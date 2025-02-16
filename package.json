@@ -20,8 +20,7 @@
     "start:local": "ts-node-dev --transpile-only src/index.ts",
     "lint": "eslint ./src ./test",
     "lint:fix": "eslint ./src ./test --fix",
-    "test": "jest",
-    "test:functional": "jest --projects ./test --forceExit --runInBand"
+    "test": "jest"
   },
   "dependencies": {
     "@prisma/client": "^6.3.1",
