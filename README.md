@@ -91,6 +91,12 @@ yarn install
    yarn start
    ```
 
+5. Alternatively, to run the project with live-reload for development, use:
+
+   ```bash
+   yarn start:local
+   ```
+
 ### Stopping the Docker Container
 
 1. List all containers (including stopped ones) to find the container ID or name:
@@ -104,10 +110,6 @@ yarn install
    ```bash
    docker stop <container_id_or_name>
    ```
-
-```bash
-yarn start:local
-```
 
 ## Testing
 
@@ -138,3 +140,7 @@ To auto-format code in VSCode, add the following to your `settings.json`:
 In the development environment, you can use **DBeaver** or **Beekeeper** to visualize your database.
 
 The values for the Database Docker come from the `.env` file.
+
+```
+
+```
