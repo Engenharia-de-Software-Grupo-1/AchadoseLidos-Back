@@ -140,7 +140,3 @@ To auto-format code in VSCode, add the following to your `settings.json`:
 In the development environment, you can use **DBeaver** or **Beekeeper** to visualize your database.
 
 The values for the Database Docker come from the `.env` file.
-
-```
-
-```
