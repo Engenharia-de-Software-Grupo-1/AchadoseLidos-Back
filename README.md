@@ -36,6 +36,8 @@ The recommended Node.js version for this project is v22.14.0. Please use this ve
 
 ## Installation
 
+You'll need Docker installed in your machine to run this project in local environment. You can see how to do it on your OS on [Docker](https://www.docker.com/)
+
 Follow these steps to install and set up the project:
 
 ```bash
@@ -51,13 +53,57 @@ yarn install
 
 ## Usage
 
-To run the project, use:
+### Setting Up the Database
 
-```bash
-yarn start
-```
+1. Create a `.env` file with the values required in the `docker-compose.yml` file.
+2. Ensure the Docker daemon is running. On Windows, you can start Docker Desktop from the Start menu.
+3. Run the following command to set up the database for the first time:
 
-To run the project with live-reload for development, use:
+   ```bash
+   docker-compose up -d
+   ```
+
+4. Create migrations from your Prisma schema, apply them to the database, and generate artifacts:
+
+   ```bash
+   yarn prisma migrate dev
+   ```
+
+### Running the Project
+
+1. Ensure the Docker daemon is running. On Windows, you can start Docker Desktop from the Start menu.
+
+2. List all containers (including stopped ones) to find the container ID or name:
+
+   ```bash
+   docker ps -a
+   ```
+
+3. Start the stopped container using its container ID or name:
+
+   ```bash
+   docker start <container_id_or_name>
+   ```
+
+4. Start the project:
+
+   ```bash
+   yarn start
+   ```
+
+### Stopping the Docker Container
+
+1. List all containers (including stopped ones) to find the container ID or name:
+
+   ```bash
+   docker ps -a
+   ```
+
+2. Stop the running container using its container ID or name:
+
+   ```bash
+   docker stop <container_id_or_name>
+   ```
 
 ```bash
 yarn start:local
