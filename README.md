@@ -1,8 +1,8 @@
-# AchadoseLidos
+# Achados e Lidos 📚
 
-Catálogo digital de sebos de Campina Grande
+_Catálogo digital de sebos de Campina Grande_
 
-## Table of Contents
+## 📌 Table of Contents
 
 - [Introduction](#introduction)
 - [Technologies](#technologies)
@@ -12,11 +12,11 @@ Catálogo digital de sebos de Campina Grande
 - [Testing](#testing)
 - [Development Tools](#development-tools)
 
-## Introduction
+## 📝 Introduction
 
 Achados e Lidos is a digital catalog for second-hand bookstores (aka sebos) in Campina Grande.
 
-## Technologies
+## 🛠️ Technologies
 
 The technologies used in this project are:
 
@@ -28,13 +28,13 @@ The technologies used in this project are:
 
 The recommended Node.js version for this project is v22.14.0. Please use this version when installing dependencies.
 
-## Features
+## 💡 Features
 
 - Feature 1
 - Feature 2
 - Feature 3
 
-## Installation
+## 📂 Installation
 
 You'll need Docker installed in your machine to run this project in local environment. You can see how to do it on your OS on [Docker](https://www.docker.com/)
 
@@ -51,7 +51,7 @@ cd AchadoseLidos
 yarn install
 ```
 
-## Usage
+## 👩‍💻 Usage
 
 ### Setting Up the Database
 
@@ -111,7 +111,7 @@ yarn install
    docker stop <container_id_or_name>
    ```
 
-## Testing
+## 🔬 Testing
 
 To run the tests, use:
 
@@ -119,7 +119,7 @@ To run the tests, use:
 yarn test
 ```
 
-## Development Tools
+## ⚙️ Development Tools
 
 It's recommended to use the following extensions in VSCode for better readability and maintaining code patterns:
 
