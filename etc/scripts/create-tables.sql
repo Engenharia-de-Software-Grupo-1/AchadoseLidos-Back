@@ -37,7 +37,7 @@ CREATE TABLE sebo_fotos (
   id_sebo INTEGER NOT NULL,
   foto VARCHAR(255) NOT NULL,
   CONSTRAINT pk_sebo_fotos PRIMARY KEY (id_sebo, foto),
-  CONSTRAINT fk_sebo_fotos FOREIGN KEY (id_sebo) REFERENCES sebo (id),
+  CONSTRAINT fk_sebo_fotos FOREIGN KEY (id_sebo) REFERENCES sebo (id)
 );
 
 CREATE TABLE usuario (
@@ -54,4 +54,32 @@ CREATE TABLE usuario (
   foto_perfil VARCHAR(255),
   CONSTRAINT pk_usuario PRIMARY KEY (id),
   CONSTRAINT fk_usuario_perfil FOREIGN KEY (id_perfil) REFERENCES perfil (id)
+);
+
+CREATE TABLE pedido (
+  id SERIAL NOT NULL,
+  data_criacao DATE,
+  data_atualizacao DATE,
+  status VARCHAR(100),
+  qtd_produtos INTEGER NOT NULL,
+  total FLOAT NOT NULL,
+  CONSTRAINT pk_pedido PRIMARY KEY (id)
+);
+
+
+CREATE TABLE produto (
+  id SERIAL NOT NULL,
+  nome VARCHAR(255) NOT NULL,
+  descricao TEXT,
+  preco FLOAT NOT NULL,
+  categoria VARCHAR(100),
+  data_criacao DATE,
+  data_atualizacao DATE,
+  qtd_estoque INTEGER NOT NULL,
+  estado VARCHAR(50),
+  ano_edicao INTEGER,
+  ano_lancamento INTEGER,
+  autores VARCHAR(100),
+  fotos text,
+  CONSTRAINT pk_produto PRIMARY KEY (id)
 );
