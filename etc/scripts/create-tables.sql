@@ -23,12 +23,12 @@ CREATE TABLE sebo (
   endereco_numero VARCHAR(100) NOT NULL,
   endereco_compl VARCHAR(255),
   endereco_eh_publico BOOL NOT NULL,
-  biografia TEXT, /* tipo está correto? */
+  biografia TEXT,
   estante_virtual VARCHAR(100),
   instagram VARCHAR(100),
   curadores VARCHAR(255),
   historia TEXT,
-  foto_perfil VARCHAR(255), /* tipo está correto? */
+  foto_perfil VARCHAR(255),
   CONSTRAINT pk_sebo PRIMARY KEY (id),
   CONSTRAINT fk_sebo_perfil FOREIGN KEY (id_perfil) REFERENCES perfil (id)
 );
@@ -58,28 +58,33 @@ CREATE TABLE usuario (
 
 CREATE TABLE pedido (
   id SERIAL NOT NULL,
-  data_criacao DATE,
+  data_criacao DATE DEFAULT CURRENT_DATE,
   data_atualizacao DATE,
-  status VARCHAR(100),
+  status VARCHAR(50) NOT NULL,
   qtd_produtos INTEGER NOT NULL,
-  total FLOAT NOT NULL,
+  total DECIMAL(10,2) NOT NULL,
   CONSTRAINT pk_pedido PRIMARY KEY (id)
 );
-
 
 CREATE TABLE produto (
   id SERIAL NOT NULL,
   nome VARCHAR(255) NOT NULL,
-  descricao TEXT,
-  preco FLOAT NOT NULL,
-  categoria VARCHAR(100),
-  data_criacao DATE,
-  data_atualizacao DATE,
+  preco DECIMAL(10,2) NOT NULL,
+  categoria VARCHAR(100) NOT NULL,
   qtd_estoque INTEGER NOT NULL,
-  estado VARCHAR(50),
+  estado VARCHAR(50) NOT NULL,
+  data_criacao DATE DEFAULT CURRENT_DATE,
+  data_atualizacao DATE,
   ano_edicao INTEGER,
   ano_lancamento INTEGER,
-  autores VARCHAR(100),
-  fotos text,
+  autores VARCHAR(255),
+  descricao TEXT,
   CONSTRAINT pk_produto PRIMARY KEY (id)
+);
+
+CREATE TABLE produto_fotos (
+  id_produto INTEGER NOT NULL,
+  foto VARCHAR(255) NOT NULL,
+  CONSTRAINT pk_produto_fotos PRIMARY KEY (id_produto, foto),
+  CONSTRAINT fk_produto_fotos FOREIGN KEY (id_produto) REFERENCES produto (id)
 );
