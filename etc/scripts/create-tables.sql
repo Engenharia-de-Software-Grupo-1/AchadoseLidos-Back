@@ -88,3 +88,13 @@ CREATE TABLE produto_fotos (
   CONSTRAINT pk_produto_fotos PRIMARY KEY (id_produto, foto),
   CONSTRAINT fk_produto_fotos FOREIGN KEY (id_produto) REFERENCES produto (id)
 );
+
+CREATE TABLE pedido_produto (
+  pedido_id INTEGER NOT NULL,
+  produto_id INTEGER NOT NULL,
+  quantidade INTEGER NOT NULL,
+  status VARCHAR(50),
+  CONSTRAINT pk_pedido_produto PRIMARY KEY (pedido_id, produto_id),
+  CONSTRAINT fk_pedido FOREIGN KEY (pedido_id) REFERENCES pedido(id) ON DELETE CASCADE,
+  CONSTRAINT fk_produto FOREIGN KEY (produto_id) REFERENCES produto(id) ON DELETE CASCADE
+);
