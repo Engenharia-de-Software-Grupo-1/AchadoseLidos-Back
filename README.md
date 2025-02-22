@@ -4,13 +4,13 @@ _Catálogo digital de sebos de Campina Grande_
 
 ## 📌 Table of Contents
 
-- [Introduction](#introduction)
-- [Technologies](#technologies)
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Testing](#testing)
-- [Development Tools](#development-tools)
+- [Introduction](https://github.com/Engenharia-de-Software-Grupo-1/AchadoseLidos-Back?tab=readme-ov-file#-introduction)
+- [Technologies](https://github.com/Engenharia-de-Software-Grupo-1/AchadoseLidos-Back?tab=readme-ov-file#%EF%B8%8F-technologies)
+- [Features](https://github.com/Engenharia-de-Software-Grupo-1/AchadoseLidos-Back?tab=readme-ov-file#-features)
+- [Installation](https://github.com/Engenharia-de-Software-Grupo-1/AchadoseLidos-Back?tab=readme-ov-file#-installation)
+- [Usage](https://github.com/Engenharia-de-Software-Grupo-1/AchadoseLidos-Back?tab=readme-ov-file#-usage)
+- [Testing](https://github.com/Engenharia-de-Software-Grupo-1/AchadoseLidos-Back?tab=readme-ov-file#-testing)
+- [Development Tools](https://github.com/Engenharia-de-Software-Grupo-1/AchadoseLidos-Back?tab=readme-ov-file#%EF%B8%8F-development-tools)
 
 ## 📝 Introduction
 
