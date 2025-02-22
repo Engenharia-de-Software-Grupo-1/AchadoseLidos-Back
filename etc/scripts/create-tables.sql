@@ -58,16 +58,21 @@ CREATE TABLE usuario (
 
 CREATE TABLE pedido (
   id SERIAL NOT NULL,
+  id_sebo INTEGER NOT NULL,
+  id_usuario INTEGER NOT NULL,
   data_criacao DATE DEFAULT CURRENT_DATE,
   data_atualizacao DATE,
   status VARCHAR(50) NOT NULL,
   qtd_produtos INTEGER NOT NULL,
   total DECIMAL(10,2) NOT NULL,
-  CONSTRAINT pk_pedido PRIMARY KEY (id)
+  CONSTRAINT pk_pedido PRIMARY KEY (id),
+  CONSTRAINT fk_pedido_sebo FOREIGN KEY (id_sebo) REFERENCES sebo (id),
+  CONSTRAINT fk_pedido_usuario FOREIGN KEY (id_usuario) REFERENCES usuario (id)
 );
 
 CREATE TABLE produto (
   id SERIAL NOT NULL,
+  id_sebo INTEGER NOT NULL,
   nome VARCHAR(255) NOT NULL,
   preco DECIMAL(10,2) NOT NULL,
   categoria VARCHAR(100) NOT NULL,
@@ -79,7 +84,8 @@ CREATE TABLE produto (
   ano_lancamento INTEGER,
   autores VARCHAR(255),
   descricao TEXT,
-  CONSTRAINT pk_produto PRIMARY KEY (id)
+  CONSTRAINT pk_produto PRIMARY KEY (id),
+  CONSTRAINT fk_produto_sebo FOREIGN KEY (id_sebo) REFERENCES sebo (id)
 );
 
 CREATE TABLE produto_fotos (
@@ -89,12 +95,29 @@ CREATE TABLE produto_fotos (
   CONSTRAINT fk_produto_fotos FOREIGN KEY (id_produto) REFERENCES produto (id)
 );
 
-CREATE TABLE pedido_produto (
-  pedido_id INTEGER NOT NULL,
-  produto_id INTEGER NOT NULL,
+CREATE TABLE favoritos (
+  id_usuario INTEGER NOT NULL,
+  id_produto INTEGER NOT NULL,
+  CONSTRAINT pk_favoritos PRIMARY KEY (id_usuario, id_produto),
+  CONSTRAINT fk_favoritos_usuario FOREIGN KEY (id_usuario) REFERENCES usuario (id),
+  CONSTRAINT fk_favoritos_produto FOREIGN KEY (id_produto) REFERENCES produto (id)
+);
+
+CREATE TABLE cesta (
+  id_usuario INTEGER NOT NULL,
+  id_produto INTEGER NOT NULL,
   quantidade INTEGER NOT NULL,
-  status VARCHAR(50),
-  CONSTRAINT pk_pedido_produto PRIMARY KEY (pedido_id, produto_id),
-  CONSTRAINT fk_pedido FOREIGN KEY (pedido_id) REFERENCES pedido(id) ON DELETE CASCADE,
-  CONSTRAINT fk_produto FOREIGN KEY (produto_id) REFERENCES produto(id) ON DELETE CASCADE
+  CONSTRAINT pk_cesta PRIMARY KEY (id_usuario, id_produto),
+  CONSTRAINT fk_cesta_usuario FOREIGN KEY (id_usuario) REFERENCES usuario (id),
+  CONSTRAINT fk_cesta_produto FOREIGN KEY (id_produto) REFERENCES produto (id)
+);
+
+CREATE TABLE pedido_produtos (
+  id_pedido INTEGER NOT NULL,
+  id_produto INTEGER NOT NULL,
+  quantidade INTEGER NOT NULL,
+  status VARCHAR(50) NOT NULL,
+  CONSTRAINT pk_pedido_produto PRIMARY KEY (id_pedido, id_produto),
+  CONSTRAINT fk_pedido FOREIGN KEY (id_pedido) REFERENCES pedido(id) ON DELETE CASCADE,
+  CONSTRAINT fk_produto FOREIGN KEY (id_produto) REFERENCES produto(id) ON DELETE CASCADE
 );
