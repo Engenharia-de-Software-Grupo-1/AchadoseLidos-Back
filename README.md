@@ -36,7 +36,7 @@ The recommended Node.js version for this project is v22.14.0. Please use this ve
 
 ## 📂 Installation
 
-You'll need Docker installed in your machine to run this project in local environment. You can see how to do it on your OS on [Docker](https://www.docker.com/)
+You'll need Docker Desktop installed in your machine to run this project in local environment. You can see how to do it on your OS on [Docker Desktop](https://www.docker.com/)
 
 Follow these steps to install and set up the project:
 
@@ -124,16 +124,25 @@ yarn test
 It's recommended to use the following extensions in VSCode for better readability and maintaining code patterns:
 
 - **Prettier**
+- **Eslint**
 - **Prisma**
 
 To auto-format code in VSCode, add the following to your `settings.json`:
 
 ```json
 {
+  "editor.tabSize": 2,
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
   },
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "eslint.codeAction.showDocumentation": {
+    "enable": true
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "eslint.format.enable": true,
 }
 ```
 
