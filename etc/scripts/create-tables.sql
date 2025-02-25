@@ -9,6 +9,7 @@ CREATE TABLE perfil (
 CREATE TABLE sebo (
   id SERIAL NOT NULL,
   id_perfil INTEGER NOT NULL,
+  status VARCHAR(50) NOT NULL,
   nome VARCHAR(100) NOT NULL,
   cpf_cnpj VARCHAR(16) NOT NULL,
   email VARCHAR(100) NOT NULL,
@@ -43,6 +44,7 @@ CREATE TABLE sebo_fotos (
 CREATE TABLE usuario (
   id SERIAL NOT NULL,
   id_perfil INTEGER NOT NULL,
+  status VARCHAR(50) NOT NULL,
   nome VARCHAR(100) NOT NULL,
   cpf VARCHAR(11) NOT NULL,
   telefone VARCHAR(11) NOT NULL,
@@ -73,6 +75,7 @@ CREATE TABLE pedido (
 CREATE TABLE produto (
   id SERIAL NOT NULL,
   id_sebo INTEGER NOT NULL,
+  status VARCHAR(50) NOT NULL,
   nome VARCHAR(255) NOT NULL,
   preco DECIMAL(10,2) NOT NULL,
   categoria VARCHAR(100) NOT NULL,
@@ -118,6 +121,6 @@ CREATE TABLE pedido_produtos (
   quantidade INTEGER NOT NULL,
   status VARCHAR(50) NOT NULL,
   CONSTRAINT pk_pedido_produto PRIMARY KEY (id_pedido, id_produto),
-  CONSTRAINT fk_pedido FOREIGN KEY (id_pedido) REFERENCES pedido(id) ON DELETE CASCADE,
-  CONSTRAINT fk_produto FOREIGN KEY (id_produto) REFERENCES produto(id) ON DELETE CASCADE
+  CONSTRAINT fk_pedido FOREIGN KEY (id_pedido) REFERENCES pedido(id),
+  CONSTRAINT fk_produto FOREIGN KEY (id_produto) REFERENCES produto(id)
 );
