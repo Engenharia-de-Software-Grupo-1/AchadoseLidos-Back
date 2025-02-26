@@ -1,6 +1,7 @@
 import globals from "globals";
 import pluginJs from "@eslint/js";
 import tseslint from "typescript-eslint";
+import importPlugin from "eslint-plugin-import";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -9,11 +10,13 @@ export default [
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    plugins: {
+      import: importPlugin,
+    },
     rules: {
       "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 1, "maxBOF": 0 }],
       "semi": ["error", "always"],
-      "quotes": ["error", "single"],
-      "indent": ["error", 1],
+      "indent": ["error", 2],
       "object-curly-spacing": ["error", "always"],
       "comma-dangle": ["error", "always-multiline"],
       "no-trailing-spaces": "error",
@@ -32,14 +35,6 @@ export default [
           "newlines-between": "always"
         }
       ],
-
-
-      "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
-      ],
-
 
       "no-console": "error",
     },
