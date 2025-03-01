@@ -1,4 +1,4 @@
-CREATE TABLE perfil (
+CREATE TABLE IF NOT EXISTS perfil (
   id SERIAL NOT NULL,
   email VARCHAR(100) NOT NULL,
   senha VARCHAR(255) NOT NULL,
@@ -6,7 +6,7 @@ CREATE TABLE perfil (
   CONSTRAINT pk_perfil PRIMARY KEY (id)
 );
 
-CREATE TABLE sebo (
+CREATE TABLE IF NOT EXISTS sebo (
   id SERIAL NOT NULL,
   id_perfil INTEGER NOT NULL,
   status VARCHAR(50) NOT NULL,
@@ -34,14 +34,14 @@ CREATE TABLE sebo (
   CONSTRAINT fk_sebo_perfil FOREIGN KEY (id_perfil) REFERENCES perfil (id)
 );
 
-CREATE TABLE sebo_fotos (
+CREATE TABLE IF NOT EXISTS sebo_fotos (
   id_sebo INTEGER NOT NULL,
   foto VARCHAR(255) NOT NULL,
   CONSTRAINT pk_sebo_fotos PRIMARY KEY (id_sebo, foto),
   CONSTRAINT fk_sebo_fotos FOREIGN KEY (id_sebo) REFERENCES sebo (id)
 );
 
-CREATE TABLE usuario (
+CREATE TABLE IF NOT EXISTS usuario (
   id SERIAL NOT NULL,
   id_perfil INTEGER NOT NULL,
   status VARCHAR(50) NOT NULL,
@@ -58,7 +58,7 @@ CREATE TABLE usuario (
   CONSTRAINT fk_usuario_perfil FOREIGN KEY (id_perfil) REFERENCES perfil (id)
 );
 
-CREATE TABLE pedido (
+CREATE TABLE IF NOT EXISTS pedido (
   id SERIAL NOT NULL,
   id_sebo INTEGER NOT NULL,
   id_usuario INTEGER NOT NULL,
@@ -72,7 +72,7 @@ CREATE TABLE pedido (
   CONSTRAINT fk_pedido_usuario FOREIGN KEY (id_usuario) REFERENCES usuario (id)
 );
 
-CREATE TABLE produto (
+CREATE TABLE IF NOT EXISTS produto (
   id SERIAL NOT NULL,
   id_sebo INTEGER NOT NULL,
   status VARCHAR(50) NOT NULL,
@@ -91,14 +91,14 @@ CREATE TABLE produto (
   CONSTRAINT fk_produto_sebo FOREIGN KEY (id_sebo) REFERENCES sebo (id)
 );
 
-CREATE TABLE produto_fotos (
+CREATE TABLE IF NOT EXISTS produto_fotos (
   id_produto INTEGER NOT NULL,
   foto VARCHAR(255) NOT NULL,
   CONSTRAINT pk_produto_fotos PRIMARY KEY (id_produto, foto),
   CONSTRAINT fk_produto_fotos FOREIGN KEY (id_produto) REFERENCES produto (id)
 );
 
-CREATE TABLE favoritos (
+CREATE TABLE IF NOT EXISTS favoritos (
   id_usuario INTEGER NOT NULL,
   id_produto INTEGER NOT NULL,
   CONSTRAINT pk_favoritos PRIMARY KEY (id_usuario, id_produto),
@@ -106,7 +106,7 @@ CREATE TABLE favoritos (
   CONSTRAINT fk_favoritos_produto FOREIGN KEY (id_produto) REFERENCES produto (id)
 );
 
-CREATE TABLE cesta (
+CREATE TABLE IF NOT EXISTS cesta (
   id_usuario INTEGER NOT NULL,
   id_produto INTEGER NOT NULL,
   quantidade INTEGER NOT NULL,
@@ -115,7 +115,7 @@ CREATE TABLE cesta (
   CONSTRAINT fk_cesta_produto FOREIGN KEY (id_produto) REFERENCES produto (id)
 );
 
-CREATE TABLE pedido_produtos (
+CREATE TABLE  IF NOT EXISTS  pedido_produtos (
   id_pedido INTEGER NOT NULL,
   id_produto INTEGER NOT NULL,
   quantidade INTEGER NOT NULL,
