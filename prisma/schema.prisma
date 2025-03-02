@@ -7,7 +7,85 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id   String @id @default(uuid())
-  name String
+enum Papel {
+  SEBO
+  USUARIO
+}
+
+enum Status {
+  ATIVO
+  EXCLUIDO
+}
+
+model Conta {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  senha     String
+  papel     Papel
+  status    Status   @default(ATIVO)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sebo    Sebo?
+  usuario Usuario?
+}
+
+model Sebo {
+  id             Int     @id @default(autoincrement())
+  nome           String
+  cpfCnpj        String  @db.VarChar(16)
+  concordaVender Boolean
+  telefone       String? @db.Char(11)
+  biografia      String?
+  estanteVirtual String?
+  instagram      String?
+  curadores      String?
+  historia       String?
+  fotoPerfil     String?
+
+  contaId Int   @unique
+  conta   Conta @relation(fields: [contaId], references: [id])
+
+  endereco EnderecoSebo?
+  fotos    FotoSebo[]
+}
+
+model EnderecoSebo {
+  id          Int     @id @default(autoincrement())
+  cep         String  @db.Char(8)
+  estado      String  @db.Char(2)
+  cidade      String
+  bairro      String
+  rua         String
+  numero      String
+  complemento String?
+  isPublic    Boolean
+
+  seboId Int  @unique
+  sebo   Sebo @relation(fields: [seboId], references: [id], onDelete: Cascade)
+}
+
+model FotoSebo {
+  url String
+
+  seboId Int
+  sebo   Sebo @relation(fields: [seboId], references: [id], onDelete: Cascade)
+
+  @@id([seboId, url])
+}
+
+model Usuario {
+  id         Int     @id @default(autoincrement())
+  nome       String
+  cpf        String  @db.VarChar(16)
+  telefone   String  @db.Char(11)
+  biografia  String?
+  twitter    String?
+  instagram  String?
+  skoob      String?
+  goodreads  String?
+  fotoPerfil String?
+
+  contaId Int   @unique
+  conta   Conta @relation(fields: [contaId], references: [id])
 }
