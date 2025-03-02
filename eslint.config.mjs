@@ -39,4 +39,10 @@ export default [
       "no-console": "error",
     },
   },
+  {
+    files: ["src/server.ts"],
+    rules: {
+      "no-console": "off",
+    },
+  },
 ];
