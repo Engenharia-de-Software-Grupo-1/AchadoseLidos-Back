@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { contaService } from "@src/services/ContaService";
-import { EmailIndisponivelError } from "@src/errors/EmailIndisponivelError";
+import { getErrorMessage } from "@src/utils/errorUtils";
 
 class ContaController {
 
@@ -12,10 +12,7 @@ class ContaController {
 
       return res.status(200).json({ mensagem: "E-mail disponível" });
     } catch (error) {
-      if (error instanceof EmailIndisponivelError) {
-        return res.status(409).json({ erro: error.message });
-      }
-      return res.status(400).json({ erro: "Erro ao verificar e-mail" });
+      return res.status(400).json({ erro: getErrorMessage(error) });
     }
   }
 }
