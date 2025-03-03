@@ -1,13 +1,13 @@
-import { prisma } from "@src/lib/prisma";
-import { EnderecoSeboRequestDTO, SeboRequestDTO } from "@src/models/SeboRequestDTO";
 import { Prisma } from "@prisma/client";
+import { EnderecoSeboRequestDTO, SeboRequestDTO } from "@src/models/SeboRequestDTO";
+import { prismaClient } from "@src/lib/prismaClient";
 
 import { contaRepository } from "./ContaRepository";
 
 class SeboRepository {
 
   async create(data: SeboRequestDTO) {
-    return prisma.$transaction(async(tx) => {
+    return prismaClient.$transaction(async(tx) => {
       //const hashSenha = await bcrypt.hash(data.conta.senha, 10);
 
       const conta = await contaRepository.create(tx, data.conta);

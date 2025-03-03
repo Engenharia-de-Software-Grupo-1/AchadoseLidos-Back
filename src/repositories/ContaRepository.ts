@@ -1,6 +1,6 @@
-import { prisma } from "@src/lib/prisma";
-import { ContaRequestDTO } from "@src/models/ContaRequestDTO";
 import { Prisma } from "@prisma/client";
+import { ContaRequestDTO } from "@src/models/ContaRequestDTO";
+import { prismaClient } from "@src/lib/prismaClient";
 
 class ContaRepository {
 
@@ -17,7 +17,7 @@ class ContaRepository {
   }
 
   async verificarEmailExiste(email: string) {
-    const conta = await prisma.conta.findUnique({
+    const conta = await prismaClient.conta.findUnique({
       where: { email },
       select: { id: true },
     });
