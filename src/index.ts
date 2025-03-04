@@ -1,5 +1,3 @@
-const testingReturn = () => {
+export const testingReturn = () => {
   return "teste";
 };
-
-export { testingReturn };

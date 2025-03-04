@@ -1,6 +1,6 @@
 import { ContaRequestDTO } from "./ContaRequestDTO";
 
-interface SeboRequestDTO {
+export interface SeboRequestDTO {
   nome: string;
   cpfCnpj: string;
   concordaVender: boolean;
@@ -17,7 +17,7 @@ interface SeboRequestDTO {
   fotos: FotoSeboRequestDTO[];
 }
 
-interface EnderecoSeboRequestDTO {
+export interface EnderecoSeboRequestDTO {
   cep: string,
   estado: string;
   cidade: string;
@@ -31,5 +31,3 @@ interface EnderecoSeboRequestDTO {
 interface FotoSeboRequestDTO {
   url: string;
 }
-
-export { SeboRequestDTO, EnderecoSeboRequestDTO };
