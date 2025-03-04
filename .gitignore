@@ -1,3 +1,5 @@
+yarn.lock
+prisma/migrations/
 node_modules# Logs
 logs
 *.log
