@@ -1,4 +1,4 @@
-import { SeboRequestDTO } from "@src/models/SeboRequestDTO";
+import { SeboCreateDTO, SeboUpdateDTO } from "@src/models/SeboRequestDTO";
 import { seboRepository } from "@src/repositories/SeboRepository";
 import { AppError } from "@src/errors/AppError";
 
@@ -6,7 +6,7 @@ import { contaService } from "./ContaService";
 
 class SeboService {
 
-  async create(data: SeboRequestDTO) {
+  async create(data: SeboCreateDTO) {
     await contaService.validarEmail(data.conta.email);
     const sebo = await seboRepository.create(data);
     return sebo;
@@ -24,7 +24,7 @@ class SeboService {
     return sebo;
   }
 
-  async update(id: number, data: Partial<SeboRequestDTO>) {
+  async update(id: number, data: SeboUpdateDTO) {
     await this.getById(id);
     return seboRepository.update(id, data);
   }
