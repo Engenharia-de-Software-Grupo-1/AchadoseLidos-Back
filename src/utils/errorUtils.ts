@@ -1,3 +1,3 @@
-export function getErrorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : "Erro desconhecido";
+export function getErrorMessage(error: unknown, messageDefault: string) {
+  return error instanceof Error ? error.message : messageDefault;
 }
