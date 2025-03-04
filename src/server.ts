@@ -1,6 +1,7 @@
 import "./config/module-alias";
 import "express-async-errors";
 import express, { ErrorRequestHandler } from "express";
+import { ZodError } from "zod";
 
 import { routes } from './routes/routes';
 import { AppError } from "./errors/AppError";
@@ -11,18 +12,18 @@ app.use(express.json());
 app.use("/api", routes);
 
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
-  if (err instanceof AppError) {
-    res.status(err.statusCode).json({
-      status: "error",
-      message: err.message,
-    });
-    return;
+  if (err instanceof ZodError) {
+    const formattedErrors = err.errors.map((error) => ({
+      message: `${error.path.join(".")}: ${error.message}`,
+    }));
+    res.status(400).json({ errors: formattedErrors });
   }
 
-  res.status(500).json({
-    status: "error",
-    message: `Internal server error. ${err.message}`,
-  });
+  if (err instanceof AppError) {
+    res.status(err.statusCode).json({ message: err.message });
+  }
+
+  res.status(500).json({ message: "Internal server error" });
 };
 
 app.use(errorHandler);

@@ -1,6 +1,6 @@
-import { SeboCreateDTO, SeboUpdateDTO } from "@src/models/SeboRequestDTO";
 import { prismaClient } from "@src/lib/prismaClient";
 import { Papel } from "@prisma/client";
+import { SeboCreateDTO, SeboUpdateDTO } from "@src/models/SeboSchema";
 
 import { contaRepository } from "./ContaRepository";
 

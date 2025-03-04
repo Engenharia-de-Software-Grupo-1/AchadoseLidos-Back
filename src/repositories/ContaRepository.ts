@@ -1,10 +1,10 @@
 import { Papel, Prisma, Status } from "@prisma/client";
-import { ContaRequestDTO } from "@src/models/ContaRequestDTO";
 import { prismaClient } from "@src/lib/prismaClient";
+import { ContaCreateDTO } from "@src/models/ContaSchema";
 
 class ContaRepository {
 
-  async create(tx: Prisma.TransactionClient, data: ContaRequestDTO, papel: Papel) {
+  async create(tx: Prisma.TransactionClient, data: ContaCreateDTO, papel: Papel) {
     return tx.conta.create({
       data: {
         email: data.email,

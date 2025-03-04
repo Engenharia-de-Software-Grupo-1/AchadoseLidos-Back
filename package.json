@@ -38,7 +38,8 @@
     "module-alias": "^2.2.3",
     "undici-types": "^6.20.0",
     "v8-compile-cache-lib": "^3.0.1",
-    "yn": "^3.1.1"
+    "yn": "^3.1.1",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",
