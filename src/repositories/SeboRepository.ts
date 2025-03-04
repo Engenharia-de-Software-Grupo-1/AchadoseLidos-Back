@@ -1,54 +1,93 @@
-import { Prisma } from "@prisma/client";
-import { EnderecoSeboRequestDTO, SeboRequestDTO } from "@src/models/SeboRequestDTO";
+import { SeboRequestDTO } from "@src/models/SeboRequestDTO";
 import { prismaClient } from "@src/lib/prismaClient";
 
 import { contaRepository } from "./ContaRepository";
 
 class SeboRepository {
 
-  async create(sebo: SeboRequestDTO) {
+  async create(data: SeboRequestDTO) {
     return prismaClient.$transaction(async(tx) => {
-      //const hashSenha = await bcrypt.hash(sebo.conta.senha, 10);
-
-      const contaCriada = await contaRepository.create(tx, sebo.conta);
-      const seboCriado = await tx.sebo.create({
+      //const hashSenha = await bcrypt.hash(data.conta.senha, 10);
+      const conta = await contaRepository.create(tx, data.conta);
+      const sebo = await tx.sebo.create({
         data: {
-          nome: sebo.nome,
-          cpfCnpj: sebo.cpfCnpj,
-          concordaVender: sebo.concordaVender,
-          telefone: sebo.telefone,
-          biografia: sebo.biografia,
-          estanteVirtual: sebo.estanteVirtual,
-          instagram: sebo.instagram,
-          curadores: sebo.curadores,
-          historia: sebo.historia,
-          fotoPerfil: sebo.fotoPerfil,
+          nome: data.nome,
+          cpfCnpj: data.cpfCnpj,
+          concordaVender: data.concordaVender,
+          telefone: data.telefone,
+          biografia: data.biografia,
+          estanteVirtual: data.estanteVirtual,
+          instagram: data.instagram,
+          curadores: data.curadores,
+          historia: data.historia,
+          fotoPerfil: data.fotoPerfil,
           conta: {
-            connect: { id: contaCriada.id },
+            connect: { id: conta.id },
           },
         },
       });
-      const enderecoCriado = await this.createEndereco(tx, sebo.endereco, seboCriado.id);
-
-      return { ...seboCriado, contaCriada, enderecoCriado };
+      const endereco = await tx.enderecoSebo.create({
+        data: {
+          cep: data.endereco.cep,
+          estado: data.endereco.estado,
+          cidade: data.endereco.cidade,
+          bairro: data.endereco.bairro,
+          rua: data.endereco.rua,
+          numero: data.endereco.numero,
+          complemento: data.endereco.complemento,
+          isPublic: data.endereco.isPublic,
+          sebo: {
+            connect: { id: sebo.id },
+          },
+        },
+      });
+      return { ...sebo, conta, endereco };
     });
   }
 
-  private async createEndereco(tx: Prisma.TransactionClient, endereco: EnderecoSeboRequestDTO, seboId: number) {
-    return tx.enderecoSebo.create({
+  async getAll() {
+    return prismaClient.sebo.findMany({
+      include: { endereco: true },
+    });
+  }
+
+  async getById(id: number) {
+    return prismaClient.sebo.findUnique({
+      where: { id },
+      include: { endereco: true },
+    });
+  }
+
+  async update(id: number, data: Partial<SeboRequestDTO>) {
+    return prismaClient.sebo.update({
+      where: { id },
       data: {
-        cep: endereco.cep,
-        estado: endereco.estado,
-        cidade: endereco.cidade,
-        bairro: endereco.bairro,
-        rua: endereco.rua,
-        numero: endereco.numero,
-        complemento: endereco.complemento,
-        isPublic: endereco.isPublic,
-        sebo: {
-          connect: { id: seboId },
-        },
+        nome: data.nome,
+        cpfCnpj: data.cpfCnpj,
+        concordaVender: data.concordaVender,
+        telefone: data.telefone,
+        biografia: data.biografia,
+        estanteVirtual: data.estanteVirtual,
+        instagram: data.instagram,
+        curadores: data.curadores,
+        historia: data.historia,
+        fotoPerfil: data.fotoPerfil,
+        endereco: data.endereco
+          ? {
+            update: {
+              cep: data.endereco.cep,
+              estado: data.endereco.estado,
+              cidade: data.endereco.cidade,
+              bairro: data.endereco.bairro,
+              rua: data.endereco.rua,
+              numero: data.endereco.numero,
+              complemento: data.endereco.complemento,
+              isPublic: data.endereco.isPublic,
+            },
+          }
+          : undefined,
       },
+      include: { endereco: true },
     });
   }
 }

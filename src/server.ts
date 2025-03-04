@@ -8,8 +8,7 @@ import { AppError } from "./errors/AppError";
 const app = express();
 
 app.use(express.json());
-
-app.use(routes);
+app.use("/api", routes);
 
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   if (err instanceof AppError) {
@@ -27,5 +26,4 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
 };
 
 app.use(errorHandler);
-
 app.listen(3333, () => console.log('Server is running in port 3333'));

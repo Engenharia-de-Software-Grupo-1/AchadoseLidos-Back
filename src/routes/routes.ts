@@ -5,5 +5,5 @@ import { seboRoutes } from "./sebo.routes";
 
 export const routes = Router();
 
-routes.use("/conta", contaRoutes);
-routes.use("/sebo", seboRoutes);
+routes.use("/contas", contaRoutes);
+routes.use("/sebos", seboRoutes);
