@@ -11,7 +11,7 @@ app.use(express.json());
 
 app.use(routes);
 
-const errorHandler: ErrorRequestHandler = (err, _req, res) => {
+const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   if (err instanceof AppError) {
     res.status(err.statusCode).json({
       status: "error",
@@ -22,7 +22,7 @@ const errorHandler: ErrorRequestHandler = (err, _req, res) => {
 
   res.status(500).json({
     status: "error",
-    message: `Internal server error - ${err.message}`,
+    message: `Internal server error. ${err.message}`,
   });
 };
 
