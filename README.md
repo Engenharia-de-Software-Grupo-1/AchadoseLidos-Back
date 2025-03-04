@@ -20,6 +20,7 @@ Achados e Lidos is a digital catalog for second-hand bookstores (aka sebos) in C
 The technologies used in this project are:
 
 - **Node.js** and **TypeScript** for functionalities development
+- **Express** as the web framework for building the API
 - **Jest** for testing
 - **Json Web Token** for authentication and authorization
 - **ESLint** for code linting and **Prettier** for code formatting
