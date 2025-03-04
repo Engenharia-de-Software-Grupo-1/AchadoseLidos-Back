@@ -6,31 +6,31 @@ import { contaRepository } from "./ContaRepository";
 
 class SeboRepository {
 
-  async create(data: SeboRequestDTO) {
+  async create(sebo: SeboRequestDTO) {
     return prismaClient.$transaction(async(tx) => {
-      //const hashSenha = await bcrypt.hash(data.conta.senha, 10);
+      //const hashSenha = await bcrypt.hash(sebo.conta.senha, 10);
 
-      const conta = await contaRepository.create(tx, data.conta);
-      const sebo = await tx.sebo.create({
+      const contaCriada = await contaRepository.create(tx, sebo.conta);
+      const seboCriado = await tx.sebo.create({
         data: {
-          nome: data.nome,
-          cpfCnpj: data.cpfCnpj,
-          concordaVender: data.concordaVender,
-          telefone: data.telefone,
-          biografia: data.biografia,
-          estanteVirtual: data.estanteVirtual,
-          instagram: data.instagram,
-          curadores: data.curadores,
-          historia: data.historia,
-          fotoPerfil: data.fotoPerfil,
+          nome: sebo.nome,
+          cpfCnpj: sebo.cpfCnpj,
+          concordaVender: sebo.concordaVender,
+          telefone: sebo.telefone,
+          biografia: sebo.biografia,
+          estanteVirtual: sebo.estanteVirtual,
+          instagram: sebo.instagram,
+          curadores: sebo.curadores,
+          historia: sebo.historia,
+          fotoPerfil: sebo.fotoPerfil,
           conta: {
-            connect: { id: conta.id },
+            connect: { id: contaCriada.id },
           },
         },
       });
-      const endereco = await this.createEndereco(tx, data.endereco, sebo.id);
+      const enderecoCriado = await this.createEndereco(tx, sebo.endereco, seboCriado.id);
 
-      return { ...sebo, conta, endereco };
+      return { ...seboCriado, contaCriada, enderecoCriado };
     });
   }
 

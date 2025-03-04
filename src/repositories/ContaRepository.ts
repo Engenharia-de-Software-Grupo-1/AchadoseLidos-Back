@@ -4,16 +4,16 @@ import { prismaClient } from "@src/lib/prismaClient";
 
 class ContaRepository {
 
-  async create(tx: Prisma.TransactionClient, data: ContaRequestDTO) {
-    const conta = await tx.conta.create({
+  async create(tx: Prisma.TransactionClient, conta: ContaRequestDTO) {
+    const contaCriada = await tx.conta.create({
       data: {
-        email: data.email,
-        senha: data.senha,
-        papel: data.papel,
+        email: conta.email,
+        senha: conta.senha,
+        papel: conta.papel,
       },
     });
 
-    return conta;
+    return contaCriada;
   }
 
   async verificarEmailExiste(email: string) {
