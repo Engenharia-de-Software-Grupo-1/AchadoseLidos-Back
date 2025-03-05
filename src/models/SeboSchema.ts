@@ -1,34 +1,33 @@
 import { z } from "zod";
-import { optionalString, optionalStringWithLength, requiredBoolean, requiredString, requiredStringWithLength, requiredStringWithRange } from "@src/utils/zodUtils";
 
 import { contaSchema } from "./ContaSchema";
 
 const enderecoSchema = z.object({
-  cep: requiredStringWithLength(8),
-  estado: requiredStringWithLength(2),
-  cidade: requiredString(),
-  bairro: requiredString(),
-  rua: requiredString(),
-  numero: requiredString(),
-  complemento: optionalString(),
-  isPublic: requiredBoolean(),
+  cep: z.string().length(8),
+  estado: z.string().length(2),
+  cidade: z.string().nonempty(),
+  bairro: z.string().nonempty(),
+  rua: z.string().nonempty(),
+  numero: z.string().nonempty(),
+  complemento: z.string().nullable().optional(),
+  isPublic: z.boolean(),
 });
 
 const fotoSchema = z.object({
-  url: requiredString().url({ message: "URL inválida" }),
+  url: z.string().url(),
 });
 
 const seboSchema = z.object({
-  nome: requiredString(),
-  cpfCnpj: requiredStringWithRange(11, 16),
-  concordaVender: requiredBoolean(),
-  telefone: optionalStringWithLength(11),
-  biografia: optionalString(),
-  estanteVirtual: optionalString(),
-  instagram: optionalString(),
-  curadores: optionalString(),
-  historia: optionalString(),
-  fotoPerfil: z.string().url({ message: "URL inválida" }).optional(),
+  nome: z.string(),
+  cpfCnpj: z.string().min(11).max(16),
+  concordaVender: z.boolean(),
+  telefone: z.string().length(11).nullable().optional(),
+  biografia: z.string().nullable().optional(),
+  estanteVirtual: z.string().nullable().optional(),
+  instagram: z.string().nullable().optional(),
+  curadores: z.string().nullable().optional(),
+  historia: z.string().nullable().optional(),
+  fotoPerfil: z.string().url().optional(),
 
   conta: contaSchema,
   endereco: enderecoSchema,

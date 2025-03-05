@@ -13,14 +13,17 @@ app.use("/api", routes);
 
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   if (err instanceof ZodError) {
+    console.log(err);
     const formattedErrors = err.errors.map((error) => ({
       message: `${error.path.join(".")}: ${error.message}`,
     }));
     res.status(400).json({ errors: formattedErrors });
+    return;
   }
 
   if (err instanceof AppError) {
     res.status(err.statusCode).json({ message: err.message });
+    return;
   }
 
   res.status(500).json({ message: "Internal server error" });
