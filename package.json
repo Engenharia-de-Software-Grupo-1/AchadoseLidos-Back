@@ -55,6 +55,7 @@
     "eslint-plugin-import": "^2.31.0",
     "globals": "^15.15.0",
     "jest": "^29.7.0",
+    "jest-mock-extended": "^4.0.0-beta1",
     "prettier": "^3.5.1",
     "prisma": "^6.3.1",
     "ts-jest": "^29.2.5",
