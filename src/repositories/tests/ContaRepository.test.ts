@@ -2,6 +2,7 @@ import { Status, Papel } from "@prisma/client";
 import { contaRepository } from "@src/repositories/ContaRepository";
 import { prismaClient } from "@src/lib/prismaClient";
 import { genSalt, hash } from "bcrypt";
+
 import { prismaMock } from "../../../singleton";
 
 jest.mock("@src/lib/prismaClient", () => ({
@@ -26,7 +27,7 @@ describe("ContaRepository", () => {
     jest.clearAllMocks();
   });
 
-  it("creates a new account with hashed password", async () => {
+  it("creates a new account with hashed password", async() => {
     const data = { email: "test@example.com", senha: "password123" };
     const papel = Papel.SEBO;
     const mockResponse = {
@@ -54,7 +55,7 @@ describe("ContaRepository", () => {
     expect(result).toEqual(mockResponse);
   });
 
-  it("retrieves an account by ID", async () => {
+  it("retrieves an account by ID", async() => {
     const mockAccount = { id: 1, email: "test@example.com" };
     (prismaClient.conta.findUnique as jest.Mock).mockResolvedValue(mockAccount);
 
@@ -66,7 +67,7 @@ describe("ContaRepository", () => {
     expect(result).toEqual(mockAccount);
   });
 
-  it("retrieves an account by email", async () => {
+  it("retrieves an account by email", async() => {
     const mockAccount = { id: 1, email: "test@example.com" };
     (prismaClient.conta.findUnique as jest.Mock).mockResolvedValue(mockAccount);
 
@@ -78,7 +79,7 @@ describe("ContaRepository", () => {
     expect(result).toEqual(mockAccount);
   });
 
-  it("updates account status", async () => {
+  it("updates account status", async() => {
     const mockResponse = { id: 1, status: Status.ATIVO };
     (prismaClient.conta.update as jest.Mock).mockResolvedValue(mockResponse);
 

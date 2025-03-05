@@ -7,7 +7,7 @@ class ContaRepository {
   async create(
     tx: Prisma.TransactionClient,
     data: ContaCreateDTO,
-    papel: Papel
+    papel: Papel,
   ) {
     const saltRounds = 10;
     const salt = await genSalt(saltRounds);
