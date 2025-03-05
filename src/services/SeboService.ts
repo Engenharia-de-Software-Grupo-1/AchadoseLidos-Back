@@ -1,6 +1,6 @@
 import { SeboCreateDTO, seboCreateSchema, SeboUpdateDTO, seboUpdateSchema } from "@src/models/SeboSchema";
 import { seboRepository } from "@src/repositories/SeboRepository";
-import { AppError } from "@src/errors/AppError";
+import { EntityNotFoundError } from "@src/errors/EntityNotFoundError";
 
 import { contaService } from "./ContaService";
 
@@ -19,7 +19,7 @@ class SeboService {
   async getById(id: number) {
     const sebo = await seboRepository.getById(id);
     if (!sebo) {
-      throw new AppError("Entidade não encontrada", 404);
+      throw new EntityNotFoundError(id);
     }
     return sebo;
   }

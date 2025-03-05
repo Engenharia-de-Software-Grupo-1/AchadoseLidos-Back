@@ -1,4 +1,6 @@
+import { StatusConta } from "@prisma/client";
 import { AppError } from "@src/errors/AppError";
+import { EntityNotFoundError } from "@src/errors/EntityNotFoundError";
 import { contaRepository } from "@src/repositories/ContaRepository";
 
 class ContaService {
@@ -13,9 +15,9 @@ class ContaService {
   async delete(id: number) {
     const conta = await contaRepository.getById(id);
     if (!conta) {
-      throw new AppError("Entidade não encontrada", 404);
+      throw new EntityNotFoundError(id);
     }
-    await contaRepository.atualizarStatus(id, "EXCLUIDO");
+    await contaRepository.atualizarStatus(id, StatusConta.EXCLUIDA);
   }
 }
 
