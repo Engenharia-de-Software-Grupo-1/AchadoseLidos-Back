@@ -13,7 +13,6 @@ app.use("/api", routes);
 
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   if (err instanceof ZodError) {
-    console.log(err);
     const formattedErrors = err.errors.map((error) => ({
       message: `${error.path.join(".")}: ${error.message}`,
     }));
