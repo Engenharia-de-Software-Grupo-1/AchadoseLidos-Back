@@ -7,24 +7,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Papel {
+enum TipoConta {
   SEBO
   USUARIO
 }
 
-enum Status {
-  ATIVO
-  EXCLUIDO
+enum StatusConta {
+  ATIVA
+  EXCLUIDA
 }
 
 model Conta {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
+  id        Int         @id @default(autoincrement())
+  email     String      @unique
   senha     String
-  papel     Papel
-  status    Status   @default(ATIVO)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  tipo      TipoConta
+  status    StatusConta @default(ATIVA)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 
   sebo    Sebo?
   usuario Usuario?
@@ -59,7 +59,7 @@ model EnderecoSebo {
   rua         String
   numero      String
   complemento String?
-  isPublic    Boolean
+  ehPublico   Boolean
 
   seboId Int  @unique
   sebo   Sebo @relation(fields: [seboId], references: [id], onDelete: Cascade)

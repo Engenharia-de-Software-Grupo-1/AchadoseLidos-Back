@@ -2,8 +2,8 @@ CREATE TABLE IF NOT EXISTS conta (
   id SERIAL NOT NULL,
   email VARCHAR(100) NOT NULL,
   senha VARCHAR(255) NOT NULL,
-  papel VARCHAR(50) NOT NULL, /* enum Papel (SEBO, USUARIO) */
-  status VARCHAR(50) NOT NULL, /* enum Status (ATIVO, EXCLUIDO) */
+  tipo VARCHAR(50) NOT NULL, /* enum TipoConta (SEBO, USUARIO) */
+  status VARCHAR(50) NOT NULL, /* enum StatusConta (ATIVA, EXCLUIDA) */
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP,
   CONSTRAINT pk_conta PRIMARY KEY (id)
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS pedido (
 CREATE TABLE IF NOT EXISTS produto (
   id SERIAL NOT NULL,
   sebo_id INTEGER NOT NULL,
-  status VARCHAR(50) NOT NULL, /* enum Status (ATIVO, EXCLUIDO) */
+  status VARCHAR(50) NOT NULL, /* enum StatusProduto (ATIVO (?), EXCLUIDO) */
   nome VARCHAR(255) NOT NULL,
   preco DECIMAL(10,2) NOT NULL,
   categoria VARCHAR(100) NOT NULL, /* enum CategoriaProduto (LIVRO, DISCO, ..) */

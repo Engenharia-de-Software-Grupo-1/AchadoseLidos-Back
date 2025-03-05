@@ -1,5 +1,5 @@
 import { prismaClient } from "@src/lib/prismaClient";
-import { Papel } from "@prisma/client";
+import { TipoConta } from "@prisma/client";
 import { SeboCreateDTO, SeboUpdateDTO } from "@src/models/SeboSchema";
 
 import { contaRepository } from "./ContaRepository";
@@ -10,7 +10,7 @@ class SeboRepository {
     const { conta, endereco, ...sebo } = data;
 
     return prismaClient.$transaction(async(tx) => {
-      const contaCriada = await contaRepository.create(tx, conta, Papel.SEBO);
+      const contaCriada = await contaRepository.create(tx, conta, TipoConta.SEBO);
       const seboCriado = await tx.sebo.create({
         data: { ...sebo, conta: { connect: { id: contaCriada.id } } },
       });

@@ -1,4 +1,4 @@
-import { Papel, Prisma, Status } from "@prisma/client";
+import { TipoConta, Prisma, StatusConta } from "@prisma/client";
 import { prismaClient } from "@src/lib/prismaClient";
 import { ContaCreateDTO } from "@src/models/ContaSchema";
 import { genSalt, hash } from "bcrypt";
@@ -7,7 +7,7 @@ class ContaRepository {
   async create(
     tx: Prisma.TransactionClient,
     data: ContaCreateDTO,
-    papel: Papel,
+    tipo: TipoConta,
   ) {
     const saltRounds = 10;
     const salt = await genSalt(saltRounds);
@@ -17,7 +17,7 @@ class ContaRepository {
       data: {
         email: data.email,
         senha: hashedPassword,
-        papel: papel,
+        tipo: tipo,
       },
     });
   }
@@ -34,7 +34,7 @@ class ContaRepository {
     });
   }
 
-  async atualizarStatus(id: number, status: Status) {
+  async atualizarStatus(id: number, status: StatusConta) {
     return prismaClient.conta.update({
       where: { id },
       data: { status },

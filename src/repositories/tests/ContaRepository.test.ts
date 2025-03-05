@@ -1,4 +1,4 @@
-import { Status, Papel } from "@prisma/client";
+import { StatusConta, TipoConta } from "@prisma/client";
 import { contaRepository } from "@src/repositories/ContaRepository";
 import { prismaClient } from "@src/lib/prismaClient";
 import { genSalt, hash } from "bcrypt";
@@ -29,19 +29,19 @@ describe("ContaRepository", () => {
 
   it("creates a new account with hashed password", async() => {
     const data = { email: "test@example.com", senha: "password123" };
-    const papel = Papel.SEBO;
+    const tipo = TipoConta.SEBO;
     const mockResponse = {
       id: 1,
       email: data.email,
       senha: "hashed_password123",
-      papel,
-      status: Status.ATIVO,
+      tipo,
+      status: StatusConta.ATIVA,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
     tx.conta.create.mockResolvedValue(mockResponse);
 
-    const result = await contaRepository.create(tx, { ...data, papel }, papel);
+    const result = await contaRepository.create(tx, data, tipo);
 
     expect(genSalt).toHaveBeenCalledWith(10);
     expect(hash).toHaveBeenCalledWith(data.senha, "mockedSalt");
@@ -49,7 +49,7 @@ describe("ContaRepository", () => {
       data: {
         email: data.email,
         senha: "hashed_password123",
-        papel,
+        tipo,
       },
     });
     expect(result).toEqual(mockResponse);
@@ -80,14 +80,14 @@ describe("ContaRepository", () => {
   });
 
   it("updates account status", async() => {
-    const mockResponse = { id: 1, status: Status.ATIVO };
+    const mockResponse = { id: 1, status: StatusConta.ATIVA };
     (prismaClient.conta.update as jest.Mock).mockResolvedValue(mockResponse);
 
-    const result = await contaRepository.atualizarStatus(1, Status.ATIVO);
+    const result = await contaRepository.atualizarStatus(1, StatusConta.ATIVA);
 
     expect(prismaClient.conta.update).toHaveBeenCalledWith({
       where: { id: 1 },
-      data: { status: Status.ATIVO },
+      data: { status: StatusConta.ATIVA },
     });
     expect(result).toEqual(mockResponse);
   });
