@@ -7,7 +7,7 @@ import { contaRepository } from "./ContaRepository";
 class SeboRepository {
 
   async create(data: SeboCreateDTO) {
-    const { conta, endereco, ...sebo } = data;
+    const { conta, endereco, fotos, ...sebo } = data;
 
     return prismaClient.$transaction(async(tx) => {
       const contaCriada = await contaRepository.create(tx, conta, TipoConta.SEBO);
@@ -36,7 +36,7 @@ class SeboRepository {
   }
 
   async update(id: number, data: SeboUpdateDTO) {
-    const { endereco, fotos, ...sebo } = data;
+    const { conta, endereco, fotos, ...sebo } = data;
 
     return prismaClient.$transaction(async(tx) => {
       await Promise.all([

@@ -1,11 +1,11 @@
 import { z } from "zod";
 
-import { contaSchema } from "./ContaSchema";
+import { ContaCreateSchema, ContaResponseSchema } from "./ContaSchema";
 
 const requiredString = z.string().nonempty();
 const optionalString = z.string().nullable().optional();
 
-const enderecoSchema = z.object({
+const EnderecoSeboSchema = z.object({
   cep: z.string().length(8),
   estado: z.string().length(2),
   cidade: requiredString,
@@ -16,11 +16,11 @@ const enderecoSchema = z.object({
   ehPublico: z.boolean(),
 });
 
-const fotoSchema = z.object({
+const FotoSeboSchema = z.object({
   url: z.string().url(),
 });
 
-const seboSchema = z.object({
+export const SeboCreateSchema = z.object({
   nome: requiredString,
   cpfCnpj: z.string().min(11).max(16),
   concordaVender: z.boolean(),
@@ -32,13 +32,17 @@ const seboSchema = z.object({
   historia: optionalString,
   fotoPerfil: optionalString,
 
-  conta: contaSchema,
-  endereco: enderecoSchema,
-  fotos: z.array(fotoSchema).nullable().optional(),
+  conta: ContaCreateSchema,
+  endereco: EnderecoSeboSchema,
+  fotos: z.array(FotoSeboSchema).nullable().optional(),
 });
 
-export const seboCreateSchema = seboSchema.omit({ fotos: true });
-export const seboUpdateSchema = seboSchema.omit({ conta: true });
+export const SeboResponseSchema = SeboCreateSchema.extend({
+  id: z.number(),
+  conta: ContaResponseSchema.nullable().optional(),
+});
 
-export type SeboCreateDTO = z.infer<typeof seboCreateSchema>;
-export type SeboUpdateDTO = z.infer<typeof seboUpdateSchema>;
+export const SeboUpdateSchema = SeboResponseSchema;
+
+export type SeboCreateDTO = z.infer<typeof SeboCreateSchema>;
+export type SeboUpdateDTO = z.infer<typeof SeboUpdateSchema>;

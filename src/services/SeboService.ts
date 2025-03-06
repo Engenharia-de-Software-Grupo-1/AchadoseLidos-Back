@@ -1,4 +1,4 @@
-import { SeboCreateDTO, seboCreateSchema, SeboUpdateDTO, seboUpdateSchema } from "@src/models/SeboSchema";
+import { SeboCreateDTO, SeboCreateSchema, SeboResponseSchema, SeboUpdateDTO, SeboUpdateSchema } from "@src/models/SeboSchema";
 import { seboRepository } from "@src/repositories/SeboRepository";
 import { EntityNotFoundError } from "@src/errors/EntityNotFoundError";
 
@@ -7,27 +7,32 @@ import { contaService } from "./ContaService";
 class SeboService {
 
   async create(data: SeboCreateDTO) {
-    const parsedData = seboCreateSchema.parse(data);
+    const parsedData = SeboCreateSchema.parse(data);
     await contaService.validarEmail(parsedData.conta.email);
-    return seboRepository.create(data);;
+
+    const result = await seboRepository.create(parsedData);
+    return SeboResponseSchema.parseAsync(result);
   }
 
   async getAll() {
-    return seboRepository.getAll();
+    const result = await seboRepository.getAll();
+    return await SeboResponseSchema.array().parseAsync(result);
   }
 
   async getById(id: number) {
-    const sebo = await seboRepository.getById(id);
-    if (!sebo) {
+    const result = await seboRepository.getById(id);
+    if (!result) {
       throw new EntityNotFoundError(id);
     }
-    return sebo;
+    return SeboResponseSchema.parseAsync(result);
   }
 
   async update(id: number, data: SeboUpdateDTO) {
-    const parsedData = seboUpdateSchema.parse(data);
+    const parsedData = SeboUpdateSchema.parse(data);
     await this.getById(id);
-    return seboRepository.update(id, parsedData);
+
+    const result = await seboRepository.update(id, parsedData);
+    return SeboResponseSchema.parseAsync(result);
   }
 }
 

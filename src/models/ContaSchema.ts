@@ -1,8 +1,20 @@
 import { z } from "zod";
 
-export const contaSchema = z.object({
+const TipoContaEnum = z.enum(["SEBO", "USUARIO"]);
+const StatusContaEnum = z.enum(["ATIVA", "EXCLUIDA"]);
+
+export const ContaCreateSchema = z.object({
   email: z.string().email(),
   senha: z.string().min(8),
 });
 
-export type ContaCreateDTO = z.infer<typeof contaSchema>;
+export const ContaResponseSchema = z.object({
+  id: z.number(),
+  email: z.string(),
+  tipo: TipoContaEnum,
+  status: StatusContaEnum,
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+
+export type ContaCreateDTO = z.infer<typeof ContaCreateSchema>;
