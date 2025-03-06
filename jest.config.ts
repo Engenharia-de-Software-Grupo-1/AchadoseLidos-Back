@@ -18,5 +18,5 @@ export default {
     "^.+\\.tsx?$": "ts-jest",
   },
   transformIgnorePatterns: ["<rootDir>/node_modules/"],
-  setupFilesAfterEnv: ["<rootDir>/singleton.ts"],
+  setupFilesAfterEnv: ["<rootDir>/src/lib/singleton.ts"],
 };

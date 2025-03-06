@@ -1,5 +1,5 @@
 import { TipoConta, Prisma, StatusConta } from "@prisma/client";
-import { prismaClient } from "@src/lib/prismaClient";
+import prismaClient from "@src/lib/prismaClient";
 import { ContaCreateDTO } from "@src/models/ContaSchema";
 import { genSalt, hash } from "bcrypt";
 

@@ -1,16 +1,19 @@
-import { prismaClient } from "@src/lib/prismaClient";
+import prismaClient from "@src/lib/prismaClient";
 import { TipoConta } from "@prisma/client";
 import { SeboCreateDTO, SeboUpdateDTO } from "@src/models/SeboSchema";
 
 import { contaRepository } from "./ContaRepository";
 
 class SeboRepository {
-
   async create(data: SeboCreateDTO) {
     const { conta, endereco, fotos, ...sebo } = data;
 
-    return prismaClient.$transaction(async(tx) => {
-      const contaCriada = await contaRepository.create(tx, conta, TipoConta.SEBO);
+    return prismaClient.$transaction(async (tx) => {
+      const contaCriada = await contaRepository.create(
+        tx,
+        conta,
+        TipoConta.SEBO,
+      );
       const seboCriado = await tx.sebo.create({
         data: { ...sebo, conta: { connect: { id: contaCriada.id } } },
       });
@@ -38,7 +41,7 @@ class SeboRepository {
   async update(id: number, data: SeboUpdateDTO) {
     const { conta, endereco, fotos, ...sebo } = data;
 
-    return prismaClient.$transaction(async(tx) => {
+    return prismaClient.$transaction(async (tx) => {
       await Promise.all([
         tx.sebo.update({ where: { id }, data: sebo }),
         tx.enderecoSebo.update({ where: { seboId: id }, data: endereco }),
