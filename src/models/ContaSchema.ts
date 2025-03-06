@@ -13,8 +13,8 @@ export const ContaResponseSchema = z.object({
   email: z.string(),
   tipo: TipoContaEnum,
   status: StatusContaEnum,
-  createdAt: z.string(),
-  updatedAt: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 
 export type ContaCreateDTO = z.infer<typeof ContaCreateSchema>;
