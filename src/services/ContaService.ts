@@ -4,7 +4,6 @@ import { EntityNotFoundError } from "@src/errors/EntityNotFoundError";
 import { contaRepository } from "@src/repositories/ContaRepository";
 
 class ContaService {
-
   async validarEmail(email: string) {
     const emailJaExiste = await contaRepository.getByEmail(email);
     if (emailJaExiste) {
@@ -21,4 +20,4 @@ class ContaService {
   }
 }
 
-export const contaService =  new ContaService();
+export const contaService = new ContaService();
