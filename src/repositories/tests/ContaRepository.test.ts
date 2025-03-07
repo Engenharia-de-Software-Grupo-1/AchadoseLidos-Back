@@ -23,10 +23,6 @@ jest.mock("bcrypt", () => ({
 describe("ContaRepository", () => {
   const tx = prismaMock;
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it("creates a new account with hashed password", async() => {
     const data = { email: "test@example.com", senha: "password123" };
     const tipo = TipoConta.SEBO;
