@@ -6,7 +6,7 @@ import { contaService } from "../ContaService";
 jest.mock("@src/repositories/ContaRepository");
 
 describe("ContaService", () => {
-  it("should throw an error if email already exists", async () => {
+  it("should throw an error if email already exists", async() => {
     const fixedDate = new Date("2025-03-07");
     (contaRepository.getByEmail as jest.Mock).mockResolvedValue({
       email: "test@example.com",
@@ -23,7 +23,7 @@ describe("ContaService", () => {
     );
   });
 
-  it("should not throw an error if email does not exist", async () => {
+  it("should not throw an error if email does not exist", async() => {
     (contaRepository.getByEmail as jest.Mock).mockResolvedValue(false);
 
     await expect(
@@ -31,7 +31,7 @@ describe("ContaService", () => {
     ).resolves.not.toThrow();
   });
 
-  it("should throw an error if account does not exist", async () => {
+  it("should throw an error if account does not exist", async() => {
     (contaRepository.getById as jest.Mock).mockResolvedValue(null);
 
     await expect(contaService.delete(1)).rejects.toEqual({
@@ -40,7 +40,7 @@ describe("ContaService", () => {
     });
   });
 
-  it("should update account status to EXCLUIDA if account exists", async () => {
+  it("should update account status to EXCLUIDA if account exists", async() => {
     (contaRepository.getById as jest.Mock).mockResolvedValue({ id: 1 });
     (contaRepository.atualizarStatus as jest.Mock).mockResolvedValue(true);
 
