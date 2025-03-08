@@ -15,13 +15,13 @@ jest.mock('@src/controllers/ContaController', () => ({
 }));
 
 describe('Conta Routes', () => {
-  it('validates email', async() => {
+  it('validates email', async () => {
     const response = await request(app).get('/conta/validar_email');
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ message: 'mensagem de email validado' });
   });
 
-  it('deletes conta by id', async() => {
+  it('deletes conta by id', async () => {
     const response = await request(app).delete('/conta/1');
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ message: 'mensagem de conta deletada' });

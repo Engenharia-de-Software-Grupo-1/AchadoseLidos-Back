@@ -6,7 +6,7 @@ import { seboController } from '../SeboController';
 jest.mock('@src/services/SeboService');
 
 describe('SeboController', () => {
-  it('returns 201 and the created entity when create is successful', async() => {
+  it('returns 201 and the created entity when create is successful', async () => {
     const req = {
       body: {},
     } as unknown as Request;
@@ -26,7 +26,7 @@ describe('SeboController', () => {
     expect(res.json).toHaveBeenCalledWith(mockResult);
   });
 
-  it('returns 200 and all entities when getAll is successful', async() => {
+  it('returns 200 and all entities when getAll is successful', async () => {
     const req = {} as Request;
 
     const res = {
@@ -45,7 +45,7 @@ describe('SeboController', () => {
     expect(res.json).toHaveBeenCalledWith(mockResult);
   });
 
-  it('returns 200 and the entity when getById is successful', async() => {
+  it('returns 200 and the entity when getById is successful', async () => {
     const req = {
       params: {
         id: '1',
@@ -67,7 +67,7 @@ describe('SeboController', () => {
     expect(res.json).toHaveBeenCalledWith(mockResult);
   });
 
-  it('returns 200 and the updated entity when update is successful', async() => {
+  it('returns 200 and the updated entity when update is successful', async () => {
     const req = {
       params: {
         id: '1',

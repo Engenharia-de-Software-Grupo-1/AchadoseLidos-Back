@@ -25,7 +25,14 @@ export default [
       'comma-dangle': ['error', 'always-multiline'],
       'no-trailing-spaces': 'error',
       'eol-last': ['error', 'always'],
-      'space-before-function-paren': ['error', 'never'],
+      'space-before-function-paren': [
+        'error',
+        {
+          anonymous: 'never',
+          named: 'never',
+          asyncArrow: 'always',
+        },
+      ],
       'arrow-spacing': ['error', { before: true, after: true }],
 
       'import/order': [

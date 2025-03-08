@@ -14,7 +14,7 @@ jest.mock('../ContaRepository', () => ({
 }));
 
 describe('SeboRepository', () => {
-  it('creates a new sebo', async() => {
+  it('creates a new sebo', async () => {
     const data: SeboCreateDTO = {
       nome: 'Example Name',
       cpfCnpj: '123.456.789-00',
@@ -58,7 +58,7 @@ describe('SeboRepository', () => {
     expect(contaRepository.create).toHaveBeenCalledWith(expect.anything(), data.conta, TipoConta.SEBO);
   });
 
-  it('returns all sebos', async() => {
+  it('returns all sebos', async () => {
     const sebos = [
       {
         id: 1,
@@ -84,7 +84,7 @@ describe('SeboRepository', () => {
     });
   });
 
-  it('returns a sebo by id', async() => {
+  it('returns a sebo by id', async () => {
     const sebo = {
       id: 1,
       endereco: {
@@ -110,7 +110,7 @@ describe('SeboRepository', () => {
     });
   });
 
-  it('updates a sebo by id', async() => {
+  it('updates a sebo by id', async () => {
     const seboId = 1;
     const sebo: SeboUpdateDTO = {
       id: seboId,

@@ -15,7 +15,7 @@ describe('Sebo Routes', () => {
     jest.clearAllMocks();
   });
 
-  it('creates a new sebo entry', async() => {
+  it('creates a new sebo entry', async () => {
     (seboController.create as jest.Mock).mockImplementationOnce((req, res) => {
       res.status(201).send({ message: 'mensagem teste para criação' });
     });
@@ -27,7 +27,7 @@ describe('Sebo Routes', () => {
     expect(seboController.create).toHaveBeenCalledTimes(1);
   });
 
-  it('gets all sebo entries', async() => {
+  it('gets all sebo entries', async () => {
     (seboController.getAll as jest.Mock).mockImplementationOnce((req, res) => {
       res.status(200).send([{ id: 1, name: 'sebo teste 1' }]);
     });
@@ -39,7 +39,7 @@ describe('Sebo Routes', () => {
     expect(seboController.getAll).toHaveBeenCalledTimes(1);
   });
 
-  it('gets a sebo entry by id', async() => {
+  it('gets a sebo entry by id', async () => {
     (seboController.getById as jest.Mock).mockImplementationOnce((req, res) => {
       res.status(200).send({ id: 1, name: 'sebo teste 2' });
     });
@@ -51,7 +51,7 @@ describe('Sebo Routes', () => {
     expect(seboController.getById).toHaveBeenCalledTimes(1);
   });
 
-  it('updates a sebo entry by id', async() => {
+  it('updates a sebo entry by id', async () => {
     (seboController.update as jest.Mock).mockImplementationOnce((req, res) => {
       res.status(200).send({ message: 'mensagem teste para atualização' });
     });

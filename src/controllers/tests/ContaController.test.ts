@@ -6,7 +6,7 @@ import { contaController } from '../ContaController';
 jest.mock('@src/services/ContaService');
 
 describe('ContaController', () => {
-  it('returns 200 and a success message if email is valid', async() => {
+  it('returns 200 and a success message if email is valid', async () => {
     const req = {
       query: {
         email: 'test@example.com',
@@ -27,7 +27,7 @@ describe('ContaController', () => {
     expect(res.json).toHaveBeenCalledWith({ mensagem: 'E-mail disponível' });
   });
 
-  it('returns 204 if the account is successfully deleted', async() => {
+  it('returns 204 if the account is successfully deleted', async () => {
     const req = {
       params: {
         id: '1',
