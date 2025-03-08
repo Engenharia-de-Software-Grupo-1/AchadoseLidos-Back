@@ -1,5 +1,5 @@
 import prismaClient from '@src/lib/prismaClient';
-import { TipoConta } from '@prisma/client';
+import { StatusConta, TipoConta } from '@prisma/client';
 import { SeboCreateDTO, SeboUpdateDTO } from '@src/models/SeboSchema';
 
 import { contaRepository } from './ContaRepository';
@@ -23,6 +23,11 @@ class SeboRepository {
 
   async getAll() {
     return prismaClient.sebo.findMany({
+      where: {
+        conta: {
+          status: StatusConta.ATIVA,
+        },
+      },
       include: { endereco: true },
     });
   }
