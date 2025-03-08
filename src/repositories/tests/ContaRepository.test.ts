@@ -65,12 +65,15 @@ describe('ContaRepository', () => {
 
   it('retrieves an account by email', async () => {
     const mockAccount = { id: 1, email: 'test@example.com' };
-    (prismaClient.conta.findUnique as jest.Mock).mockResolvedValue(mockAccount);
+    (prismaClient.conta.findFirst as jest.Mock).mockResolvedValue(mockAccount);
 
     const result = await contaRepository.getByEmail('test@example.com');
 
-    expect(prismaClient.conta.findUnique).toHaveBeenCalledWith({
-      where: { email: 'test@example.com' },
+    expect(prismaClient.conta.findFirst).toHaveBeenCalledWith({
+      where: {
+        email: 'test@example.com',
+        status: StatusConta.ATIVA,
+      },
     });
     expect(result).toEqual(mockAccount);
   });

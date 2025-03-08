@@ -1,5 +1,5 @@
 import prismaClient from '@src/lib/prismaClient';
-import { TipoConta } from '@prisma/client';
+import { StatusConta, TipoConta } from '@prisma/client';
 import { SeboCreateDTO, SeboUpdateDTO } from '@src/models/SeboSchema';
 
 import { seboRepository } from '../SeboRepository';
@@ -80,6 +80,11 @@ describe('SeboRepository', () => {
 
     expect(result).toEqual(sebos);
     expect(prismaClient.sebo.findMany).toHaveBeenCalledWith({
+      where: {
+        conta: {
+          status: StatusConta.ATIVA,
+        },
+      },
       include: { endereco: true },
     });
   });
@@ -106,7 +111,7 @@ describe('SeboRepository', () => {
     expect(result).toEqual(sebo);
     expect(prismaClient.sebo.findUnique).toHaveBeenCalledWith({
       where: { id: 1 },
-      include: { endereco: true, fotos: true },
+      include: { conta: true, endereco: true, fotos: true },
     });
   });
 
@@ -146,7 +151,7 @@ describe('SeboRepository', () => {
     expect(prismaClient.$transaction).toHaveBeenCalled();
     expect(prismaClient.sebo.findUnique).toHaveBeenCalledWith({
       where: { id: 1 },
-      include: { endereco: true, fotos: true },
+      include: { conta: true, endereco: true, fotos: true },
     });
   });
 });
