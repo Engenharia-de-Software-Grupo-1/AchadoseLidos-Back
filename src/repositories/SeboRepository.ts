@@ -55,7 +55,10 @@ class SeboRepository {
         });
       }
 
-      return this.getById(id);
+      return tx.sebo.findUnique({
+        where: { id },
+        include: { conta: true, endereco: true, fotos: true },
+      });
     });
   }
 }
