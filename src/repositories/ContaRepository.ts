@@ -25,7 +25,7 @@ class ContaRepository {
   }
 
   async getByEmail(email: string) {
-    return await prismaClient.conta.findUnique({
+    return await prismaClient.conta.findFirst({
       where: {
         email: email,
         status: StatusConta.ATIVA,
