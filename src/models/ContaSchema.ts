@@ -10,7 +10,6 @@ export const ContaCreateSchema = z.object({
 
 export const ContaResponseSchema = z.object({
   id: z.number(),
-  email: z.string(),
   tipo: TipoContaEnum,
   status: StatusContaEnum,
 });
