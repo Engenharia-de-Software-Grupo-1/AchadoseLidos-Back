@@ -1,7 +1,7 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-const TipoContaEnum = z.enum(["SEBO", "USUARIO"]);
-const StatusContaEnum = z.enum(["ATIVA", "EXCLUIDA"]);
+const TipoContaEnum = z.enum(['SEBO', 'USUARIO']);
+const StatusContaEnum = z.enum(['ATIVA', 'EXCLUIDA']);
 
 export const ContaCreateSchema = z.object({
   email: z.string().email(),

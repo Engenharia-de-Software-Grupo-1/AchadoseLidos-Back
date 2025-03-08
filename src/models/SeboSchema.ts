@@ -1,6 +1,6 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { ContaCreateSchema, ContaResponseSchema } from "./ContaSchema";
+import { ContaCreateSchema, ContaResponseSchema } from './ContaSchema';
 
 const requiredString = z.string().nonempty();
 const optionalString = z.string().nullable().optional();

@@ -1,13 +1,13 @@
-import { StatusConta } from "@prisma/client";
-import { AppError } from "@src/errors/AppError";
-import { EntityNotFoundError } from "@src/errors/EntityNotFoundError";
-import { contaRepository } from "@src/repositories/ContaRepository";
+import { StatusConta } from '@prisma/client';
+import { AppError } from '@src/errors/AppError';
+import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
+import { contaRepository } from '@src/repositories/ContaRepository';
 
 class ContaService {
   async validarEmail(email: string) {
     const emailJaExiste = await contaRepository.getByEmail(email);
     if (emailJaExiste) {
-      throw new AppError("Já existe um cadastro para este e-mail!", 409);
+      throw new AppError('Já existe um cadastro para este e-mail!', 409);
     }
   }
 

@@ -1,22 +1,22 @@
-import { resolve } from "path";
+import { resolve } from 'path';
 
 const root = resolve(__dirname);
 
 export default {
   rootDir: root,
-  displayName: "root-tests",
-  testMatch: ["<rootDir>/src/**/*.test.ts"],
-  testEnvironment: "node",
+  displayName: 'root-tests',
+  testMatch: ['<rootDir>/src/**/*.test.ts'],
+  testEnvironment: 'node',
   clearMocks: true,
-  preset: "ts-jest",
+  preset: 'ts-jest',
   moduleNameMapper: {
-    "@src/(.*)": "<rootDir>/src/$1",
-    "@test/(.*)": "<rootDir>/test/$1",
+    '@src/(.*)': '<rootDir>/src/$1',
+    '@test/(.*)': '<rootDir>/test/$1',
   },
-  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   transform: {
-    "^.+\\.tsx?$": "ts-jest",
+    '^.+\\.tsx?$': 'ts-jest',
   },
-  transformIgnorePatterns: ["<rootDir>/node_modules/"],
-  setupFilesAfterEnv: ["<rootDir>/src/lib/singleton.ts"],
+  transformIgnorePatterns: ['<rootDir>/node_modules/'],
+  setupFilesAfterEnv: ['<rootDir>/src/lib/singleton.ts'],
 };

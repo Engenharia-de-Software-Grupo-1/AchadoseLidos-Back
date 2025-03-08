@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
-import { seboService } from "@src/services/SeboService";
+import { Request, Response } from 'express';
+import { seboService } from '@src/services/SeboService';
 
-import { seboController } from "../SeboController";
+import { seboController } from '../SeboController';
 
-jest.mock("@src/services/SeboService");
+jest.mock('@src/services/SeboService');
 
-describe("SeboController", () => {
-  it("returns 201 and the created entity when create is successful", async() => {
+describe('SeboController', () => {
+  it('returns 201 and the created entity when create is successful', async() => {
     const req = {
       body: {},
     } as unknown as Request;
@@ -16,7 +16,7 @@ describe("SeboController", () => {
       json: jest.fn(),
     } as unknown as Response;
 
-    const mockResult = { someResultKey: "someResultValue" };
+    const mockResult = { someResultKey: 'someResultValue' };
     (seboService.create as jest.Mock).mockResolvedValueOnce(mockResult);
 
     await seboController.create(req, res);
@@ -26,7 +26,7 @@ describe("SeboController", () => {
     expect(res.json).toHaveBeenCalledWith(mockResult);
   });
 
-  it("returns 200 and all entities when getAll is successful", async() => {
+  it('returns 200 and all entities when getAll is successful', async() => {
     const req = {} as Request;
 
     const res = {
@@ -34,7 +34,7 @@ describe("SeboController", () => {
       json: jest.fn(),
     } as unknown as Response;
 
-    const mockResult = { someResultKey: "someResultValue" };
+    const mockResult = { someResultKey: 'someResultValue' };
 
     (seboService.getAll as jest.Mock).mockResolvedValueOnce(mockResult);
 
@@ -45,10 +45,10 @@ describe("SeboController", () => {
     expect(res.json).toHaveBeenCalledWith(mockResult);
   });
 
-  it("returns 200 and the entity when getById is successful", async() => {
+  it('returns 200 and the entity when getById is successful', async() => {
     const req = {
       params: {
-        id: "1",
+        id: '1',
       },
     } as unknown as Request;
 
@@ -57,7 +57,7 @@ describe("SeboController", () => {
       json: jest.fn(),
     } as unknown as Response;
 
-    const mockResult = { someResultKey: "someResultValue" };
+    const mockResult = { someResultKey: 'someResultValue' };
     (seboService.getById as jest.Mock).mockResolvedValueOnce(mockResult);
 
     await seboController.getById(req, res);
@@ -67,12 +67,12 @@ describe("SeboController", () => {
     expect(res.json).toHaveBeenCalledWith(mockResult);
   });
 
-  it("returns 200 and the updated entity when update is successful", async() => {
+  it('returns 200 and the updated entity when update is successful', async() => {
     const req = {
       params: {
-        id: "1",
+        id: '1',
       },
-      body: { someBodyKey: "someBodyValue" },
+      body: { someBodyKey: 'someBodyValue' },
     } as unknown as Request;
 
     const res = {
@@ -80,7 +80,7 @@ describe("SeboController", () => {
       json: jest.fn(),
     } as unknown as Response;
 
-    const mockResult = { someResultKey: "someResultValue" };
+    const mockResult = { someResultKey: 'someResultValue' };
     (seboService.update as jest.Mock).mockResolvedValueOnce(mockResult);
 
     await seboController.update(req, res);

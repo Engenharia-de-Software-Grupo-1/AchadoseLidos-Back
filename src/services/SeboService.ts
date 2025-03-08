@@ -1,11 +1,16 @@
-import { SeboCreateDTO, SeboCreateSchema, SeboResponseSchema, SeboUpdateDTO, SeboUpdateSchema } from "@src/models/SeboSchema";
-import { seboRepository } from "@src/repositories/SeboRepository";
-import { EntityNotFoundError } from "@src/errors/EntityNotFoundError";
+import {
+  SeboCreateDTO,
+  SeboCreateSchema,
+  SeboResponseSchema,
+  SeboUpdateDTO,
+  SeboUpdateSchema,
+} from '@src/models/SeboSchema';
+import { seboRepository } from '@src/repositories/SeboRepository';
+import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 
-import { contaService } from "./ContaService";
+import { contaService } from './ContaService';
 
 class SeboService {
-
   async create(data: SeboCreateDTO) {
     const parsedData = SeboCreateSchema.parse(data);
     await contaService.validarEmail(parsedData.conta.email);

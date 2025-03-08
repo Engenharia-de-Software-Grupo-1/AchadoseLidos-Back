@@ -30,7 +30,7 @@ The recommended Node.js version for this project is v22.14.0. Please use this ve
 
 ## 📂 Installation
 
-You must have Docker Desktop installed in your machine to run this project in local environment. You can see how to do it on your OS on [Docker Desktop](https://www.docker.com/)
+You'll need Docker Desktop installed in your machine to run this project in local environment. You can see how to do it on your OS on [Docker Desktop](https://www.docker.com/)
 
 Follow these steps to install and set up the project:
 
@@ -133,26 +133,20 @@ To auto-format code in VSCode, add the following to your `settings.json`:
 ```json
 {
   "editor.tabSize": 2,
-  "[prisma]": {
-    "editor.defaultFormatter": "Prisma.prisma"
-  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
-  "eslint.codeAction.showDocumentation": {
-    "enable": true
-  },
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit"
   },
-  "eslint.format.enable": true,
-  "eslint.options": {
-    "overrideConfigFile": "eslint.config.mjs"
+  "prettier.configPath": ".prettierrc",
+  "eslint.codeAction.showDocumentation": {
+    "enable": true
   },
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ]
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "eslint.useFlatConfig": true,
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  }
 }
 ```
 

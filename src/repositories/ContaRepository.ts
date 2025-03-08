@@ -1,14 +1,10 @@
-import { TipoConta, Prisma, StatusConta } from "@prisma/client";
-import prismaClient from "@src/lib/prismaClient";
-import { ContaCreateDTO } from "@src/models/ContaSchema";
-import { genSalt, hash } from "bcrypt";
+import { TipoConta, Prisma, StatusConta } from '@prisma/client';
+import prismaClient from '@src/lib/prismaClient';
+import { ContaCreateDTO } from '@src/models/ContaSchema';
+import { genSalt, hash } from 'bcrypt';
 
 class ContaRepository {
-  async create(
-    tx: Prisma.TransactionClient,
-    data: ContaCreateDTO,
-    tipo: TipoConta,
-  ) {
+  async create(tx: Prisma.TransactionClient, data: ContaCreateDTO, tipo: TipoConta) {
     const saltRounds = 10;
     const salt = await genSalt(saltRounds);
     const hashedPassword = await hash(data.senha, salt);
