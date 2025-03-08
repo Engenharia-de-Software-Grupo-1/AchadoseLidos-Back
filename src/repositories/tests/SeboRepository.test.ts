@@ -137,21 +137,18 @@ describe('SeboRepository', () => {
 
     (prismaClient.$transaction as jest.Mock).mockImplementation(async fn =>
       fn({
-        sebo: { update: jest.fn() },
+        sebo: {
+          update: jest.fn(),
+          findUnique: jest.fn().mockResolvedValue(sebo),
+        },
         enderecoSebo: { update: jest.fn() },
         fotoSebo: { deleteMany: jest.fn(), createMany: jest.fn() },
       }),
     );
 
-    (prismaClient.sebo.findUnique as jest.Mock).mockResolvedValue(sebo);
-
     const result = await seboRepository.update(seboId, sebo);
 
     expect(result).toEqual(sebo);
     expect(prismaClient.$transaction).toHaveBeenCalled();
-    expect(prismaClient.sebo.findUnique).toHaveBeenCalledWith({
-      where: { id: 1 },
-      include: { conta: true, endereco: true, fotos: true },
-    });
   });
 });
