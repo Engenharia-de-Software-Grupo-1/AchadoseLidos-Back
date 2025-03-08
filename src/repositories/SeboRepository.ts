@@ -35,7 +35,7 @@ class SeboRepository {
   async getById(id: number) {
     return prismaClient.sebo.findUnique({
       where: { id },
-      include: { endereco: true, fotos: true },
+      include: { conta: true, endereco: true, fotos: true },
     });
   }
 
