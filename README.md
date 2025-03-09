@@ -6,7 +6,6 @@ _Catálogo digital de sebos de Campina Grande_
 
 - [Introduction](https://github.com/Engenharia-de-Software-Grupo-1/AchadoseLidos-Back?tab=readme-ov-file#-introduction)
 - [Technologies](https://github.com/Engenharia-de-Software-Grupo-1/AchadoseLidos-Back?tab=readme-ov-file#%EF%B8%8F-technologies)
-- [Features](https://github.com/Engenharia-de-Software-Grupo-1/AchadoseLidos-Back?tab=readme-ov-file#-features)
 - [Installation](https://github.com/Engenharia-de-Software-Grupo-1/AchadoseLidos-Back?tab=readme-ov-file#-installation)
 - [Usage](https://github.com/Engenharia-de-Software-Grupo-1/AchadoseLidos-Back?tab=readme-ov-file#-usage)
 - [Testing](https://github.com/Engenharia-de-Software-Grupo-1/AchadoseLidos-Back?tab=readme-ov-file#-testing)
@@ -21,18 +20,13 @@ Achados e Lidos is a digital catalog for second-hand bookstores (aka sebos) in C
 The technologies used in this project are:
 
 - **Node.js** and **TypeScript** for functionalities development
+- **Express** as the web framework for building the API
 - **Jest** for testing
 - **Json Web Token** for authentication and authorization
 - **ESLint** for code linting and **Prettier** for code formatting
-- **Prisma** as the ORM, **Postgres** as the database, and **Docker** for containerization
+- **Prisma** as the ORM, **Postgres** as the database and **Docker** for containerization
 
 The recommended Node.js version for this project is v22.14.0. Please use this version when installing dependencies.
-
-## 💡 Features
-
-- Feature 1
-- Feature 2
-- Feature 3
 
 ## 📂 Installation
 
@@ -40,16 +34,23 @@ You'll need Docker Desktop installed in your machine to run this project in loca
 
 Follow these steps to install and set up the project:
 
-```bash
-# Clone the repository
-git clone https://github.com/Engenharia-de-Software-Grupo-1/AchadoseLidos-Back.git
+1. Clone the repository
 
-# Navigate to the project directory
-cd AchadoseLidos
+   ```bash
+   git clone https://github.com/Engenharia-de-Software-Grupo-1/AchadoseLidos-Back.git
+   ```
 
-# Install dependencies
-yarn install
-```
+2. Navigate to the project directory
+
+   ```bash
+   cd AchadoseLidos-Back
+   ```
+
+3. Install dependencies
+
+   ```bash
+   yarn
+   ```
 
 ## 👩‍💻 Usage
 
@@ -69,6 +70,12 @@ yarn install
    yarn prisma migrate dev
    ```
 
+5. You can run the following command to visualize the artifacts created:
+
+   ```bash
+   yarn prisma studio
+   ```
+
 ### Running the Project
 
 1. Ensure the Docker daemon is running. On Windows, you can start Docker Desktop from the Start menu.
@@ -85,16 +92,10 @@ yarn install
    docker start <container_id_or_name>
    ```
 
-4. Start the project:
+4. Run the project:
 
    ```bash
-   yarn start
-   ```
-
-5. Alternatively, to run the project with live-reload for development, use:
-
-   ```bash
-   yarn start:local
+   yarn dev
    ```
 
 ### Stopping the Docker Container
@@ -132,17 +133,20 @@ To auto-format code in VSCode, add the following to your `settings.json`:
 ```json
 {
   "editor.tabSize": 2,
-  "[prisma]": {
-    "editor.defaultFormatter": "Prisma.prisma"
-  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
-  "eslint.codeAction.showDocumentation": {
-    "enable": true
-  },
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit"
   },
-  "eslint.format.enable": true,
+  "prettier.configPath": ".prettierrc",
+  "eslint.codeAction.showDocumentation": {
+    "enable": true
+  },
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "eslint.useFlatConfig": true,
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  }
 }
 ```
 
