@@ -14,4 +14,7 @@ export const ContaResponseSchema = z.object({
   status: StatusContaEnum,
 });
 
+export const ContaUpdateSchema = ContaCreateSchema;
+
 export type ContaCreateDTO = z.infer<typeof ContaCreateSchema>;
+export type ContaUpdateDTO = z.infer<typeof ContaUpdateSchema>;
