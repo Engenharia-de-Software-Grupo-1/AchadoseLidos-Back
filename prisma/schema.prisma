@@ -42,6 +42,9 @@ model Sebo {
   curadores      String?
   historia       String?
   fotoPerfil     String?
+  mercadoLivre   String?
+  enjoei         String?
+  amazon         String?
 
   contaId Int   @unique
   conta   Conta @relation(fields: [contaId], references: [id])
@@ -77,7 +80,7 @@ model FotoSebo {
 model Usuario {
   id         Int     @id @default(autoincrement())
   nome       String
-  cpf        String  @db.VarChar(16)
+  cpf        String  @db.VarChar(11)
   telefone   String  @db.Char(11)
   biografia  String?
   twitter    String?
