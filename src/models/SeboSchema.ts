@@ -31,6 +31,9 @@ export const SeboCreateSchema = z.object({
   curadores: optionalString,
   historia: optionalString,
   fotoPerfil: optionalString,
+  mercadoLivre: optionalString,
+  enjoei: optionalString,
+  amazon: optionalString,
 
   conta: ContaCreateSchema,
   endereco: EnderecoSeboSchema,
