@@ -80,7 +80,7 @@ model FotoSebo {
 model Usuario {
   id         Int     @id @default(autoincrement())
   nome       String
-  cpf        String  @db.VarChar(11)
+  cpf        String  @db.Char(11)
   telefone   String  @db.Char(11)
   biografia  String?
   twitter    String?
