@@ -3,6 +3,7 @@ import { AppError } from '@src/errors/AppError';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import { ContaResponseSchema, ContaUpdateDTO, ContaUpdateSchema } from '@src/models/ContaSchema';
 import { contaRepository } from '@src/repositories/ContaRepository';
+import { sendEmail } from '@src/lib/mailer';
 
 class ContaService {
   async validarEmail(email: string) {
@@ -17,6 +18,8 @@ class ContaService {
     if (!emailAtivo) {
       throw new AppError('Não existe um cadastro para este e-mail', 409);
     }
+    const token = '123';
+    sendEmail(email, 'Recuperação de Senha', 'email-recuperar-senha.html', { token });
   }
 
   async atualizarSenha(data: ContaUpdateDTO) {
