@@ -19,7 +19,7 @@ class ContaService {
       throw new AppError('Não existe um cadastro para este e-mail', 409);
     }
     const token = '123';
-    sendEmail(email, 'Recuperação de Senha', 'email-recuperar-senha.html', { token });
+    await sendEmail(email, 'Recuperação de Senha', 'email-recuperar-senha.html', { token });
   }
 
   async atualizarSenha(data: ContaUpdateDTO) {

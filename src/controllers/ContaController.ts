@@ -11,7 +11,7 @@ class ContaController {
   async recuperarSenha(req: Request, res: Response) {
     const { email } = req.body;
     await contaService.recuperarSenha(email);
-    res.status(200).json({ mensagem: 'E-mail enviado!' });
+    res.status(200).json({ mensagem: 'E-mail enviado! Verifique sua caixa de Spam' });
   }
 
   async atualizarSenha(req: Request, res: Response) {

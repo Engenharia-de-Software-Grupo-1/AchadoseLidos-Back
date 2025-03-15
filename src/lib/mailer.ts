@@ -1,6 +1,8 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import fs from 'fs';
+import path from 'path';
+import { AppError } from '@src/errors/AppError';
 
 dotenv.config();
 
@@ -13,7 +15,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const loadTemplate = (template: string, replacements?: Record<string, string>) => {
-  let html = fs.readFileSync(`@src/templates/${template}`, 'utf8');
+  let html = fs.readFileSync(path.resolve(__dirname, '../templates', template), 'utf8');
   if (replacements) {
     Object.keys(replacements).forEach(key => {
       html = html.replace(new RegExp(`{{${key}}}`, 'g'), replacements[key]);
@@ -37,6 +39,7 @@ export const sendEmail = async (
       html,
     });
   } catch (error) {
-    console.error('Erro ao enviar e-mail: ', error);
+    console.error(error);
+    throw new AppError('Erro ao enviar e-mail. Verifique o endereço e tente novamente.', 500);
   }
 };
