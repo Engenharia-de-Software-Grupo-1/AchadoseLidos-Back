@@ -1,3 +1,4 @@
+import { env } from 'process';
 import { StatusConta } from '@prisma/client';
 import { AppError } from '@src/errors/AppError';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
@@ -18,8 +19,9 @@ class ContaService {
     if (!emailAtivo) {
       throw new AppError('Não existe um cadastro para este e-mail', 409);
     }
-    const token = '123';
-    await sendEmail(email, 'Recuperação de Senha', 'email-recuperar-senha.html', { token });
+    const token = '12345';
+    const resetLink = `${env.FRONTEND_URL}/recover/reset?token=${token}`;
+    await sendEmail(email, 'Recuperação de Senha', 'email-recuperar-senha.html', { resetLink });
   }
 
   async atualizarSenha(data: ContaUpdateDTO) {
