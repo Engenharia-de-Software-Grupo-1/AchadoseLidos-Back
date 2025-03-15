@@ -8,7 +8,9 @@ import {
 
 import { usuarioRepository } from '@src/repositories/UsuarioRepository';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
+
 import { contaService } from './ContaService';
+
 
 class UsuarioService {
   async create(data: UsuarioCreateDTO) {
