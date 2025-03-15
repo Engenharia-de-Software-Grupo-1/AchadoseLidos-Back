@@ -7,6 +7,7 @@ import {
 } from '@src/models/UsuarioSchema';
 
 import { usuarioRepository } from '@src/repositories/UsuarioRepository';
+
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 
 import { contaService } from './ContaService';

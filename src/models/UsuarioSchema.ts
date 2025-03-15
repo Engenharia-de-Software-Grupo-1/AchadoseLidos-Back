@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { ContaCreateSchema, ContaResponseSchema } from './ContaSchema';
 
 const requiredString = z.string().nonempty();
@@ -24,10 +25,7 @@ export const UsuarioResponseSchema = UsuarioCreateSchema.extend({
   conta: ContaResponseSchema.nullable().optional(),
 });
 
-export const UsuarioUpdateSchema = UsuarioCreateSchema.partial().extend({
-  id: z.number(),
-  conta: ContaResponseSchema.nullable().optional(),
-});
+export const UsuarioUpdateSchema = UsuarioResponseSchema;
 
 export type UsuarioCreateDTO = z.infer<typeof UsuarioCreateSchema>;
 export type UsuarioUpdateDTO = z.infer<typeof UsuarioUpdateSchema>;

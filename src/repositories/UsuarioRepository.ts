@@ -1,5 +1,6 @@
 import prismaClient from '@src/lib/prismaClient';
 import { StatusConta, TipoConta } from '@prisma/client';
+
 import { UsuarioCreateDTO, UsuarioUpdateDTO } from '@src/models/UsuarioSchema';
 
 import { contaRepository } from './ContaRepository';
@@ -14,7 +15,7 @@ class UsuarioRepository {
         data: { ...usuario, conta: { connect: { id: contaCriada.id } } },
       });
 
-      return { ...usuarioCriado, conta: contaCriada };
+      return usuarioCriado;
     });
   }
 
@@ -25,7 +26,6 @@ class UsuarioRepository {
           status: StatusConta.ATIVA,
         },
       },
-      include: { conta: true },
     });
   }
 
@@ -37,15 +37,11 @@ class UsuarioRepository {
   }
 
   async update(id: number, data: UsuarioUpdateDTO) {
-    const { conta, ...usuario } = data;
+    const { conta: _conta, ...usuario } = data;
 
-    return prismaClient.$transaction(async tx => {
-      await tx.usuario.update({ where: { id }, data: usuario });
-      
-      return tx.usuario.findUnique({
-        where: { id },
-        include: { conta: true },
-      });
+    return prismaClient.usuario.update({
+      where: { id },
+      data: usuario,
     });
   }
 }
