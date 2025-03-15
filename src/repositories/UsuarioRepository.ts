@@ -1,6 +1,5 @@
 import prismaClient from '@src/lib/prismaClient';
 import { StatusConta, TipoConta } from '@prisma/client';
-
 import { UsuarioCreateDTO, UsuarioUpdateDTO } from '@src/models/UsuarioSchema';
 
 import { contaRepository } from './ContaRepository';
