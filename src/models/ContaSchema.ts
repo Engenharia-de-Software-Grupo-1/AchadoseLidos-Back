@@ -14,7 +14,10 @@ export const ContaResponseSchema = z.object({
   status: StatusContaEnum,
 });
 
-export const ContaUpdateSchema = ContaCreateSchema;
+export const ContaUpdateSchema = z.object({
+  senha: z.string().min(8),
+  token: z.string(),
+});
 
 export type ContaCreateDTO = z.infer<typeof ContaCreateSchema>;
 export type ContaUpdateDTO = z.infer<typeof ContaUpdateSchema>;

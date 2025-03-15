@@ -18,13 +18,15 @@ enum StatusConta {
 }
 
 model Conta {
-  id        Int         @id @default(autoincrement())
-  email     String
-  senha     String
-  tipo      TipoConta
-  status    StatusConta @default(ATIVA)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  id                  Int         @id @default(autoincrement())
+  email               String
+  senha               String
+  tipo                TipoConta
+  status              StatusConta @default(ATIVA)
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+  resetToken          String?
+  resetTokenExpiresAt DateTime?
 
   sebo    Sebo?
   usuario Usuario?

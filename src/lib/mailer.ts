@@ -1,5 +1,4 @@
 import nodemailer from 'nodemailer';
-import { env } from 'process';
 import fs from 'fs';
 import path from 'path';
 import { AppError } from '@src/errors/AppError';
@@ -7,8 +6,8 @@ import { AppError } from '@src/errors/AppError';
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: env.EMAIL_USER,
-    pass: env.EMAIL_PASSWORD,
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD,
   },
 });
 

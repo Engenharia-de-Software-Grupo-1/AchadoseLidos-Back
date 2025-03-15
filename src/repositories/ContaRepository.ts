@@ -1,16 +1,15 @@
 import { TipoConta, Prisma, StatusConta } from '@prisma/client';
 import prismaClient from '@src/lib/prismaClient';
-import { ContaCreateDTO, ContaUpdateDTO } from '@src/models/ContaSchema';
-import { genSalt, hash } from 'bcrypt';
+import { ContaCreateDTO } from '@src/models/ContaSchema';
+import { gerarHashSenha } from '@src/utils/auth';
 
 class ContaRepository {
   async create(tx: Prisma.TransactionClient, data: ContaCreateDTO, tipo: TipoConta) {
-    const hashedPassword = await this.gerarHashSenha(data.senha);
-
+    const hashSenha = await gerarHashSenha(data.senha);
     return tx.conta.create({
       data: {
         email: data.email,
-        senha: hashedPassword,
+        senha: hashSenha,
         tipo: tipo,
       },
     });
@@ -31,13 +30,26 @@ class ContaRepository {
     });
   }
 
-  async atualizarSenha(data: ContaUpdateDTO) {
-    const conta = await this.getByEmail(data.email);
-    const hashedPassword = await this.gerarHashSenha(data.senha);
+  async salvarResetToken(email: string, token: string, expiresAt: Date) {
+    const conta = await this.getByEmail(email);
+    await prismaClient.conta.update({
+      where: { id: conta?.id },
+      data: {
+        resetToken: token,
+        resetTokenExpiresAt: expiresAt,
+      },
+    });
+  }
 
+  async atualizarSenha(email: string, senha: string) {
+    const conta = await this.getByEmail(email);
     return prismaClient.conta.update({
       where: { id: conta?.id },
-      data: { senha: hashedPassword },
+      data: {
+        senha,
+        resetToken: null,
+        resetTokenExpiresAt: null,
+      },
     });
   }
 
@@ -46,12 +58,6 @@ class ContaRepository {
       where: { id },
       data: { status },
     });
-  }
-
-  private async gerarHashSenha(senha: string) {
-    const saltRounds = 10;
-    const salt = await genSalt(saltRounds);
-    return hash(senha, salt);
   }
 }
 
