@@ -5,8 +5,25 @@ import { ContaResponseSchema, ContaUpdateDTO, ContaUpdateSchema } from '@src/mod
 import { contaRepository } from '@src/repositories/ContaRepository';
 import { sendEmail } from '@src/lib/mailer';
 import { gerarHashSenha, gerarResetToken } from '@src/utils/auth';
+import bcrypt from 'bcrypt';
+import { ErrorMessages } from '@src/utils/ErrorMessages';
 
 class ContaService {
+  async login(email: string, senha: string) {
+    const conta = await contaRepository.getByEmail(email);
+    if (!conta) {
+      throw new AppError(ErrorMessages.emailOuSenhaErrados, 401);
+    }
+
+    const senhaEhValida = await bcrypt.compare(senha, conta.senha);
+
+    if (!senhaEhValida) {
+      throw new AppError(ErrorMessages.emailOuSenhaErrados, 401);
+    }
+
+    return conta;
+  }
+
   async validarEmail(email: string) {
     const emailAtivo = await contaRepository.getByEmail(email);
     if (emailAtivo) {
