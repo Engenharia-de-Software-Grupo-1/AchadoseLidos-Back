@@ -21,10 +21,10 @@ class ContaService {
     }
 
     const { token, expiresAt } = gerarResetToken();
-    await contaRepository.salvarResetToken(email, token, expiresAt);
 
     const resetLink = `${process.env.FRONTEND_URL}/recover/reset?token=${token}`;
     await sendEmail(email, 'Recuperação de Senha', 'email-recuperar-senha.html', { resetLink });
+    await contaRepository.salvarResetToken(email, token, expiresAt);
   }
 
   async atualizarSenha(data: ContaUpdateDTO) {
