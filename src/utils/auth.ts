@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 import { AppError } from '@src/errors/AppError';
 
@@ -10,9 +11,7 @@ if (!JWT_SECRET) {
 }
 
 export const gerarToken = (email: string) => {
-  const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
-  const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: TOKEN_EXPIRATION });
-  return { token, expiresAt };
+  return jwt.sign({ email }, JWT_SECRET, { expiresIn: TOKEN_EXPIRATION });
 };
 
 export const verificarToken = (token: string) => {
@@ -25,6 +24,13 @@ export const verificarToken = (token: string) => {
     }
     throw new AppError('Token inválido', 400);
   }
+};
+
+export const gerarResetToken = () => {
+  const token = crypto.randomBytes(32).toString('hex');
+  const expiresAt = new Date();
+  expiresAt.setHours(expiresAt.getHours() + 1);
+  return { token, expiresAt };
 };
 
 export const gerarHashSenha = async (senha: string) => {

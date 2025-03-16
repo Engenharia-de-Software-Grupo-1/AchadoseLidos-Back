@@ -30,6 +30,14 @@ class ContaRepository {
     });
   }
 
+  async getByResetToken(token: string) {
+    return await prismaClient.conta.findFirst({
+      where: {
+        resetToken: token,
+      },
+    });
+  }
+
   async salvarResetToken(email: string, token: string, expiresAt: Date) {
     const conta = await this.getByEmail(email);
     await prismaClient.conta.update({
@@ -41,10 +49,9 @@ class ContaRepository {
     });
   }
 
-  async atualizarSenha(email: string, senha: string) {
-    const conta = await this.getByEmail(email);
+  async atualizarSenha(id: number, senha: string) {
     return prismaClient.conta.update({
-      where: { id: conta?.id },
+      where: { id },
       data: {
         senha,
         resetToken: null,

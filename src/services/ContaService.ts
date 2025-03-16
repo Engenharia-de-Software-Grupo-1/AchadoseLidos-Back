@@ -4,7 +4,7 @@ import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import { ContaResponseSchema, ContaUpdateDTO, ContaUpdateSchema } from '@src/models/ContaSchema';
 import { contaRepository } from '@src/repositories/ContaRepository';
 import { sendEmail } from '@src/lib/mailer';
-import { gerarHashSenha, gerarToken, verificarToken } from '@src/utils/auth';
+import { gerarHashSenha, gerarResetToken } from '@src/utils/auth';
 
 class ContaService {
   async validarEmail(email: string) {
@@ -17,10 +17,10 @@ class ContaService {
   async recuperarSenha(email: string) {
     const emailAtivo = await contaRepository.getByEmail(email);
     if (!emailAtivo) {
-      throw new AppError('Não existe um cadastro para este e-mail', 409);
+      throw new AppError('Não existe um cadastro para este e-mail', 404);
     }
 
-    const { token, expiresAt } = gerarToken(email);
+    const { token, expiresAt } = gerarResetToken();
     await contaRepository.salvarResetToken(email, token, expiresAt);
 
     const resetLink = `${process.env.FRONTEND_URL}/recover/reset?token=${token}`;
@@ -30,9 +30,16 @@ class ContaService {
   async atualizarSenha(data: ContaUpdateDTO) {
     const parsedData = ContaUpdateSchema.parse(data);
 
-    const email = verificarToken(parsedData.token);
+    const conta = await contaRepository.getByResetToken(parsedData.token);
+    if (!conta) {
+      throw new AppError('Token inválido', 400);
+    }
+    if (conta.resetTokenExpiresAt && conta.resetTokenExpiresAt < new Date()) {
+      throw new AppError('Token expirado', 401);
+    }
+
     const hashSenha = await gerarHashSenha(parsedData.senha);
-    const result = await contaRepository.atualizarSenha(email, hashSenha);
+    const result = await contaRepository.atualizarSenha(conta.id, hashSenha);
 
     return ContaResponseSchema.parseAsync(result);
   }
