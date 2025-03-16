@@ -12,7 +12,7 @@ seboRoutes.get('/', requireAuth, async (req, res) => {
   await seboController.getAll(req, res);
 });
 
-seboRoutes.get('/:id', async (req, res) => {
+seboRoutes.get('/:id', requireAuth, async (req, res) => {
   await seboController.getById(req, res);
 });
 
