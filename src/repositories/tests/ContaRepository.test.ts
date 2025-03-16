@@ -34,6 +34,8 @@ describe('ContaRepository', () => {
       status: StatusConta.ATIVA,
       createdAt: new Date(),
       updatedAt: new Date(),
+      resetToken: null,
+      resetTokenExpiresAt: null,
     };
     tx.conta.create.mockResolvedValue(mockResponse);
 

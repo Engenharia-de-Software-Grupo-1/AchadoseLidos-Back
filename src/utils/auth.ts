@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
-import bcrypt from 'bcrypt';
+import bcrypt, { genSalt } from 'bcrypt';
 import { AppError } from '@src/errors/AppError';
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -34,6 +34,6 @@ export const gerarResetToken = () => {
 };
 
 export const gerarHashSenha = async (senha: string) => {
-  const saltRounds = 10;
-  return await bcrypt.hash(senha, saltRounds);
+  const salt = await genSalt(10);
+  return await bcrypt.hash(senha, salt);
 };
