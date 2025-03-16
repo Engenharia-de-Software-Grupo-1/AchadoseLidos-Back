@@ -52,6 +52,10 @@ class ContaController {
     await contaService.delete(Number(id));
     res.status(204).send();
   }
+
+  async logout(_: Request, res: Response) {
+    await contaService.logout(res);
+  }
 }
 
 export const contaController = new ContaController();

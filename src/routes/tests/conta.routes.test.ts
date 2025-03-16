@@ -12,6 +12,7 @@ jest.mock('@src/controllers/ContaController', () => ({
     validarEmail: jest.fn((req, res) => res.status(200).send({ message: 'mensagem de email validado' })),
     delete: jest.fn((req, res) => res.status(200).send({ message: 'mensagem de conta deletada' })),
     login: jest.fn((req, res) => res.status(200).send({ message: 'mensagem de login' })),
+    logout: jest.fn((req, res) => res.status(200).send({ message: 'mensagem de logout' })),
   },
 }));
 
@@ -32,5 +33,11 @@ describe('Conta Routes', () => {
     const response = await request(app).delete('/conta/1');
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ message: 'mensagem de conta deletada' });
+  });
+
+  it('desloga', async () => {
+    const response = await request(app).post('/conta/logout');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ message: 'mensagem de logout' });
   });
 });

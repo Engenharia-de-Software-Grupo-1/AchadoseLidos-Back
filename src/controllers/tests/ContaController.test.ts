@@ -135,4 +135,25 @@ describe('ContaController', () => {
     expect(res.status).toHaveBeenCalledWith(204);
     expect(res.send).toHaveBeenCalled();
   });
+
+  it('clears the authToken cookie and send a 200 status', async () => {
+    const req = {} as unknown as Request;
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+      cookie: jest.fn(),
+    } as unknown as Response;
+
+    (contaService.logout as jest.Mock).mockImplementation((res: Response) => {
+      res.cookie('authToken', '', { maxAge: 1 });
+      res.status(200).send();
+    });
+
+    await contaController.logout(req, res);
+
+    expect(res.cookie).toHaveBeenCalledWith('authToken', '', { maxAge: 1 });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalled();
+  });
 });
