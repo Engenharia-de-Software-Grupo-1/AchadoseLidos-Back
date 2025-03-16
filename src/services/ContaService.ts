@@ -7,6 +7,7 @@ import { sendEmail } from '@src/lib/mailer';
 import { gerarHashSenha, gerarResetToken } from '@src/utils/auth';
 import bcrypt from 'bcrypt';
 import { ErrorMessages } from '@src/utils/ErrorMessages';
+import { Response } from 'express';
 
 class ContaService {
   async login(email: string, senha: string) {
@@ -67,6 +68,11 @@ class ContaService {
       throw new EntityNotFoundError(id);
     }
     await contaRepository.atualizarStatus(id, StatusConta.EXCLUIDA);
+  }
+
+  async logout(res: Response) {
+    res.cookie('authToken', '', { maxAge: 1 });
+    res.status(200).send();
   }
 }
 
