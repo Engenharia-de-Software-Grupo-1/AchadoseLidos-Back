@@ -1,7 +1,35 @@
 import { Request, Response } from 'express';
 import { contaService } from '@src/services/ContaService';
+import { cookieExpirationTimeInMilliseconds, criaAccessToken } from '@src/utils/auth';
+import { AppError } from '@src/errors/AppError';
+import { ErrorMessages } from '@src/utils/ErrorMessages';
 
 class ContaController {
+  async login(req: Request, res: Response) {
+    const { email, senha } = req.body;
+
+    try {
+      const conta = await contaService.login(email, senha);
+
+      const token = criaAccessToken(conta);
+
+      res.cookie('authToken', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // quando deployar, temos que garantir que node_env tenha o valor de 'production'
+        maxAge: cookieExpirationTimeInMilliseconds,
+      });
+      res.status(200).send();
+    } catch (err) {
+      const isAppError = err instanceof AppError;
+
+      if (isAppError) {
+        res.status(400).json(err.message);
+      }
+
+      res.status(500).json(ErrorMessages.serverError);
+    }
+  }
+
   async validarEmail(req: Request, res: Response) {
     const email = req.query.email as string;
     await contaService.validarEmail(email);
