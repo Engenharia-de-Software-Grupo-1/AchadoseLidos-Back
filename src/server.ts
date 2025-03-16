@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import './config/module-alias';
 import 'express-async-errors';
 import cors from 'cors';
