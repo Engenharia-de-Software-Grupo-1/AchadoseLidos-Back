@@ -95,11 +95,16 @@ model Usuario {
   conta   Conta @relation(fields: [contaId], references: [id])
 }
 
+enum StatusProduto {
+  ATIVO
+  EXCLUIDO
+}
+
 model Produto {
   id                Int           @id @default(autoincrement())
   nome              String
   preco             Float
-  status            String
+  status            StatusProduto @default(ATIVO)
   categoria         String
   qtdEstoque        Int
   estadoConservacao String

@@ -23,6 +23,12 @@ class ProdutoController {
     const result = await produtoService.update(Number(id), req.body);
     res.status(200).json(result);
   }
+
+  async delete(req: Request, res: Response) {
+    const { id } = req.params;
+    await produtoService.delete(Number(id));
+    res.status(204).send();
+  }
 }
 
 export const produtoController = new ProdutoController();

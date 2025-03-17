@@ -1,9 +1,12 @@
+-- CreateEnum
+CREATE TYPE "StatusProduto" AS ENUM ('ATIVO', 'EXCLUIDO');
+
 -- CreateTable
 CREATE TABLE "Produto" (
     "id" SERIAL NOT NULL,
     "nome" TEXT NOT NULL,
     "preco" DOUBLE PRECISION NOT NULL,
-    "status" TEXT NOT NULL,
+    "status" "StatusProduto" NOT NULL DEFAULT 'ATIVO',
     "categoria" TEXT NOT NULL,
     "qtdEstoque" INTEGER NOT NULL,
     "estadoConservacao" TEXT NOT NULL,

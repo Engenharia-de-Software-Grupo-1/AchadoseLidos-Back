@@ -59,6 +59,13 @@ class ProdutoRepository {
       });
     });
   }
+
+  async atualizarStatus(id: number, status: StatusProduto) {
+    return prismaClient.produto.update({
+      where: { id },
+      data: { status },
+    });
+  }
 }
 
 export const produtoRepository = new ProdutoRepository();

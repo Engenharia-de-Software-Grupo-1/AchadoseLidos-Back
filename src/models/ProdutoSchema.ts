@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 const requiredString = z.string().nonempty();
 const optionalString = z.string().nullable().optional();
+const StatusProdutoEnum = z.enum(['ATIVO', 'EXCLUIDO']);
 
 const ProdutoFotoSchema = z.object({
   url: z.string().url(),
@@ -9,7 +10,7 @@ const ProdutoFotoSchema = z.object({
 
 export const ProdutoCreateSchema = z.object({
   seboId: z.number().int().positive(),
-  status: z.enum(['ATIVO', 'EXCLUIDO']),
+  status: StatusProdutoEnum,
   nome: requiredString.max(255),
   preco: z.number().nonnegative(),
   categoria: z.enum(['GIBI', 'REVISTA', 'DVD']),
