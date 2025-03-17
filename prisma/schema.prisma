@@ -94,3 +94,28 @@ model Usuario {
   contaId Int   @unique
   conta   Conta @relation(fields: [contaId], references: [id])
 }
+
+model Produto {
+  id                Int           @id @default(autoincrement())
+  nome              String
+  preco             Float
+  status            String
+  categoria         String
+  qtdEstoque        Int
+  estadoConservacao String
+  anoEdicao         Int
+  anoLancamento     Int
+  autores           String?
+  descricao         String?
+  seboId            Int
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  produtoFotos      ProdutoFoto[] @relation("ProdutoFotos")
+}
+
+model ProdutoFoto {
+  id        Int     @id @default(autoincrement())
+  url       String
+  produtoId Int
+  produto   Produto @relation("ProdutoFotos", fields: [produtoId], references: [id])
+}
