@@ -7,7 +7,8 @@ import { AppError } from '@src/errors/AppError';
 import { ErrorMessages } from './ErrorMessages';
 
 const cookieExpirationTimeInHours = 1;
-const cookieExpirationTimeInMilliseconds = cookieExpirationTimeInHours * 60 * 60 * 1000;
+const cookieExpirationTimeInSeconds = cookieExpirationTimeInHours * 60 * 60;
+const cookieExpirationTimeInMilliseconds = cookieExpirationTimeInSeconds * 1000;
 
 const gerarResetToken = () => {
   const token = crypto.randomBytes(32).toString('hex');
@@ -26,8 +27,8 @@ const criaAccessToken = (conta: Conta) => {
     throw new AppError(ErrorMessages.serverError, 500);
   }
 
-  const token = jwt.sign({ id: conta.id, email: conta.email }, process.env.JWT_SECRET, {
-    expiresIn: cookieExpirationTimeInHours,
+  const token = jwt.sign({ id: conta.id, email: conta.email, role: conta.tipo }, process.env.JWT_SECRET, {
+    expiresIn: cookieExpirationTimeInSeconds,
   });
 
   return `Bearer ${token}`;
