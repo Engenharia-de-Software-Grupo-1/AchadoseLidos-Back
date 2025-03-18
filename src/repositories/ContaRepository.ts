@@ -27,6 +27,10 @@ class ContaRepository {
         email: email,
         status: StatusConta.ATIVA,
       },
+      include: {
+        sebo: true,
+        usuario: true,
+      },
     });
   }
 

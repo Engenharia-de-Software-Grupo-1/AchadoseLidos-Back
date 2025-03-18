@@ -10,7 +10,6 @@ class ContaController {
 
     try {
       const conta = await contaService.login(email, senha);
-
       const token = criaAccessToken(conta);
 
       res.cookie('authToken', token, {
@@ -18,6 +17,7 @@ class ContaController {
         secure: process.env.NODE_ENV === 'production', // quando deployar, temos que garantir que node_env tenha o valor de 'production'
         maxAge: cookieExpirationTimeInMilliseconds,
       });
+
       res.status(200).send();
     } catch (err) {
       const isAppError = err instanceof AppError;
