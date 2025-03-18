@@ -13,13 +13,13 @@ class ContaService {
   async login(email: string, senha: string) {
     const conta = await contaRepository.getByEmail(email);
     if (!conta) {
-      throw new AppError(ErrorMessages.emailOuSenhaErrados, 401);
+      throw new AppError(ErrorMessages.wrongEmail, 401);
     }
 
     const senhaEhValida = await bcrypt.compare(senha, conta.senha);
 
     if (!senhaEhValida) {
-      throw new AppError(ErrorMessages.emailOuSenhaErrados, 401);
+      throw new AppError(ErrorMessages.wrongPassword, 401);
     }
 
     return conta;

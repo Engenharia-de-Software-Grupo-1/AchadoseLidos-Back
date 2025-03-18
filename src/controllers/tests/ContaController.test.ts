@@ -60,7 +60,7 @@ describe('ContaController', () => {
         json: jest.fn(),
       } as unknown as Response;
 
-      const mockError = new AppError(ErrorMessages.emailOuSenhaErrados, 401);
+      const mockError = new AppError(ErrorMessages.wrongEmail, 401);
 
       (contaService.login as jest.Mock).mockRejectedValueOnce(mockError);
 
@@ -68,7 +68,7 @@ describe('ContaController', () => {
 
       expect(contaService.login).toHaveBeenCalledWith('invalid@example.com', 'wrongpassword');
       expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith(ErrorMessages.emailOuSenhaErrados);
+      expect(res.json).toHaveBeenCalledWith(ErrorMessages.wrongEmail);
     });
 
     it('returns 500 if an unexpected error occurs', async () => {
