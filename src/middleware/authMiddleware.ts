@@ -109,7 +109,7 @@ const validaJWT = (token: string, next: NextFunction, res: Response) => {
       if (err) {
         throw new AppError(ErrorMessages.invalidToken, 401);
       } else {
-        res.locals.token = decryptedToken;
+        res.locals.decryptedToken = decryptedToken;
         next();
       }
     },
