@@ -3,7 +3,8 @@ import { z } from 'zod';
 const requiredString = z.string().nonempty();
 const optionalString = z.string().nullable().optional();
 const StatusProdutoEnum = z.enum(['ATIVO', 'EXCLUIDO']);
-
+const CategoriaProduto = z.enum(['LIVRO', 'DISCO', 'CD', 'DVD', 'REVISTA', 'GIBI']);
+const EstadoConservacaoProduto = z.enum(['NOVO', 'EXECELENTE', 'BOM', 'ACEITAVEL', 'RUIM']);
 const ProdutoFotoSchema = z.object({
   url: z.string().url(),
 });
@@ -11,11 +12,11 @@ const ProdutoFotoSchema = z.object({
 export const ProdutoCreateSchema = z.object({
   seboId: z.number().int().positive(),
   status: StatusProdutoEnum,
-  nome: requiredString.max(255),
+  nome: requiredString,
   preco: z.number().nonnegative(),
-  categoria: z.enum(['GIBI', 'REVISTA', 'DVD']),
+  categoria: CategoriaProduto,
   qtdEstoque: z.number().int().nonnegative(),
-  estadoConservacao: z.enum(['NOVO', 'EXECELENTE', 'BOM', 'ACEITAVEL', 'RUIM']),
+  estadoConservacao: EstadoConservacaoProduto,
   anoEdicao: z.number().int().min(1000).max(new Date().getFullYear()),
   anoLancamento: z.number().int().min(1000).max(new Date().getFullYear()),
   autores: optionalString,
@@ -26,10 +27,10 @@ export const ProdutoCreateSchema = z.object({
 export const ProdutoResponseSchema = ProdutoCreateSchema.extend({
   id: z.number().int().positive(),
   createdAt: z.date().or(z.string().datetime()),
-  updatedAt: z.date().or(z.string().datetime()).nullable().optional(),
+  updatedAt: z.date().or(z.string().datetime()),
 });
 
-export const ProdutoUpdateSchema = ProdutoResponseSchema.partial();
+export const ProdutoUpdateSchema = ProdutoResponseSchema;
 
 export type ProdutoCreateDTO = z.infer<typeof ProdutoCreateSchema>;
 export type ProdutoUpdateDTO = z.infer<typeof ProdutoUpdateSchema>;

@@ -100,27 +100,44 @@ enum StatusProduto {
   EXCLUIDO
 }
 
+enum CategoriaProduto {
+  LIVRO
+  DISCO
+  CD
+  DVD
+  REVISTA
+  GIBI
+}
+
+enum EstadoConservacaoProduto {
+  NOVO
+  EXECELENTE
+  BOM
+  ACEITAVEL
+  RUIM
+}
+
 model Produto {
-  id                Int           @id @default(autoincrement())
+  id                Int                      @id @default(autoincrement())
   nome              String
   preco             Float
-  status            StatusProduto @default(ATIVO)
-  categoria         String
+  status            StatusProduto            @default(ATIVO)
+  categoria         CategoriaProduto
   qtdEstoque        Int
-  estadoConservacao String
+  estadoConservacao EstadoConservacaoProduto
   anoEdicao         Int
   anoLancamento     Int
   autores           String?
   descricao         String?
   seboId            Int
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
-  produtoFotos      ProdutoFoto[] @relation("ProdutoFotos")
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  fotos             FotoProduto[]            @relation("ProdutoFotos")
 }
 
-model ProdutoFoto {
+model FotoProduto {
   id        Int     @id @default(autoincrement())
   url       String
   produtoId Int
-  produto   Produto @relation("ProdutoFotos", fields: [produtoId], references: [id])
+  produto   Produto @relation("ProdutoFotos", fields: [produtoId], references: [id], onDelete: Cascade)
 }

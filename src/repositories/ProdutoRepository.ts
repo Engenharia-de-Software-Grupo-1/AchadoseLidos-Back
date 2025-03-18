@@ -1,5 +1,6 @@
 import prismaClient from '@src/lib/prismaClient';
 import { ProdutoCreateDTO, ProdutoUpdateDTO } from '@src/models/ProdutoSchema';
+import { StatusProduto } from '@prisma/client';
 
 class ProdutoRepository {
   async create(data: ProdutoCreateDTO) {
@@ -9,7 +10,6 @@ class ProdutoRepository {
       const produtoCriado = await tx.produto.create({
         data: {
           ...produto,
-          status: 'ATIVO',
         },
       });
 
@@ -28,7 +28,7 @@ class ProdutoRepository {
 
   async getAll() {
     return prismaClient.produto.findMany({
-      where: { status: 'ATIVO' },
+      where: { status: StatusProduto.ATIVO },
       include: { produtoFotos: true },
     });
   }
