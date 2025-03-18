@@ -76,6 +76,10 @@ describe('ContaRepository', () => {
         email: 'test@example.com',
         status: StatusConta.ATIVA,
       },
+      include: {
+        sebo: true,
+        usuario: true,
+      },
     });
     expect(result).toEqual(mockAccount);
   });

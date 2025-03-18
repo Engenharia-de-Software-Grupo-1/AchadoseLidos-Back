@@ -1,10 +1,15 @@
 import crypto from 'crypto';
 import bcrypt, { genSalt } from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { Conta } from '@prisma/client';
+import { Conta, Sebo, Usuario } from '@prisma/client';
 import { AppError } from '@src/errors/AppError';
 
 import { ErrorMessages } from './ErrorMessages';
+
+type ContaWithRelations = Conta & {
+  sebo?: Sebo | null;
+  usuario?: Usuario | null;
+};
 
 const cookieExpirationTimeInHours = 1;
 const cookieExpirationTimeInSeconds = cookieExpirationTimeInHours * 60 * 60;
@@ -22,14 +27,24 @@ const gerarHashSenha = async (senha: string) => {
   return await bcrypt.hash(senha, salt);
 };
 
-const criaAccessToken = (conta: Conta) => {
+const criaAccessToken = (conta: ContaWithRelations) => {
   if (!process.env.JWT_SECRET) {
     throw new AppError(ErrorMessages.serverError, 500);
   }
 
-  const token = jwt.sign({ id: conta.id, email: conta.email, role: conta.tipo }, process.env.JWT_SECRET, {
-    expiresIn: cookieExpirationTimeInSeconds,
-  });
+  let token: string = '';
+
+  if (conta.sebo) {
+    token = jwt.sign({ id: conta.sebo.id, email: conta.email, role: conta.tipo }, process.env.JWT_SECRET, {
+      expiresIn: cookieExpirationTimeInSeconds,
+    });
+  }
+
+  if (conta.usuario) {
+    token = jwt.sign({ id: conta.usuario.id, email: conta.email, role: conta.tipo }, process.env.JWT_SECRET, {
+      expiresIn: cookieExpirationTimeInSeconds,
+    });
+  }
 
   return `Bearer ${token}`;
 };
