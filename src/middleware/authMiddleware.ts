@@ -9,7 +9,7 @@ const requireAuth = (req: Request, res: Response, next: NextFunction) => {
 
   if (token) {
     try {
-      validaJWT(token, next);
+      validaJWT(token, next, res);
     } catch (e) {
       const isAppError = e instanceof AppError;
 
@@ -37,10 +37,11 @@ const ensureRole = (req: Request, res: Response, next: NextFunction, role: TipoC
 
   if (token) {
     try {
-      const tokenInfo = getTokenInfo(token);
+      const tokenInfo = getDecryptedToken(token);
       const userRole = getUserRole(tokenInfo);
 
       if (userRole === role) {
+        res.locals.decryptedToken = tokenInfo;
         next();
       } else {
         throw new AppError(ErrorMessages.unauthorized, 401);
@@ -71,30 +72,30 @@ const getUserRole = (tokenInfo: string | jwt.Jwt | jwt.JwtPayload | undefined) =
   return userRole;
 };
 
-const getTokenInfo = (token: string) => {
+const getDecryptedToken = (token: string) => {
   if (!process.env.JWT_SECRET) {
     throw new AppError(ErrorMessages.serverError, 500);
   }
   const tokenWithoutBearer = token.split(' ')[1];
 
-  let tokenInfo: string | jwt.Jwt | jwt.JwtPayload | undefined;
+  let decryptedToken: string | jwt.Jwt | jwt.JwtPayload | undefined;
 
   jwt.verify(
     tokenWithoutBearer,
     process.env.JWT_SECRET,
     (err: jwt.VerifyErrors | null, decodedToken: Jwt | JwtPayload | string | undefined) => {
       if (err) {
-        throw new AppError(ErrorMessages.invalidToken, 401); // checar se é preciso adicionar next aqui
+        throw new AppError(ErrorMessages.invalidToken, 401);
       }
 
-      tokenInfo = decodedToken;
+      decryptedToken = decodedToken;
     },
   );
 
-  return tokenInfo;
+  return decryptedToken;
 };
 
-const validaJWT = (token: string, next: NextFunction) => {
+const validaJWT = (token: string, next: NextFunction, res: Response) => {
   if (!process.env.JWT_SECRET) {
     throw new AppError(ErrorMessages.serverError, 500);
   }
@@ -104,10 +105,11 @@ const validaJWT = (token: string, next: NextFunction) => {
   jwt.verify(
     tokenWithoutBearer,
     process.env.JWT_SECRET,
-    (err: jwt.VerifyErrors | null, _: Jwt | JwtPayload | string | undefined) => {
+    (err: jwt.VerifyErrors | null, decryptedToken: Jwt | JwtPayload | string | undefined) => {
       if (err) {
         throw new AppError(ErrorMessages.invalidToken, 401);
       } else {
+        res.locals.token = decryptedToken;
         next();
       }
     },
