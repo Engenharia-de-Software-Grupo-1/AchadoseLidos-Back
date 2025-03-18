@@ -100,7 +100,7 @@ describe('ContaService', () => {
     const deletionId = 1;
 
     await expect(contaService.delete(deletionId, authenticatedConta)).rejects.toEqual({
-      message: ErrorMessages.cantDeleteAccount,
+      message: ErrorMessages.noPermissionForAction,
       statusCode: 403,
     });
   });

@@ -8,6 +8,7 @@ import { gerarHashSenha, gerarResetToken } from '@src/utils/auth';
 import bcrypt from 'bcrypt';
 import { ErrorMessages } from '@src/utils/ErrorMessages';
 import { Response } from 'express';
+import { ensureSelfTargetedAction } from '@src/utils/ensureSelfTargetedAction';
 
 class ContaService {
   async login(email: string, senha: string) {
@@ -63,13 +64,7 @@ class ContaService {
   }
 
   async delete(deletionId: number, authenticatedConta: unknown) {
-    if (!authenticatedConta || typeof authenticatedConta !== 'object' || !('id' in authenticatedConta)) {
-      throw new AppError(ErrorMessages.invalidToken, 401);
-    }
-
-    if (deletionId !== authenticatedConta.id) {
-      throw new AppError(ErrorMessages.cantDeleteAccount, 403);
-    }
+    ensureSelfTargetedAction(deletionId, authenticatedConta);
 
     const conta = await contaRepository.getById(deletionId);
     if (!conta) {
