@@ -8,20 +8,18 @@ class ProdutoRepository {
 
     return prismaClient.$transaction(async tx => {
       const produtoCriado = await tx.produto.create({
-        data: {
-          ...produto,
-        },
+        data: { ...produto },
       });
 
       if (fotos && fotos.length > 0) {
-        await tx.produtoFoto.createMany({
+        await tx.fotoProduto.createMany({
           data: fotos.map(foto => ({ url: foto.url, produtoId: produtoCriado.id })),
         });
       }
 
       return tx.produto.findUnique({
         where: { id: produtoCriado.id },
-        include: { produtoFotos: true },
+        include: { fotos: true },
       });
     });
   }
@@ -29,14 +27,14 @@ class ProdutoRepository {
   async getAll() {
     return prismaClient.produto.findMany({
       where: { status: StatusProduto.ATIVO },
-      include: { produtoFotos: true },
+      include: { fotos: true },
     });
   }
 
   async getById(id: number) {
     return prismaClient.produto.findUnique({
       where: { id },
-      include: { produtoFotos: true },
+      include: { fotos: true },
     });
   }
 
@@ -44,18 +42,20 @@ class ProdutoRepository {
     const { fotos, ...produto } = data;
 
     return prismaClient.$transaction(async tx => {
-      await tx.produto.update({ where: { id }, data: produto });
-      await tx.produtoFoto.deleteMany({ where: { produtoId: id } });
+      await Promise.all([
+        tx.produto.update({ where: { id }, data: produto }),
+        tx.fotoProduto.deleteMany({ where: { produtoId: id } }),
+      ]);
 
       if (fotos && fotos.length > 0) {
-        await tx.produtoFoto.createMany({
+        await tx.fotoProduto.createMany({
           data: fotos.map(foto => ({ url: foto.url, produtoId: id })),
         });
       }
 
       return tx.produto.findUnique({
         where: { id },
-        include: { produtoFotos: true },
+        include: { fotos: true },
       });
     });
   }

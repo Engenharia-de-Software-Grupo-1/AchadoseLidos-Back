@@ -132,12 +132,14 @@ model Produto {
   seboId            Int
   createdAt         DateTime                 @default(now())
   updatedAt         DateTime                 @updatedAt
-  fotos             FotoProduto[]            @relation("ProdutoFotos")
+
+  fotos FotoProduto[]
 }
 
 model FotoProduto {
-  id        Int     @id @default(autoincrement())
-  url       String
+  id  Int    @id @default(autoincrement())
+  url String
+
   produtoId Int
-  produto   Produto @relation("ProdutoFotos", fields: [produtoId], references: [id], onDelete: Cascade)
+  produto   Produto @relation(fields: [produtoId], references: [id], onDelete: Cascade)
 }

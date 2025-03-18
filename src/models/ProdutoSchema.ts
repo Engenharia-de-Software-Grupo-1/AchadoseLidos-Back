@@ -1,11 +1,11 @@
 import { z } from 'zod';
+import { optionalString, requiredString } from '@src/utils/zodTypes';
 
-const requiredString = z.string().nonempty();
-const optionalString = z.string().nullable().optional();
 const StatusProdutoEnum = z.enum(['ATIVO', 'EXCLUIDO']);
 const CategoriaProduto = z.enum(['LIVRO', 'DISCO', 'CD', 'DVD', 'REVISTA', 'GIBI']);
 const EstadoConservacaoProduto = z.enum(['NOVO', 'EXECELENTE', 'BOM', 'ACEITAVEL', 'RUIM']);
-const ProdutoFotoSchema = z.object({
+
+const FotoProdutoSchema = z.object({
   url: z.string().url(),
 });
 
@@ -21,7 +21,7 @@ export const ProdutoCreateSchema = z.object({
   anoLancamento: z.number().int().min(1000).max(new Date().getFullYear()),
   autores: optionalString,
   descricao: optionalString,
-  fotos: z.array(ProdutoFotoSchema).nullable().optional(),
+  fotos: z.array(FotoProdutoSchema).nullable().optional(),
 });
 
 export const ProdutoResponseSchema = ProdutoCreateSchema.extend({

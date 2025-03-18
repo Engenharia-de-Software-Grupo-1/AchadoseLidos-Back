@@ -18,6 +18,7 @@ produtoRoutes.get('/:id', async (req, res) => {
 produtoRoutes.put('/:id', async (req, res) => {
   await produtoController.update(req, res);
 });
+
 produtoRoutes.delete('/:id', async (req, res) => {
   await produtoController.delete(req, res);
 });
