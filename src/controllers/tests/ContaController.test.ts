@@ -125,13 +125,14 @@ describe('ContaController', () => {
     const res = {
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
+      locals: { decryptedToken: { id: 1 } },
     } as unknown as Response;
 
     (contaService.delete as jest.Mock).mockResolvedValueOnce('resolveu');
 
     await contaController.delete(req, res);
 
-    expect(contaService.delete).toHaveBeenCalledWith(1);
+    expect(contaService.delete).toHaveBeenCalledWith(1, { id: 1 });
     expect(res.status).toHaveBeenCalledWith(204);
     expect(res.send).toHaveBeenCalled();
   });

@@ -1,6 +1,7 @@
 import { contaRepository } from '@src/repositories/ContaRepository';
 import { StatusConta } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import { ErrorMessages } from '@src/utils/ErrorMessages';
 
 import { contaService } from '../ContaService';
 
@@ -71,7 +72,7 @@ describe('ContaService', () => {
   it('should throw an error if account does not exist', async () => {
     (contaRepository.getById as jest.Mock).mockResolvedValue(null);
 
-    await expect(contaService.delete(1)).rejects.toEqual({
+    await expect(contaService.delete(1, { id: 1 })).rejects.toEqual({
       message: 'Entidade com id 1 não encontrada',
       statusCode: 404,
     });
@@ -81,7 +82,26 @@ describe('ContaService', () => {
     (contaRepository.getById as jest.Mock).mockResolvedValue({ id: 1 });
     (contaRepository.atualizarStatus as jest.Mock).mockResolvedValue(true);
 
-    await expect(contaService.delete(1)).resolves.not.toThrow();
+    await expect(contaService.delete(1, { id: 1 })).resolves.not.toThrow();
     expect(contaRepository.atualizarStatus).toHaveBeenCalledWith(1, StatusConta.EXCLUIDA);
+  });
+
+  it('should throw an error if authenticatedConta is missing', async () => {
+    const invalidAuthenticatedConta = null;
+
+    await expect(contaService.delete(1, invalidAuthenticatedConta)).rejects.toEqual({
+      message: ErrorMessages.invalidToken,
+      statusCode: 401,
+    });
+  });
+
+  it('should throw an error if deletionId does not match authenticatedConta.id', async () => {
+    const authenticatedConta = { id: 2 };
+    const deletionId = 1;
+
+    await expect(contaService.delete(deletionId, authenticatedConta)).rejects.toEqual({
+      message: ErrorMessages.cantDeleteAccount,
+      statusCode: 403,
+    });
   });
 });
