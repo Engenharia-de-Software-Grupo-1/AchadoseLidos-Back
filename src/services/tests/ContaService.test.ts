@@ -25,7 +25,7 @@ describe('ContaService', () => {
     (contaRepository.getByEmail as jest.Mock).mockResolvedValue(null);
 
     await expect(contaService.login('nonexistent@example.com', 'password')).rejects.toEqual({
-      message: 'E-mail ou senha incorretos',
+      message: 'Email incorreto',
       statusCode: 401,
     });
     expect(contaRepository.getByEmail).toHaveBeenCalledWith('nonexistent@example.com');
@@ -38,7 +38,7 @@ describe('ContaService', () => {
     (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
     await expect(contaService.login('test@example.com', 'invalidPassword')).rejects.toEqual({
-      message: 'E-mail ou senha incorretos',
+      message: 'Senha incorreta',
       statusCode: 401,
     });
     expect(bcrypt.compare).toHaveBeenCalledWith('invalidPassword', 'hashedPassword');
