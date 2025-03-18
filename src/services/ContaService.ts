@@ -62,12 +62,20 @@ class ContaService {
     return ContaResponseSchema.parseAsync(result);
   }
 
-  async delete(id: number) {
-    const conta = await contaRepository.getById(id);
-    if (!conta) {
-      throw new EntityNotFoundError(id);
+  async delete(deletionId: number, authenticatedConta: unknown) {
+    if (!authenticatedConta || typeof authenticatedConta !== 'object' || !('id' in authenticatedConta)) {
+      throw new AppError(ErrorMessages.invalidToken, 401);
     }
-    await contaRepository.atualizarStatus(id, StatusConta.EXCLUIDA);
+
+    if (deletionId !== authenticatedConta.id) {
+      throw new AppError(ErrorMessages.cantDeleteAccount, 403);
+    }
+
+    const conta = await contaRepository.getById(deletionId);
+    if (!conta) {
+      throw new EntityNotFoundError(deletionId);
+    }
+    await contaRepository.atualizarStatus(deletionId, StatusConta.EXCLUIDA);
   }
 
   async logout(res: Response) {

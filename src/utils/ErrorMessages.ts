@@ -5,4 +5,5 @@ export enum ErrorMessages {
   unauthorized = 'Não autorizado',
   wrongEmail = 'Email incorreto',
   wrongPassword = 'Senha incorreta',
+  cantDeleteAccount = 'Você não tem permissão para excluir esta conta',
 }

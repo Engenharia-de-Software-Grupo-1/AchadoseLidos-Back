@@ -48,8 +48,10 @@ class ContaController {
   }
 
   async delete(req: Request, res: Response) {
-    const { id } = req.params;
-    await contaService.delete(Number(id));
+    const { id: deletionId } = req.params;
+    const authenticatedConta = res.locals.decryptedToken;
+
+    await contaService.delete(Number(deletionId), authenticatedConta);
     res.status(204).send();
   }
 
