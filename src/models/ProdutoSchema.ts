@@ -22,6 +22,7 @@ export const ProdutoCreateSchema = z.object({
   anoLancamento: z.number().int().min(1000).max(new Date().getFullYear()),
   autores: optionalString,
   descricao: optionalString,
+
   fotos: z.array(FotoProdutoSchema).nullable().optional(),
 });
 
@@ -32,7 +33,7 @@ export const ProdutoResponseSchema = ProdutoCreateSchema.extend({
   sebo: SeboResponseSchema,
 });
 
-export const ProdutoUpdateSchema = ProdutoCreateSchema.extend({ sebo: SeboResponseSchema });
+export const ProdutoUpdateSchema = ProdutoCreateSchema;
 
 export type ProdutoCreateDTO = z.infer<typeof ProdutoCreateSchema>;
 export type ProdutoUpdateDTO = z.infer<typeof ProdutoUpdateSchema>;
