@@ -4,28 +4,27 @@ import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import { ContaResponseSchema, ContaUpdateDTO, ContaUpdateSchema } from '@src/models/ContaSchema';
 import { contaRepository } from '@src/repositories/ContaRepository';
 import { sendEmail } from '@src/lib/mailer';
-import { criaAccessToken, gerarHashSenha, gerarResetToken } from '@src/utils/auth';
+import { criarAcessToken, gerarHashSenha, gerarResetToken } from '@src/utils/auth';
 import bcrypt from 'bcrypt';
-import { ErrorMessages } from '@src/utils/ErrorMessages';
 import { Response } from 'express';
 import { ensureSelfTargetedAction } from '@src/utils/ensureSelfTargetedAction';
+import { TokenInvalidError } from '@src/errors/TokenInvalidError';
+import { TokenExpiredError } from '@src/errors/TokenExpiredError';
+import { EmailNotRegisteredError } from '@src/errors/EmailNotRegisteredError';
 
 class ContaService {
   async login(email: string, senha: string) {
     const conta = await contaRepository.getByEmail(email);
     if (!conta) {
-      throw new AppError(ErrorMessages.wrongEmail, 401);
+      throw new EmailNotRegisteredError();
     }
 
-    const senhaEhValida = await bcrypt.compare(senha, conta.senha);
-
-    if (!senhaEhValida) {
-      throw new AppError(ErrorMessages.wrongPassword, 401);
+    const senhaValida = await bcrypt.compare(senha, conta.senha);
+    if (!senhaValida) {
+      throw new AppError('Senha incorreta', 401);
     }
 
-    const token = criaAccessToken(conta);
-
-    return token;
+    return criarAcessToken(conta);
   }
 
   async validarEmail(email: string) {
@@ -38,7 +37,7 @@ class ContaService {
   async recuperarSenha(email: string) {
     const emailAtivo = await contaRepository.getByEmail(email);
     if (!emailAtivo) {
-      throw new AppError('Não existe um cadastro para este e-mail', 404);
+      throw new EmailNotRegisteredError();
     }
 
     const { token, expiresAt } = gerarResetToken();
@@ -50,13 +49,14 @@ class ContaService {
 
   async atualizarSenha(data: ContaUpdateDTO) {
     const parsedData = ContaUpdateSchema.parse(data);
-
     const conta = await contaRepository.getByResetToken(parsedData.token);
+
     if (!conta) {
-      throw new AppError('Token inválido', 400);
+      throw new TokenInvalidError();
     }
+
     if (conta.resetTokenExpiresAt && conta.resetTokenExpiresAt < new Date()) {
-      throw new AppError('Token expirado', 401);
+      throw new TokenExpiredError();
     }
 
     const hashSenha = await gerarHashSenha(parsedData.senha);
@@ -65,14 +65,15 @@ class ContaService {
     return ContaResponseSchema.parseAsync(result);
   }
 
-  async delete(deletionId: number, authenticatedConta: unknown) {
-    ensureSelfTargetedAction(deletionId, authenticatedConta);
+  async delete(id: number, authenticatedConta: unknown) {
+    ensureSelfTargetedAction(id, authenticatedConta);
 
-    const conta = await contaRepository.getById(deletionId);
+    const conta = await contaRepository.getById(id);
     if (!conta) {
-      throw new EntityNotFoundError(deletionId);
+      throw new EntityNotFoundError(id);
     }
-    await contaRepository.atualizarStatus(deletionId, StatusConta.EXCLUIDA);
+
+    await contaRepository.atualizarStatus(id, StatusConta.EXCLUIDA);
   }
 
   async logout(res: Response) {

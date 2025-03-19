@@ -23,6 +23,7 @@ export const SeboCreateSchema = z.object({
   cpfCnpj: z.string().min(11).max(16),
   concordaVender: z.boolean(),
   telefone: z.string().max(11).nullable().optional(),
+
   biografia: optionalString,
   estanteVirtual: optionalString,
   instagram: optionalString,
@@ -40,10 +41,14 @@ export const SeboCreateSchema = z.object({
 
 export const SeboResponseSchema = SeboCreateSchema.extend({
   id: z.number(),
+  createdAt: z.date().or(z.string().datetime()),
+  updatedAt: z.date().or(z.string().datetime()),
   conta: ContaResponseSchema.nullable().optional(),
 });
 
-export const SeboUpdateSchema = SeboResponseSchema;
+export const SeboUpdateSchema = SeboCreateSchema.extend({
+  conta: ContaResponseSchema.nullable().optional(),
+});
 
 export type SeboCreateDTO = z.infer<typeof SeboCreateSchema>;
 export type SeboUpdateDTO = z.infer<typeof SeboUpdateSchema>;
