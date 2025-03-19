@@ -118,7 +118,6 @@ describe('SeboRepository', () => {
   it('updates a sebo by id', async () => {
     const seboId = 1;
     const sebo: SeboUpdateDTO = {
-      id: seboId,
       nome: 'Example Name',
       cpfCnpj: '123.456.789-00',
       concordaVender: false,

@@ -1,19 +1,16 @@
-import { AppError } from '@src/errors/AppError';
+import { TokenInvalidError } from '@src/errors/TokenInvalidError';
+import { NoPermissionError } from '@src/errors/NoPermissionError';
 
-import { ErrorMessages } from './ErrorMessages';
-
-const ensureSelfTargetedAction = (targetAccountId: string | number, authenticatedAccountToken: unknown) => {
+export const ensureSelfTargetedAction = (id: string | number, authenticatedAccountToken: unknown) => {
   if (
     !authenticatedAccountToken ||
     typeof authenticatedAccountToken !== 'object' ||
     !('id' in authenticatedAccountToken)
   ) {
-    throw new AppError(ErrorMessages.invalidToken, 401);
+    throw new TokenInvalidError();
   }
 
-  if (targetAccountId !== authenticatedAccountToken.id) {
-    throw new AppError(ErrorMessages.noPermissionForAction, 403);
+  if (id !== authenticatedAccountToken.id) {
+    throw new NoPermissionError();
   }
 };
-
-export { ensureSelfTargetedAction };
