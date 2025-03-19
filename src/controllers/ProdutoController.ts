@@ -3,7 +3,9 @@ import { produtoService } from '@src/services/ProdutoService';
 
 class ProdutoController {
   async create(req: Request, res: Response) {
-    const result = await produtoService.create(req.body);
+    const authenticatedSebo = res.locals.decryptedToken;
+
+    const result = await produtoService.create(req.body, authenticatedSebo);
     return res.status(201).json(result);
   }
 

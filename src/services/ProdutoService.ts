@@ -8,11 +8,17 @@ import {
 import { produtoRepository } from '@src/repositories/ProdutoRepository';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import { StatusProduto } from '@prisma/client';
+import { AppError } from '@src/errors/AppError';
+import { ErrorMessages } from '@src/utils/ErrorMessages';
 
 class ProdutoService {
-  async create(data: ProdutoCreateDTO) {
+  async create(data: ProdutoCreateDTO, authenticatedSeboToken: unknown) {
+    if (!authenticatedSeboToken || typeof authenticatedSeboToken !== 'object' || !('id' in authenticatedSeboToken)) {
+      throw new AppError(ErrorMessages.invalidToken, 401);
+    }
+
     const parsedData = ProdutoCreateSchema.parse(data);
-    const result = await produtoRepository.create(parsedData);
+    const result = await produtoRepository.create(parsedData, authenticatedSeboToken.id as number);
     return ProdutoResponseSchema.parseAsync(result);
   }
 

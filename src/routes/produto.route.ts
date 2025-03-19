@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { produtoController } from '@src/controllers/ProdutoController';
+import { ensureIsSebo } from '@src/middleware/authMiddleware';
 
 export const produtoRoutes = Router();
 
-produtoRoutes.post('/', async (req, res) => {
+produtoRoutes.post('/', ensureIsSebo, async (req, res) => {
   await produtoController.create(req, res);
 });
 

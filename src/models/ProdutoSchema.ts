@@ -10,9 +10,8 @@ const FotoProdutoSchema = z.object({
 });
 
 export const ProdutoCreateSchema = z.object({
-  seboId: z.number().int().positive(),
-  status: StatusProdutoEnum,
   nome: requiredString,
+  status: StatusProdutoEnum,
   preco: z.number().nonnegative(),
   categoria: CategoriaProduto,
   qtdEstoque: z.number().int().nonnegative(),
