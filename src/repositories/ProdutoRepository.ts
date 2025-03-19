@@ -19,7 +19,14 @@ class ProdutoRepository {
 
       return tx.produto.findUnique({
         where: { id: produtoCriado.id },
-        include: { fotos: true },
+        include: {
+          fotos: true,
+          sebo: {
+            include: {
+              endereco: true,
+            },
+          },
+        },
       });
     });
   }

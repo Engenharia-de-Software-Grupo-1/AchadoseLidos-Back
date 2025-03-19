@@ -12,6 +12,8 @@ export const ContaResponseSchema = z.object({
   id: z.number(),
   tipo: TipoContaEnum,
   status: StatusContaEnum,
+  createdAt: z.date().or(z.string().datetime()),
+  updatedAt: z.date().or(z.string().datetime()),
 });
 
 export const ContaUpdateSchema = z.object({
