@@ -7,6 +7,7 @@ import {
 } from '@src/models/SeboSchema';
 import { seboRepository } from '@src/repositories/SeboRepository';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
+import { ensureSelfTargetedAction } from '@src/utils/ensureSelfTargetedAction';
 
 import { contaService } from './ContaService';
 
@@ -32,7 +33,9 @@ class SeboService {
     return SeboResponseSchema.parseAsync(result);
   }
 
-  async update(id: number, data: SeboUpdateDTO) {
+  async update(id: number, data: SeboUpdateDTO, authenticatedUser: unknown) {
+    ensureSelfTargetedAction(id, authenticatedUser);
+
     const parsedData = SeboUpdateSchema.parse(data);
     await this.getById(id);
 

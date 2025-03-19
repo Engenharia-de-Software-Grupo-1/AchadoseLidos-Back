@@ -7,6 +7,7 @@ import {
 } from '@src/models/UsuarioSchema';
 import { usuarioRepository } from '@src/repositories/UsuarioRepository';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
+import { ensureSelfTargetedAction } from '@src/utils/ensureSelfTargetedAction';
 
 import { contaService } from './ContaService';
 
@@ -32,7 +33,9 @@ class UsuarioService {
     return UsuarioResponseSchema.parseAsync(result);
   }
 
-  async update(id: number, data: UsuarioUpdateDTO) {
+  async update(id: number, data: UsuarioUpdateDTO, authenticatedUser: unknown) {
+    ensureSelfTargetedAction(id, authenticatedUser);
+
     const parsedData = UsuarioUpdateSchema.parse(data);
     await this.getById(id);
 

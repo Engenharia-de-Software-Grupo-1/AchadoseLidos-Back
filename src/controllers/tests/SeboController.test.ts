@@ -78,6 +78,7 @@ describe('SeboController', () => {
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
+      locals: { decryptedToken: 'testToken' },
     } as unknown as Response;
 
     const mockResult = { someResultKey: 'someResultValue' };
@@ -85,7 +86,7 @@ describe('SeboController', () => {
 
     await seboController.update(req, res);
 
-    expect(seboService.update).toHaveBeenCalledWith(1, req.body);
+    expect(seboService.update).toHaveBeenCalledWith(1, req.body, 'testToken');
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith(mockResult);
   });
