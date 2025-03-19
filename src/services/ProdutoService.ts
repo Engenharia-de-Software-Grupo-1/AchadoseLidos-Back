@@ -35,7 +35,15 @@ class ProdutoService {
     return ProdutoResponseSchema.parseAsync(result);
   }
 
-  async update(id: number, data: ProdutoUpdateDTO) {
+  async update(id: number, data: ProdutoUpdateDTO, authenticatedSeboToken: unknown) {
+    if (!authenticatedSeboToken || typeof authenticatedSeboToken !== 'object' || !('id' in authenticatedSeboToken)) {
+      throw new AppError(ErrorMessages.invalidToken, 401);
+    }
+
+    if (data.sebo.id !== authenticatedSeboToken.id) {
+      throw new AppError(ErrorMessages.noPermissionForAction, 403);
+    }
+
     const parsedData = ProdutoUpdateSchema.parse(data);
     await this.getById(id);
 

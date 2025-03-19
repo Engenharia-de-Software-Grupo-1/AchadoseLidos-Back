@@ -32,7 +32,7 @@ export const ProdutoResponseSchema = ProdutoCreateSchema.extend({
   sebo: SeboResponseSchema,
 });
 
-export const ProdutoUpdateSchema = ProdutoCreateSchema;
+export const ProdutoUpdateSchema = ProdutoCreateSchema.extend({ sebo: SeboResponseSchema });
 
 export type ProdutoCreateDTO = z.infer<typeof ProdutoCreateSchema>;
 export type ProdutoUpdateDTO = z.infer<typeof ProdutoUpdateSchema>;
