@@ -1,9 +1,7 @@
 import { z } from 'zod';
+import { optionalString, requiredString } from '@src/utils/zodTypes';
 
 import { ContaCreateSchema, ContaResponseSchema } from './ContaSchema';
-
-const requiredString = z.string().nonempty();
-const optionalString = z.string().nullable().optional();
 
 const EnderecoSeboSchema = z.object({
   cep: z.string().length(8),
