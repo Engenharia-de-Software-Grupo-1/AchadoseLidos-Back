@@ -8,13 +8,13 @@ import {
 import { produtoRepository } from '@src/repositories/ProdutoRepository';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import { StatusProduto } from '@prisma/client';
-import { AppError } from '@src/errors/AppError';
-import { ErrorMessages } from '@src/utils/ErrorMessages';
+import { TokenInvalidError } from '@src/errors/TokenInvalidError';
+import { ensureSelfTargetedAction } from '@src/utils/ensureSelfTargetedAction';
 
 class ProdutoService {
   async create(data: ProdutoCreateDTO, authenticatedSeboToken: unknown) {
     if (!authenticatedSeboToken || typeof authenticatedSeboToken !== 'object' || !('id' in authenticatedSeboToken)) {
-      throw new AppError(ErrorMessages.invalidToken, 401);
+      throw new TokenInvalidError();
     }
 
     const parsedData = ProdutoCreateSchema.parse(data);
@@ -36,26 +36,18 @@ class ProdutoService {
   }
 
   async update(id: number, data: ProdutoUpdateDTO, authenticatedSeboToken: unknown) {
-    if (!authenticatedSeboToken || typeof authenticatedSeboToken !== 'object' || !('id' in authenticatedSeboToken)) {
-      throw new AppError(ErrorMessages.invalidToken, 401);
-    }
-
-    if (data.sebo.id !== authenticatedSeboToken.id) {
-      throw new AppError(ErrorMessages.noPermissionForAction, 403);
-    }
-
     const parsedData = ProdutoUpdateSchema.parse(data);
-    await this.getById(id);
+    const produto = await this.getById(id);
+    ensureSelfTargetedAction(produto.sebo.id, authenticatedSeboToken);
 
     const result = await produtoRepository.update(id, parsedData);
     return ProdutoResponseSchema.parseAsync(result);
   }
 
-  async delete(id: number) {
-    const produto = await produtoRepository.getById(id);
-    if (!produto) {
-      throw new EntityNotFoundError(id);
-    }
+  async delete(id: number, authenticatedSeboToken: unknown) {
+    const produto = await this.getById(id);
+    ensureSelfTargetedAction(produto.sebo.id, authenticatedSeboToken);
+
     await produtoRepository.atualizarStatus(id, StatusProduto.EXCLUIDO);
   }
 }

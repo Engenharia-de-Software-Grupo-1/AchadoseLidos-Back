@@ -30,7 +30,9 @@ class ProdutoController {
 
   async delete(req: Request, res: Response) {
     const { id } = req.params;
-    await produtoService.delete(Number(id));
+    const authenticatedSebo = res.locals.decryptedToken;
+
+    await produtoService.delete(Number(id), authenticatedSebo);
     res.status(204).send();
   }
 }

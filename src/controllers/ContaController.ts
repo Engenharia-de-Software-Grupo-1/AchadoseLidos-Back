@@ -9,7 +9,7 @@ class ContaController {
 
     res.cookie('authToken', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // quando deployar, temos que garantir que node_env tenha o valor de 'production'
+      secure: process.env.NODE_ENV === 'production',
       maxAge: cookieExpirationTimeInMilliseconds,
     });
 
@@ -34,10 +34,10 @@ class ContaController {
   }
 
   async delete(req: Request, res: Response) {
-    const { id: deletionId } = req.params;
+    const { id } = req.params;
     const authenticatedConta = res.locals.decryptedToken;
 
-    await contaService.delete(Number(deletionId), authenticatedConta);
+    await contaService.delete(Number(id), authenticatedConta);
     res.status(204).send();
   }
 
