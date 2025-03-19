@@ -4,7 +4,7 @@ import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import { ContaResponseSchema, ContaUpdateDTO, ContaUpdateSchema } from '@src/models/ContaSchema';
 import { contaRepository } from '@src/repositories/ContaRepository';
 import { sendEmail } from '@src/lib/mailer';
-import { gerarHashSenha, gerarResetToken } from '@src/utils/auth';
+import { criaAccessToken, gerarHashSenha, gerarResetToken } from '@src/utils/auth';
 import bcrypt from 'bcrypt';
 import { ErrorMessages } from '@src/utils/ErrorMessages';
 import { Response } from 'express';
@@ -23,7 +23,9 @@ class ContaService {
       throw new AppError(ErrorMessages.wrongPassword, 401);
     }
 
-    return conta;
+    const token = criaAccessToken(conta);
+
+    return token;
   }
 
   async validarEmail(email: string) {
