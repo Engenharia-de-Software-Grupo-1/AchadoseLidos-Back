@@ -16,7 +16,7 @@ produtoRoutes.get('/:id', async (req, res) => {
   await produtoController.getById(req, res);
 });
 
-produtoRoutes.put('/:id', async (req, res) => {
+produtoRoutes.put('/:id', ensureIsSebo, async (req, res) => {
   await produtoController.update(req, res);
 });
 

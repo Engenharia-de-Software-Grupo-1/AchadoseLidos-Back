@@ -22,7 +22,9 @@ class ProdutoController {
 
   async update(req: Request, res: Response) {
     const { id } = req.params;
-    const result = await produtoService.update(Number(id), req.body);
+    const authenticatedSebo = res.locals.decryptedToken;
+
+    const result = await produtoService.update(Number(id), req.body, authenticatedSebo);
     res.status(200).json(result);
   }
 

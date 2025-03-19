@@ -53,7 +53,7 @@ class ProdutoRepository {
   }
 
   async update(id: number, data: ProdutoUpdateDTO) {
-    const { fotos, ...produto } = data;
+    const { fotos, sebo: _sebo, ...produto } = data;
 
     return prismaClient.$transaction(async tx => {
       await Promise.all([
