@@ -1,7 +1,7 @@
 import { contaRepository } from '@src/repositories/ContaRepository';
 import { StatusConta } from '@prisma/client';
 import bcrypt from 'bcrypt';
-import { ErrorMessages } from '@src/utils/ErrorMessages';
+import { ErrorMessages } from '@src/errors/ErrorMessages';
 
 import { contaService } from '../ContaService';
 
@@ -37,8 +37,8 @@ describe('ContaService', () => {
     (contaRepository.getByEmail as jest.Mock).mockResolvedValue(null);
 
     await expect(contaService.login('nonexistent@example.com', 'password')).rejects.toEqual({
-      message: 'Email incorreto',
-      statusCode: 401,
+      message: ErrorMessages.emailNotRegistered,
+      statusCode: 404,
     });
     expect(contaRepository.getByEmail).toHaveBeenCalledWith('nonexistent@example.com');
   });
@@ -50,7 +50,7 @@ describe('ContaService', () => {
     (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
     await expect(contaService.login('test@example.com', 'invalidPassword')).rejects.toEqual({
-      message: 'Senha incorreta',
+      message: ErrorMessages.wrongPassword,
       statusCode: 401,
     });
     expect(bcrypt.compare).toHaveBeenCalledWith('invalidPassword', 'hashedPassword');

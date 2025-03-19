@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { Conta, Sebo, Usuario } from '@prisma/client';
 import { AppError } from '@src/errors/AppError';
 
-import { ErrorMessages } from './ErrorMessages';
+import { ErrorMessages } from '../errors/ErrorMessages';
 
 type ContaWithRelations = Conta & {
   sebo?: Sebo | null;
@@ -27,7 +27,7 @@ const gerarHashSenha = async (senha: string) => {
   return await bcrypt.hash(senha, salt);
 };
 
-const criaAccessToken = (conta: ContaWithRelations) => {
+const criarAcessToken = (conta: ContaWithRelations) => {
   if (!process.env.JWT_SECRET) {
     throw new AppError(ErrorMessages.serverError, 500);
   }
@@ -54,5 +54,5 @@ export {
   gerarHashSenha,
   cookieExpirationTimeInHours,
   cookieExpirationTimeInMilliseconds,
-  criaAccessToken,
+  criarAcessToken,
 };

@@ -1,6 +1,6 @@
 import request from 'supertest';
 import express from 'express';
-import { ErrorMessages } from '@src/utils/ErrorMessages';
+import { ErrorMessages } from '@src/errors/ErrorMessages';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import { TipoConta } from '@prisma/client';

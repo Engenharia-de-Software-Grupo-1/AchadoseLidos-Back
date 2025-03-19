@@ -1,6 +1,8 @@
 import { TipoConta } from '@prisma/client';
 import { AppError } from '@src/errors/AppError';
-import { ErrorMessages } from '@src/utils/ErrorMessages';
+import { ErrorMessages } from '@src/errors/ErrorMessages';
+import { InternalServerError } from '@src/errors/InternalServerError';
+import { TokenInvalidError } from '@src/errors/TokenInvalidError';
 import { NextFunction, Request, Response } from 'express';
 import jwt, { Jwt, JwtPayload } from 'jsonwebtoken';
 
@@ -66,7 +68,7 @@ const getUserRole = (tokenInfo: string | jwt.Jwt | jwt.JwtPayload | undefined) =
   if (typeof tokenInfo === 'object' && tokenInfo !== null && 'role' in tokenInfo) {
     userRole = tokenInfo.role;
   } else {
-    throw new AppError(ErrorMessages.invalidToken, 401);
+    throw new TokenInvalidError();
   }
 
   return userRole;
@@ -74,7 +76,7 @@ const getUserRole = (tokenInfo: string | jwt.Jwt | jwt.JwtPayload | undefined) =
 
 const getDecryptedToken = (token: string) => {
   if (!process.env.JWT_SECRET) {
-    throw new AppError(ErrorMessages.serverError, 500);
+    throw new InternalServerError();
   }
   const tokenWithoutBearer = token.split(' ')[1];
 
@@ -85,7 +87,7 @@ const getDecryptedToken = (token: string) => {
     process.env.JWT_SECRET,
     (err: jwt.VerifyErrors | null, decodedToken: Jwt | JwtPayload | string | undefined) => {
       if (err) {
-        throw new AppError(ErrorMessages.invalidToken, 401);
+        throw new TokenInvalidError();
       }
 
       decryptedToken = decodedToken;
@@ -97,7 +99,7 @@ const getDecryptedToken = (token: string) => {
 
 const validaJWT = (token: string, next: NextFunction, res: Response) => {
   if (!process.env.JWT_SECRET) {
-    throw new AppError(ErrorMessages.serverError, 500);
+    throw new InternalServerError();
   }
 
   const tokenWithoutBearer = token.split(' ')[1];
@@ -107,7 +109,7 @@ const validaJWT = (token: string, next: NextFunction, res: Response) => {
     process.env.JWT_SECRET,
     (err: jwt.VerifyErrors | null, decryptedToken: Jwt | JwtPayload | string | undefined) => {
       if (err) {
-        throw new AppError(ErrorMessages.invalidToken, 401);
+        throw new TokenInvalidError();
       } else {
         res.locals.decryptedToken = decryptedToken;
         next();

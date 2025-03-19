@@ -1,4 +1,4 @@
-import { ErrorMessages } from '../ErrorMessages';
+import { ErrorMessages } from '../../errors/ErrorMessages';
 import { ensureSelfTargetedAction } from '../ensureSelfTargetedAction';
 
 describe('ensureSelfTargetedAction', () => {
