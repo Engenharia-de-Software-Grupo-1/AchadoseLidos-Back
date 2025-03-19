@@ -3,12 +3,12 @@ import { ProdutoCreateDTO, ProdutoUpdateDTO } from '@src/models/ProdutoSchema';
 import { StatusProduto } from '@prisma/client';
 
 class ProdutoRepository {
-  async create(data: ProdutoCreateDTO) {
+  async create(data: ProdutoCreateDTO, authenticatedSeboId: number) {
     const { fotos, ...produto } = data;
 
     return prismaClient.$transaction(async tx => {
       const produtoCriado = await tx.produto.create({
-        data: { ...produto },
+        data: { ...produto, sebo: { connect: { id: authenticatedSeboId } } },
       });
 
       if (fotos && fotos.length > 0) {

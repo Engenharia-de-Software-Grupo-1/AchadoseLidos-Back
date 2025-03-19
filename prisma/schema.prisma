@@ -53,6 +53,7 @@ model Sebo {
 
   endereco EnderecoSebo?
   fotos    FotoSebo[]
+  produtos Produto[]
 }
 
 model EnderecoSebo {
@@ -129,11 +130,12 @@ model Produto {
   anoLancamento     Int
   autores           String?
   descricao         String?
-  seboId            Int
   createdAt         DateTime                 @default(now())
   updatedAt         DateTime                 @updatedAt
 
-  fotos FotoProduto[]
+  fotos  FotoProduto[]
+  seboId Int
+  sebo   Sebo          @relation(fields: [seboId], references: [id])
 }
 
 model FotoProduto {
