@@ -7,17 +7,28 @@ import { contaService } from '../ContaService';
 
 jest.mock('bcrypt');
 jest.mock('@src/repositories/ContaRepository');
+jest.mock('jsonwebtoken', () => ({
+  ...jest.requireActual('jsonwebtoken'),
+  sign: jest.fn(() => 'exampleToken'),
+}));
 
 describe('ContaService', () => {
-  it('should return the account if email and password are valid', async () => {
-    const mockConta = { id: 1, email: 'test@example.com', senha: 'hashedPassword' };
+  it('should return the token', async () => {
+    const mockConta = {
+      id: 1,
+      email: 'test@example.com',
+      senha: 'hashedPassword',
+      usuario: {
+        id: 12,
+      },
+    };
 
     (contaRepository.getByEmail as jest.Mock).mockResolvedValue(mockConta);
     (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
     const result = await contaService.login('test@example.com', 'validPassword');
 
-    expect(result).toEqual(mockConta);
+    expect(result).toEqual('Bearer exampleToken');
     expect(contaRepository.getByEmail).toHaveBeenCalledWith('test@example.com');
     expect(bcrypt.compare).toHaveBeenCalledWith('validPassword', 'hashedPassword');
   });
