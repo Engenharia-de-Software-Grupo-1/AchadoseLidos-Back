@@ -2,8 +2,8 @@ import { Router } from 'express';
 
 import { contaRoutes } from './conta.routes';
 import { seboRoutes } from './sebo.routes';
-import { usuarioRoutes } from './usuario.route';
-import { produtoRoutes } from './produto.route';
+import { usuarioRoutes } from './usuario.routes';
+import { produtoRoutes } from './produto.routes';
 
 export const routes = Router();
 

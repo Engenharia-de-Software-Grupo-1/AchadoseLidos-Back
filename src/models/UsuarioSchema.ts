@@ -20,10 +20,14 @@ export const UsuarioCreateSchema = z.object({
 
 export const UsuarioResponseSchema = UsuarioCreateSchema.extend({
   id: z.number(),
+  createdAt: z.date().or(z.string().datetime()),
+  updatedAt: z.date().or(z.string().datetime()),
   conta: ContaResponseSchema.nullable().optional(),
 });
 
-export const UsuarioUpdateSchema = UsuarioResponseSchema;
+export const UsuarioUpdateSchema = UsuarioCreateSchema.extend({
+  conta: ContaResponseSchema.nullable().optional(),
+});
 
 export type UsuarioCreateDTO = z.infer<typeof UsuarioCreateSchema>;
 export type UsuarioUpdateDTO = z.infer<typeof UsuarioUpdateSchema>;
