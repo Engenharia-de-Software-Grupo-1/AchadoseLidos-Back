@@ -5,7 +5,6 @@ export enum ErrorMessages {
   tokenNotProvided = 'Token não fornecido',
   unauthorized = 'Não autorizado',
   emailNotRegistered = 'Email não cadastrado',
-  wrongEmail = 'Email incorreto',
   wrongPassword = 'Senha incorreta',
   noPermissionForAction = 'Acesso negado. Você não tem permissão para essa ação',
 }

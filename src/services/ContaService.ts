@@ -11,6 +11,7 @@ import { ensureSelfTargetedAction } from '@src/utils/ensureSelfTargetedAction';
 import { TokenInvalidError } from '@src/errors/TokenInvalidError';
 import { TokenExpiredError } from '@src/errors/TokenExpiredError';
 import { EmailNotRegisteredError } from '@src/errors/EmailNotRegisteredError';
+import { IncorrectPasswordError } from '@src/errors/IncorrectPasswordError';
 
 class ContaService {
   async login(email: string, senha: string) {
@@ -21,7 +22,7 @@ class ContaService {
 
     const senhaValida = await bcrypt.compare(senha, conta.senha);
     if (!senhaValida) {
-      throw new AppError('Senha incorreta', 401);
+      throw new IncorrectPasswordError();
     }
 
     return criarAcessToken(conta);
