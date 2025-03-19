@@ -27,14 +27,28 @@ class ProdutoRepository {
   async getAll() {
     return prismaClient.produto.findMany({
       where: { status: StatusProduto.ATIVO },
-      include: { fotos: true },
+      include: {
+        fotos: true,
+        sebo: {
+          include: {
+            endereco: true,
+          },
+        },
+      },
     });
   }
 
   async getById(id: number) {
     return prismaClient.produto.findUnique({
       where: { id },
-      include: { fotos: true },
+      include: {
+        fotos: true,
+        sebo: {
+          include: {
+            endereco: true,
+          },
+        },
+      },
     });
   }
 
@@ -55,7 +69,14 @@ class ProdutoRepository {
 
       return tx.produto.findUnique({
         where: { id },
-        include: { fotos: true },
+        include: {
+          fotos: true,
+          sebo: {
+            include: {
+              endereco: true,
+            },
+          },
+        },
       });
     });
   }
