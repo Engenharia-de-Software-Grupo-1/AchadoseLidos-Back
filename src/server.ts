@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 
 import { routes } from './routes/routes';
 import { AppError } from './errors/AppError';
+import { ErrorMessages } from './errors/ErrorMessages';
 
 const app = express();
 
@@ -31,7 +32,7 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   }
 
   console.error(err);
-  res.status(500).json({ message: 'Internal server error' });
+  res.status(500).json({ message: ErrorMessages.serverError });
 };
 
 app.use(errorHandler);
