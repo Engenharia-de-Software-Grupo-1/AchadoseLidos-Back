@@ -41,8 +41,6 @@ export const SeboCreateSchema = z.object({
 
 export const SeboResponseSchema = SeboCreateSchema.extend({
   id: z.number(),
-  createdAt: z.date().or(z.string().datetime()),
-  updatedAt: z.date().or(z.string().datetime()),
   conta: ContaResponseSchema.nullable().optional(),
 });
 

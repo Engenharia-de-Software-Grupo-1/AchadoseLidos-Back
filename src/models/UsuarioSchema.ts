@@ -20,8 +20,6 @@ export const UsuarioCreateSchema = z.object({
 
 export const UsuarioResponseSchema = UsuarioCreateSchema.extend({
   id: z.number(),
-  createdAt: z.date().or(z.string().datetime()),
-  updatedAt: z.date().or(z.string().datetime()),
   conta: ContaResponseSchema.nullable().optional(),
 });
 
