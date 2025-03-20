@@ -45,7 +45,7 @@ export const SeboResponseSchema = SeboCreateSchema.extend({
 });
 
 export const SeboUpdateSchema = SeboCreateSchema.extend({
-  conta: ContaResponseSchema.nullable().optional(),
+  conta: ContaResponseSchema.partial().nullable().optional(),
 });
 
 export type SeboCreateDTO = z.infer<typeof SeboCreateSchema>;

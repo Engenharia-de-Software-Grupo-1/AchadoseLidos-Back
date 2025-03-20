@@ -1,7 +1,7 @@
 import { TipoConta, Prisma, StatusConta } from '@prisma/client';
 import prismaClient from '@src/lib/prismaClient';
 import { ContaCreateDTO } from '@src/models/ContaSchema';
-import { gerarHashSenha } from '@src/utils/auth';
+import { gerarHashSenha } from '@src/utils/authUtils';
 
 class ContaRepository {
   async create(tx: Prisma.TransactionClient, data: ContaCreateDTO, tipo: TipoConta) {

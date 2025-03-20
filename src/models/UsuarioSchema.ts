@@ -24,7 +24,7 @@ export const UsuarioResponseSchema = UsuarioCreateSchema.extend({
 });
 
 export const UsuarioUpdateSchema = UsuarioCreateSchema.extend({
-  conta: ContaResponseSchema.nullable().optional(),
+  conta: ContaResponseSchema.partial().nullable().optional(),
 });
 
 export type UsuarioCreateDTO = z.infer<typeof UsuarioCreateSchema>;
