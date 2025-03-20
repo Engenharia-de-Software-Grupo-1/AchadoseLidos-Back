@@ -4,8 +4,8 @@ import { contaService } from '@src/services/ContaService';
 import { contaController } from '../ContaController';
 
 jest.mock('@src/services/ContaService');
-jest.mock('@src/utils/auth', () => ({
-  cookieExpirationTimeInMilliseconds: 1000,
+jest.mock('@src/utils/authUtils', () => ({
+  COOKIE_EXPIRATION_MS: 1000,
 }));
 
 describe('ContaController', () => {
@@ -59,7 +59,7 @@ describe('ContaController', () => {
 
     expect(contaService.validarEmail).toHaveBeenCalledWith('test@example.com');
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith({ mensagem: 'E-mail disponível' });
+    expect(res.json).toHaveBeenCalledWith({ mensagem: 'Email disponível' });
   });
 
   it('returns 204 if the account is successfully deleted', async () => {
@@ -92,11 +92,6 @@ describe('ContaController', () => {
       send: jest.fn(),
       cookie: jest.fn(),
     } as unknown as Response;
-
-    (contaService.logout as jest.Mock).mockImplementation((res: Response) => {
-      res.cookie('authToken', '', { maxAge: 1 });
-      res.status(200).send();
-    });
 
     await contaController.logout(req, res);
 

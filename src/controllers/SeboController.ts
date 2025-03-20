@@ -20,9 +20,9 @@ class SeboController {
 
   async update(req: Request, res: Response) {
     const { id } = req.params;
-    const authenticatedUser = res.locals.decryptedToken;
+    const authToken = res.locals.decryptedToken;
 
-    const result = await seboService.update(Number(id), req.body, authenticatedUser);
+    const result = await seboService.update(Number(id), req.body, authToken);
     res.status(200).json(result);
   }
 }
