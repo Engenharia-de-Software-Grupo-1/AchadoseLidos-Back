@@ -20,6 +20,6 @@ produtoRoutes.put('/:id', ensureIsSebo, async (req, res) => {
   await produtoController.update(req, res);
 });
 
-produtoRoutes.delete('/:id', async (req, res) => {
+produtoRoutes.delete('/:id', ensureIsSebo, async (req, res) => {
   await produtoController.delete(req, res);
 });
