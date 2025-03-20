@@ -1,8 +1,8 @@
 import { AppError } from './AppError';
 import { ErrorMessages } from './ErrorMessages';
 
-export class TokenInvalidError extends AppError {
+export class TokenNotProvided extends AppError {
   constructor() {
-    super(ErrorMessages.invalidToken, 401);
+    super(ErrorMessages.tokenNotProvided, 401);
   }
 }
