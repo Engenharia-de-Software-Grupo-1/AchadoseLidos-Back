@@ -18,6 +18,10 @@ class ContaRepository {
   async getById(id: number) {
     return prismaClient.conta.findUnique({
       where: { id },
+      include: {
+        sebo: { include: { endereco: true } },
+        usuario: true,
+      },
     });
   }
 
