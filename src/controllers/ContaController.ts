@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { contaService } from '@src/services/ContaService';
-import { COOKIE_EXPIRATION_MS } from '@src/utils/authUtils';
 
 class ContaController {
   async login(req: Request, res: Response) {
