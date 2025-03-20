@@ -61,6 +61,10 @@ describe('ContaRepository', () => {
 
     expect(prismaClient.conta.findUnique).toHaveBeenCalledWith({
       where: { id: 1 },
+      include: {
+        sebo: { include: { endereco: true } },
+        usuario: true,
+      },
     });
     expect(result).toEqual(mockAccount);
   });
