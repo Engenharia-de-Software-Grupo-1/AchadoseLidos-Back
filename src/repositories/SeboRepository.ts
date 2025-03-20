@@ -49,7 +49,7 @@ class SeboRepository {
         tx.fotoSebo.deleteMany({ where: { seboId: id } }),
       ]);
 
-      if (fotos && fotos.length > 0) {
+      if (fotos?.length) {
         await tx.fotoSebo.createMany({
           data: fotos.map(foto => ({ url: foto.url, seboId: id })),
         });
