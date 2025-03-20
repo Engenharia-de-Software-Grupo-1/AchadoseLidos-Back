@@ -2,7 +2,12 @@ import bcrypt from 'bcrypt';
 import { StatusConta } from '@prisma/client';
 import { AppError } from '@src/errors/AppError';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
-import { ContaResponseSchema, ContaUpdateDTO, ContaUpdateSchema } from '@src/models/ContaSchema';
+import {
+  ContaInformacoesResponseSchema,
+  ContaResponseSchema,
+  ContaUpdateDTO,
+  ContaUpdateSchema,
+} from '@src/models/ContaSchema';
 import { contaRepository } from '@src/repositories/ContaRepository';
 import { sendEmail } from '@src/lib/mailer';
 import { gerarAuthToken, gerarHashSenha, gerarResetToken } from '@src/utils/authUtils';
@@ -25,6 +30,20 @@ class ContaService {
     }
 
     return gerarAuthToken(conta);
+  }
+
+  async recuperarInformacoes(authToken: { id: number }) {
+    if (!authToken) {
+      return { autenticado: false };
+    }
+
+    const conta = await contaRepository.getById(authToken.id);
+    if (!conta) {
+      throw new EntityNotFoundError(authToken.id);
+    }
+
+    const parsedData = await ContaInformacoesResponseSchema.parseAsync(conta);
+    return { autenticado: true, conta: parsedData };
   }
 
   async validarEmail(email: string) {

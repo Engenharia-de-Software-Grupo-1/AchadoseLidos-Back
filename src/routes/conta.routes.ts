@@ -7,6 +7,10 @@ contaRoutes.post('/login', async (req, res) => {
   await contaController.login(req, res);
 });
 
+contaRoutes.get('/informacoes', requireAuth, async (req, res) => {
+  await contaController.recuperarInformacoes(req, res);
+});
+
 contaRoutes.get('/validar_email', async (req, res) => {
   await contaController.validarEmail(req, res);
 });
@@ -23,6 +27,6 @@ contaRoutes.delete('/:id', requireAuth, async (req, res) => {
   await contaController.delete(req, res);
 });
 
-contaRoutes.post('/logout', async (req, res) => {
+contaRoutes.post('/logout', requireAuth, async (req, res) => {
   await contaController.logout(req, res);
 });

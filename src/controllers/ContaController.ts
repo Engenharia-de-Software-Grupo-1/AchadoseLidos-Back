@@ -16,6 +16,12 @@ class ContaController {
     res.status(200).send();
   }
 
+  async recuperarInformacoes(req: Request, res: Response) {
+    const authToken = res.locals.decryptedToken;
+    const result = await contaService.recuperarInformacoes(authToken);
+    res.status(200).json(result);
+  }
+
   async validarEmail(req: Request, res: Response) {
     const email = req.query.email as string;
     await contaService.validarEmail(email);
