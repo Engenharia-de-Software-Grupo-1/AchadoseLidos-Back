@@ -3,9 +3,9 @@ import { produtoService } from '@src/services/ProdutoService';
 
 class ProdutoController {
   async create(req: Request, res: Response) {
-    const authenticatedSebo = res.locals.decryptedToken;
+    const authToken = res.locals.decryptedToken;
 
-    const result = await produtoService.create(req.body, authenticatedSebo);
+    const result = await produtoService.create(req.body, authToken);
     return res.status(201).json(result);
   }
 
@@ -22,17 +22,17 @@ class ProdutoController {
 
   async update(req: Request, res: Response) {
     const { id } = req.params;
-    const authenticatedSebo = res.locals.decryptedToken;
+    const authToken = res.locals.decryptedToken;
 
-    const result = await produtoService.update(Number(id), req.body, authenticatedSebo);
+    const result = await produtoService.update(Number(id), req.body, authToken);
     res.status(200).json(result);
   }
 
   async delete(req: Request, res: Response) {
     const { id } = req.params;
-    const authenticatedSebo = res.locals.decryptedToken;
+    const authToken = res.locals.decryptedToken;
 
-    await produtoService.delete(Number(id), authenticatedSebo);
+    await produtoService.delete(Number(id), authToken);
     res.status(204).send();
   }
 }
