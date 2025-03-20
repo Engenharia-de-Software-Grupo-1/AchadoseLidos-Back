@@ -69,7 +69,7 @@ describe('ContaService', () => {
     });
 
     await expect(contaService.validarEmail('test@example.com')).rejects.toEqual({
-      message: 'Já existe um cadastro para este e-mail!',
+      message: 'Email já cadastrado',
       statusCode: 409,
     });
   });
@@ -97,7 +97,7 @@ describe('ContaService', () => {
     expect(contaRepository.atualizarStatus).toHaveBeenCalledWith(1, StatusConta.EXCLUIDA);
   });
 
-  it('should throw an error if authenticatedConta is missing', async () => {
+  it('should throw an error if authToken is missing', async () => {
     const invalidAuthenticatedConta = null;
 
     await expect(contaService.delete(1, invalidAuthenticatedConta)).rejects.toEqual({
@@ -106,11 +106,11 @@ describe('ContaService', () => {
     });
   });
 
-  it('should throw an error if deletionId does not match authenticatedConta.id', async () => {
-    const authenticatedConta = { id: 2 };
+  it('should throw an error if deletionId does not match authToken.id', async () => {
+    const authToken = { id: 2 };
     const deletionId = 1;
 
-    await expect(contaService.delete(deletionId, authenticatedConta)).rejects.toEqual({
+    await expect(contaService.delete(deletionId, authToken)).rejects.toEqual({
       message: ErrorMessages.noPermissionForAction,
       statusCode: 403,
     });
