@@ -25,8 +25,14 @@ export const ContaResponseSchema = z.object({
 });
 
 export const ContaInformacoesResponseSchema = ContaResponseSchema.extend({
-  sebo: SeboResponseSchema.nullable().optional(),
-  usuario: UsuarioResponseSchema.nullable().optional(),
+  sebo: z
+    .lazy(() => SeboResponseSchema)
+    .nullable()
+    .optional(),
+  usuario: z
+    .lazy(() => UsuarioResponseSchema)
+    .nullable()
+    .optional(),
 });
 
 export type ContaCreateDTO = z.infer<typeof ContaCreateSchema>;

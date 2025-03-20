@@ -32,14 +32,14 @@ class ContaService {
     return gerarAuthToken(conta);
   }
 
-  async recuperarInformacoes(authToken: { id: number }) {
+  async recuperarInformacoes(authToken: { contaId: number }) {
     if (!authToken) {
       return { autenticado: false };
     }
 
-    const conta = await contaRepository.getById(authToken.id);
+    const conta = await contaRepository.getById(authToken.contaId);
     if (!conta) {
-      throw new EntityNotFoundError(authToken.id);
+      throw new EntityNotFoundError(authToken.contaId);
     }
 
     const parsedData = await ContaInformacoesResponseSchema.parseAsync(conta);

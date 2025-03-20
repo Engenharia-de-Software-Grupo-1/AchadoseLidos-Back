@@ -33,6 +33,7 @@ export const gerarAuthToken = (conta: ContaWithRelations) => {
 
   const payload = {
     id: conta.sebo?.id || conta.usuario?.id,
+    contaId: conta.id,
     email: conta.email,
     role: conta.tipo,
   };
