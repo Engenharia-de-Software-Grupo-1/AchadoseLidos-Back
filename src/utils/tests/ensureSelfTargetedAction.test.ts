@@ -1,34 +1,34 @@
 import { ErrorMessages } from '../../errors/ErrorMessages';
-import { ensureSelfTargetedAction } from '../ensureSelfTargetedAction';
+import { ensureSelfTargetedAction } from '../authUtils';
 
 describe('ensureSelfTargetedAction', () => {
-  it('should throw invalidToken error if authenticatedAccountToken is null', () => {
+  it('should throw invalidToken error if authToken is null', () => {
     expect(() => {
-      ensureSelfTargetedAction('123', null);
+      ensureSelfTargetedAction(123, null);
     }).toThrow(ErrorMessages.invalidToken);
   });
 
-  it('should throw invalidToken error if authenticatedAccountToken is not an object', () => {
+  it('should throw invalidToken error if authToken is not an object', () => {
     expect(() => {
-      ensureSelfTargetedAction('123', 'invalidToken');
+      ensureSelfTargetedAction(123, 'invalidToken');
     }).toThrow(ErrorMessages.invalidToken);
   });
 
-  it('should throw invalidToken error if authenticatedAccountToken does not have an id property', () => {
+  it('should throw invalidToken error if authToken does not have an id property', () => {
     expect(() => {
-      ensureSelfTargetedAction('123', {});
+      ensureSelfTargetedAction(123, {});
     }).toThrow(ErrorMessages.invalidToken);
   });
 
-  it('should throw noPermissionForAction if targetAccountId does not match authenticatedAccountToken.id', () => {
+  it('should throw noPermissionForAction if targetAccountId does not match authToken.id', () => {
     expect(() => {
-      ensureSelfTargetedAction('123', { id: '456' });
+      ensureSelfTargetedAction(123, { id: 456 });
     }).toThrow(ErrorMessages.noPermissionForAction);
   });
 
-  it('should not throw an error if targetAccountId matches authenticatedAccountToken.id', () => {
+  it('should not throw an error if targetAccountId matches authToken.id', () => {
     expect(() => {
-      ensureSelfTargetedAction('123', { id: '123' });
+      ensureSelfTargetedAction(123, { id: 123 });
     }).not.toThrow();
   });
 });
