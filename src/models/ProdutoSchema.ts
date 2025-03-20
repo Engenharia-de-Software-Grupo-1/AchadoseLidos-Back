@@ -26,14 +26,14 @@ export const ProdutoCreateSchema = z.object({
   fotos: z.array(FotoProdutoSchema).nullable().optional(),
 });
 
+export const ProdutoUpdateSchema = ProdutoCreateSchema;
+
 export const ProdutoResponseSchema = ProdutoCreateSchema.extend({
   id: z.number().int().positive(),
   createdAt: z.date().or(z.string().datetime()),
   updatedAt: z.date().or(z.string().datetime()),
   sebo: SeboResponseSchema,
 });
-
-export const ProdutoUpdateSchema = ProdutoCreateSchema;
 
 export type ProdutoCreateDTO = z.infer<typeof ProdutoCreateSchema>;
 export type ProdutoUpdateDTO = z.infer<typeof ProdutoUpdateSchema>;

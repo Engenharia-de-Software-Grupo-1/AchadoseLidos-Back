@@ -39,13 +39,19 @@ export const SeboCreateSchema = z.object({
   fotos: z.array(FotoSeboSchema).nullable().optional(),
 });
 
-export const SeboResponseSchema = SeboCreateSchema.extend({
-  id: z.number(),
-  conta: ContaResponseSchema.nullable().optional(),
+export const SeboUpdateSchema = SeboCreateSchema.extend({
+  conta: z
+    .lazy(() => ContaResponseSchema)
+    .nullable()
+    .optional(),
 });
 
-export const SeboUpdateSchema = SeboCreateSchema.extend({
-  conta: ContaResponseSchema.partial().nullable().optional(),
+export const SeboResponseSchema = SeboCreateSchema.extend({
+  id: z.number(),
+  conta: z
+    .lazy(() => ContaResponseSchema)
+    .nullable()
+    .optional(),
 });
 
 export type SeboCreateDTO = z.infer<typeof SeboCreateSchema>;

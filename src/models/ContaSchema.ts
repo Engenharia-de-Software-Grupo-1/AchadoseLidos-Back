@@ -1,11 +1,19 @@
 import { z } from 'zod';
 
+import { SeboResponseSchema } from './SeboSchema';
+import { UsuarioResponseSchema } from './UsuarioSchema';
+
 const TipoContaEnum = z.enum(['SEBO', 'USUARIO']);
 const StatusContaEnum = z.enum(['ATIVA', 'EXCLUIDA']);
 
 export const ContaCreateSchema = z.object({
   email: z.string().email(),
   senha: z.string().min(8),
+});
+
+export const ContaUpdateSchema = z.object({
+  senha: z.string().min(8),
+  token: z.string(),
 });
 
 export const ContaResponseSchema = z.object({
@@ -16,9 +24,9 @@ export const ContaResponseSchema = z.object({
   updatedAt: z.date().or(z.string().datetime()),
 });
 
-export const ContaUpdateSchema = z.object({
-  senha: z.string().min(8),
-  token: z.string(),
+export const ContaInformacoesResponseSchema = ContaResponseSchema.extend({
+  sebo: SeboResponseSchema.nullable().optional(),
+  usuario: UsuarioResponseSchema.nullable().optional(),
 });
 
 export type ContaCreateDTO = z.infer<typeof ContaCreateSchema>;
