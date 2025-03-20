@@ -10,7 +10,8 @@ class ContaController {
     res.cookie('authToken', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      maxAge: COOKIE_EXPIRATION_MS,
+      sameSite: 'strict',
+      maxAge: 1000 * 60 * 60,
     });
 
     res.status(200).send();
