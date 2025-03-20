@@ -18,13 +18,19 @@ export const UsuarioCreateSchema = z.object({
   conta: ContaCreateSchema,
 });
 
-export const UsuarioResponseSchema = UsuarioCreateSchema.extend({
-  id: z.number(),
-  conta: ContaResponseSchema.nullable().optional(),
+export const UsuarioUpdateSchema = UsuarioCreateSchema.extend({
+  conta: z
+    .lazy(() => ContaResponseSchema)
+    .nullable()
+    .optional(),
 });
 
-export const UsuarioUpdateSchema = UsuarioCreateSchema.extend({
-  conta: ContaResponseSchema.partial().nullable().optional(),
+export const UsuarioResponseSchema = UsuarioCreateSchema.extend({
+  id: z.number(),
+  conta: z
+    .lazy(() => ContaResponseSchema)
+    .nullable()
+    .optional(),
 });
 
 export type UsuarioCreateDTO = z.infer<typeof UsuarioCreateSchema>;
