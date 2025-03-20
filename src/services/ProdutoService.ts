@@ -8,17 +8,14 @@ import {
 import { produtoRepository } from '@src/repositories/ProdutoRepository';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import { StatusProduto } from '@prisma/client';
-import { TokenInvalidError } from '@src/errors/TokenInvalidError';
-import { ensureSelfTargetedAction } from '@src/utils/ensureSelfTargetedAction';
+import { ensureSelfTargetedAction, getAuthTokenId } from '@src/utils/authUtils';
 
 class ProdutoService {
-  async create(data: ProdutoCreateDTO, authenticatedSeboToken: unknown) {
-    if (!authenticatedSeboToken || typeof authenticatedSeboToken !== 'object' || !('id' in authenticatedSeboToken)) {
-      throw new TokenInvalidError();
-    }
-
+  async create(data: ProdutoCreateDTO, authToken: unknown) {
+    const authTokenId = getAuthTokenId(authToken);
     const parsedData = ProdutoCreateSchema.parse(data);
-    const result = await produtoRepository.create(parsedData, authenticatedSeboToken.id as number);
+
+    const result = await produtoRepository.create(parsedData, authTokenId);
     return ProdutoResponseSchema.parseAsync(result);
   }
 
@@ -35,18 +32,18 @@ class ProdutoService {
     return ProdutoResponseSchema.parseAsync(result);
   }
 
-  async update(id: number, data: ProdutoUpdateDTO, authenticatedSeboToken: unknown) {
+  async update(id: number, data: ProdutoUpdateDTO, authToken: unknown) {
     const parsedData = ProdutoUpdateSchema.parse(data);
     const produto = await this.getById(id);
-    ensureSelfTargetedAction(produto.sebo.id, authenticatedSeboToken);
+    ensureSelfTargetedAction(produto.sebo.id, authToken);
 
     const result = await produtoRepository.update(id, parsedData);
     return ProdutoResponseSchema.parseAsync(result);
   }
 
-  async delete(id: number, authenticatedSeboToken: unknown) {
+  async delete(id: number, authToken: unknown) {
     const produto = await this.getById(id);
-    ensureSelfTargetedAction(produto.sebo.id, authenticatedSeboToken);
+    ensureSelfTargetedAction(produto.sebo.id, authToken);
 
     await produtoRepository.atualizarStatus(id, StatusProduto.EXCLUIDO);
   }
