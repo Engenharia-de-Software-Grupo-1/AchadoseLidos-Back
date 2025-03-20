@@ -1,9 +1,11 @@
 import request from 'supertest';
-import express from 'express';
+import express, { ErrorRequestHandler } from 'express';
 import { ErrorMessages } from '@src/errors/ErrorMessages';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import { TipoConta } from '@prisma/client';
+import { AppError } from '@src/errors/AppError';
+import { InvalidTokenError } from '@src/errors/InvalidTokenError';
 
 import { ensureIsSebo, ensureIsUsuario, requireAuth } from '../authMiddleware';
 
@@ -25,6 +27,16 @@ app.get('/usuario', ensureIsUsuario, (req: express.Request, res: express.Respons
   res.status(200).send('Usuario Access Granted');
 });
 
+const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
+  if (err instanceof AppError) {
+    res.status(err.statusCode).json({ message: err.message });
+    return;
+  }
+  res.status(500).json({ message: ErrorMessages.serverError });
+};
+
+app.use(errorHandler);
+
 describe('requireAuth Middleware', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -45,8 +57,8 @@ describe('requireAuth Middleware', () => {
 
   it('should return 401 if token is invalid', async () => {
     process.env.JWT_SECRET = 'secret';
-    (jwt.verify as jest.Mock).mockImplementation((token, secret, callback) => {
-      callback(new Error('Invalid token'));
+    (jwt.verify as jest.Mock).mockImplementation(() => {
+      throw new InvalidTokenError();
     });
 
     const response = await request(app).get('/protected').set('Cookie', 'authToken=fakeToken');
@@ -56,9 +68,7 @@ describe('requireAuth Middleware', () => {
 
   it('should call next if token is valid', async () => {
     process.env.JWT_SECRET = 'secret';
-    (jwt.verify as jest.Mock).mockImplementation((token, secret, callback) => {
-      callback(null, {});
-    });
+    (jwt.verify as jest.Mock).mockReturnValue({});
 
     const response = await request(app).get('/protected').set('Cookie', ['authToken=validToken']);
     expect(response.status).toBe(200);
@@ -78,26 +88,22 @@ describe('requireAuth Middleware', () => {
       expect(response.body.message).toBe(ErrorMessages.tokenNotProvided);
     });
 
-    it('should return 401 if token role is not SEBO for ensureIsSebo', async () => {
+    it('should return 403 if token role is not SEBO for ensureIsSebo', async () => {
       process.env.JWT_SECRET = 'secret';
-      (jwt.verify as jest.Mock).mockImplementation((token, secret, callback) => {
-        callback(null, { role: TipoConta.USUARIO });
-      });
+      (jwt.verify as jest.Mock).mockReturnValue({ role: TipoConta.USUARIO });
 
       const response = await request(app).get('/sebo').set('Cookie', ['authToken=validToken']);
-      expect(response.status).toBe(401);
-      expect(response.body.message).toBe(ErrorMessages.unauthorized);
+      expect(response.status).toBe(403);
+      expect(response.body.message).toBe(ErrorMessages.noPermissionForAction);
     });
 
-    it('should return 401 if token role is not USUARIO for ensureIsUsuario', async () => {
+    it('should return 403 if token role is not USUARIO for ensureIsUsuario', async () => {
       process.env.JWT_SECRET = 'secret';
-      (jwt.verify as jest.Mock).mockImplementation((token, secret, callback) => {
-        callback(null, { role: TipoConta.SEBO });
-      });
+      (jwt.verify as jest.Mock).mockReturnValue({ role: TipoConta.SEBO });
 
       const response = await request(app).get('/usuario').set('Cookie', ['authToken=validToken']);
-      expect(response.status).toBe(401);
-      expect(response.body.message).toBe(ErrorMessages.unauthorized);
+      expect(response.status).toBe(403);
+      expect(response.body.message).toBe(ErrorMessages.noPermissionForAction);
     });
 
     it('should return 500 if JWT_SECRET is not set for ensureIsSebo', async () => {
@@ -116,8 +122,8 @@ describe('requireAuth Middleware', () => {
 
     it('should return 401 if token is invalid for ensureIsSebo', async () => {
       process.env.JWT_SECRET = 'secret';
-      (jwt.verify as jest.Mock).mockImplementation((token, secret, callback) => {
-        callback(new Error('Invalid token'));
+      (jwt.verify as jest.Mock).mockImplementation(() => {
+        throw new InvalidTokenError();
       });
 
       const response = await request(app).get('/sebo').set('Cookie', ['authToken=invalidToken']);
@@ -127,8 +133,8 @@ describe('requireAuth Middleware', () => {
 
     it('should return 401 if token is invalid for ensureIsUsuario', async () => {
       process.env.JWT_SECRET = 'secret';
-      (jwt.verify as jest.Mock).mockImplementation((token, secret, callback) => {
-        callback(new Error('Invalid token'));
+      (jwt.verify as jest.Mock).mockImplementation(() => {
+        throw new InvalidTokenError();
       });
 
       const response = await request(app).get('/usuario').set('Cookie', ['authToken=invalidToken']);
@@ -138,9 +144,7 @@ describe('requireAuth Middleware', () => {
 
     it('should call next if token role is SEBO for ensureIsSebo', async () => {
       process.env.JWT_SECRET = 'secret';
-      (jwt.verify as jest.Mock).mockImplementation((token, secret, callback) => {
-        callback(null, { role: TipoConta.SEBO });
-      });
+      (jwt.verify as jest.Mock).mockReturnValue({ role: TipoConta.SEBO });
 
       const response = await request(app).get('/sebo').set('Cookie', ['authToken=validToken']);
       expect(response.status).toBe(200);
@@ -149,9 +153,7 @@ describe('requireAuth Middleware', () => {
 
     it('should call next if token role is USUARIO for ensureIsUsuario', async () => {
       process.env.JWT_SECRET = 'secret';
-      (jwt.verify as jest.Mock).mockImplementation((token, secret, callback) => {
-        callback(null, { role: TipoConta.USUARIO });
-      });
+      (jwt.verify as jest.Mock).mockReturnValue({ role: TipoConta.USUARIO });
 
       const response = await request(app).get('/usuario').set('Cookie', ['authToken=validToken']);
       expect(response.status).toBe(200);
