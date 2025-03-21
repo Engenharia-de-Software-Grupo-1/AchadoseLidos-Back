@@ -7,7 +7,7 @@ contaRoutes.post('/login', async (req, res) => {
   await contaController.login(req, res);
 });
 
-contaRoutes.get('/perfil', requireAuth, async (req, res) => {
+contaRoutes.get('/perfil', async (req, res) => {
   await contaController.getPerfil(req, res);
 });
 
