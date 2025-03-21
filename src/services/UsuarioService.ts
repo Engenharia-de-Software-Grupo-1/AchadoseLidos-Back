@@ -6,7 +6,6 @@ import {
   UsuarioUpdateDTO,
   UsuarioUpdateSchema,
 } from '@src/models/UsuarioSchema';
-import { JwtPayload } from 'jsonwebtoken';
 import { usuarioRepository } from '@src/repositories/UsuarioRepository';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import { ensureSelfTargetedAction } from '@src/utils/authUtils';
@@ -35,7 +34,7 @@ class UsuarioService {
     return UsuarioResponseSchema.parseAsync(result);
   }
 
-  async getPerfilById(id: number, authToken: JwtPayload) {
+  async getPerfilById(id: number, authToken: unknown) {
     ensureSelfTargetedAction(id, authToken);
     const result = await usuarioRepository.getById(id);
     if (!result) {
@@ -44,7 +43,7 @@ class UsuarioService {
     return UsuarioPrivateResponseSchema.parseAsync(result);
   }
 
-  async update(id: number, data: UsuarioUpdateDTO, authToken: JwtPayload) {
+  async update(id: number, data: UsuarioUpdateDTO, authToken: unknown) {
     ensureSelfTargetedAction(id, authToken);
 
     const parsedData = UsuarioUpdateSchema.parse(data);
