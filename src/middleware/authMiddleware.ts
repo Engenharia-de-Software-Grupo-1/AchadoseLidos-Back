@@ -6,6 +6,17 @@ import { TokenNotProvided } from '@src/errors/TokenNotProvided';
 import { NextFunction, Request, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
+const getAuth = (req: Request, res: Response, next: NextFunction) => {
+  const token = req.cookies.authToken;
+  if (!token) {
+    res.status(200).json({ autenticado: false });
+    return;
+  }
+
+  res.locals.decryptedToken = getDecryptedToken(token);
+  next();
+};
+
 const requireAuth = (req: Request, res: Response, next: NextFunction) => {
   const token = req.cookies.authToken;
   if (!token) {
@@ -49,4 +60,4 @@ const getDecryptedToken = (token: string): JwtPayload => {
   }
 };
 
-export { requireAuth, ensureIsSebo, ensureIsUsuario };
+export { getAuth, requireAuth, ensureIsSebo, ensureIsUsuario };
