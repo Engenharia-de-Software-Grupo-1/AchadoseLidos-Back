@@ -7,8 +7,8 @@ contaRoutes.post('/login', async (req, res) => {
   await contaController.login(req, res);
 });
 
-contaRoutes.get('/informacoes', requireAuth, async (req, res) => {
-  await contaController.recuperarInformacoes(req, res);
+contaRoutes.get('/perfil', requireAuth, async (req, res) => {
+  await contaController.getPerfil(req, res);
 });
 
 contaRoutes.get('/validar_email', async (req, res) => {

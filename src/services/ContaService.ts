@@ -32,7 +32,7 @@ class ContaService {
     return gerarAuthToken(conta);
   }
 
-  async recuperarInformacoes(authToken: { contaId: number }) {
+  async getPerfil(authToken: { contaId: number }) {
     if (!authToken) {
       return { autenticado: false };
     }

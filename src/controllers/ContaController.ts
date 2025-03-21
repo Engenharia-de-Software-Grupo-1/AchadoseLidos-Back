@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { contaService } from '@src/services/ContaService';
+import { COOKIE_EXPIRATION_MS } from '@src/utils/authUtils';
 
 class ContaController {
   async login(req: Request, res: Response) {
@@ -10,15 +11,15 @@ class ContaController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 1000 * 60 * 60,
+      maxAge: COOKIE_EXPIRATION_MS,
     });
 
     res.status(200).send();
   }
 
-  async recuperarInformacoes(req: Request, res: Response) {
+  async getPerfil(req: Request, res: Response) {
     const authToken = res.locals.decryptedToken;
-    const result = await contaService.recuperarInformacoes(authToken);
+    const result = await contaService.getPerfil(authToken);
     res.status(200).json(result);
   }
 
