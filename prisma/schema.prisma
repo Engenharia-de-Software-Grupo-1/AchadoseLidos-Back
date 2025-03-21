@@ -33,11 +33,13 @@ model Conta {
 }
 
 model Sebo {
-  id             Int     @id @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   nome           String
-  cpfCnpj        String  @db.VarChar(16)
+  cpfCnpj        String    @db.VarChar(16)
   concordaVender Boolean
-  telefone       String? @db.Char(11)
+  telefone       String?   @db.Char(11)
+  horarioInicio  DateTime?
+  horarioFim     DateTime?
   biografia      String?
   estanteVirtual String?
   instagram      String?
@@ -126,8 +128,8 @@ model Produto {
   categoria         CategoriaProduto
   qtdEstoque        Int
   estadoConservacao EstadoConservacaoProduto
-  anoEdicao         Int
-  anoLancamento     Int
+  anoEdicao         Int?
+  anoLancamento     Int?
   autores           String?
   descricao         String?
   createdAt         DateTime                 @default(now())

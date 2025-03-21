@@ -13,13 +13,12 @@ const FotoProdutoSchema = z.object({
 
 export const ProdutoCreateSchema = z.object({
   nome: requiredString,
-  status: StatusProdutoEnum,
   preco: z.number().nonnegative(),
   categoria: CategoriaProduto,
   qtdEstoque: z.number().int().nonnegative(),
   estadoConservacao: EstadoConservacaoProduto,
-  anoEdicao: z.number().int().min(1000).max(new Date().getFullYear()),
-  anoLancamento: z.number().int().min(1000).max(new Date().getFullYear()),
+  anoEdicao: z.number().optional().nullable(),
+  anoLancamento: z.number().optional().nullable(),
   autores: optionalString,
   descricao: optionalString,
 
@@ -29,7 +28,8 @@ export const ProdutoCreateSchema = z.object({
 export const ProdutoUpdateSchema = ProdutoCreateSchema;
 
 export const ProdutoResponseSchema = ProdutoCreateSchema.extend({
-  id: z.number().int().positive(),
+  id: z.number(),
+  status: StatusProdutoEnum,
   createdAt: z.date().or(z.string().datetime()),
   updatedAt: z.date().or(z.string().datetime()),
   sebo: SeboResponseSchema,
