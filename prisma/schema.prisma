@@ -105,19 +105,17 @@ enum StatusProduto {
 
 enum CategoriaProduto {
   LIVRO
+  REVISTA
+  QUADRINHOS
   DISCO
   CD
   DVD
-  REVISTA
-  GIBI
 }
 
 enum EstadoConservacaoProduto {
   NOVO
-  EXECELENTE
-  BOM
-  ACEITAVEL
-  RUIM
+  SEMINOVO
+  USADO
 }
 
 model Produto {
@@ -126,6 +124,7 @@ model Produto {
   preco             Float
   status            StatusProduto            @default(ATIVO)
   categoria         CategoriaProduto
+  generos           String[]
   qtdEstoque        Int
   estadoConservacao EstadoConservacaoProduto
   anoEdicao         Int?
