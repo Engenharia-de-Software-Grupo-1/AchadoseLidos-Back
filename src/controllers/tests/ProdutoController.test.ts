@@ -89,4 +89,24 @@ describe('ProdutoController', () => {
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith(mockResult);
   });
+
+  it('returns 204 and the deleted entity when delete is successful', async () => {
+    const req = {
+      params: {
+        id: '1',
+      },
+    } as unknown as Request;
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    } as unknown as Response;
+
+    (produtoService.delete as jest.Mock).mockResolvedValueOnce({ id: 1 });
+
+    await produtoController.delete(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(204);
+    expect(produtoService.delete).toHaveBeenCalledWith(1);
+  });
 });
