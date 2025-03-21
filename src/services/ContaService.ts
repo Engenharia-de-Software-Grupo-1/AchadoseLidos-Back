@@ -3,7 +3,7 @@ import { StatusConta } from '@prisma/client';
 import { AppError } from '@src/errors/AppError';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import {
-  ContaInformacoesResponseSchema,
+  ContaExtendedResponseSchema,
   ContaResponseSchema,
   ContaUpdateDTO,
   ContaUpdateSchema,
@@ -42,7 +42,7 @@ class ContaService {
       throw new EntityNotFoundError(authToken.contaId);
     }
 
-    const parsedData = await ContaInformacoesResponseSchema.parseAsync(conta);
+    const parsedData = await ContaExtendedResponseSchema.parseAsync(conta);
     return { autenticado: true, conta: parsedData };
   }
 

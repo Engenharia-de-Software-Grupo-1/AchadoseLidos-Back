@@ -35,6 +35,7 @@ describe('ContaController', () => {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         maxAge: expect.any(Number),
+        sameSite: 'strict',
       });
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalled();

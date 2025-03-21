@@ -24,7 +24,7 @@ export const ContaResponseSchema = z.object({
   updatedAt: z.date().or(z.string().datetime()),
 });
 
-export const ContaInformacoesResponseSchema = ContaResponseSchema.extend({
+export const ContaExtendedResponseSchema = ContaResponseSchema.extend({
   sebo: z
     .lazy(() => SeboResponseSchema)
     .nullable()
