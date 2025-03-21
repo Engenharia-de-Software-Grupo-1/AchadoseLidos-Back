@@ -1,6 +1,7 @@
 import {
   SeboCreateDTO,
   SeboCreateSchema,
+  SeboPrivateResponseSchema,
   SeboResponseSchema,
   SeboUpdateDTO,
   SeboUpdateSchema,
@@ -31,6 +32,15 @@ class SeboService {
       throw new EntityNotFoundError(id);
     }
     return SeboResponseSchema.parseAsync(result);
+  }
+
+  async getPerfilById(id: number, authToken: unknown) {
+    ensureSelfTargetedAction(id, authToken);
+    const result = await seboRepository.getById(id);
+    if (!result) {
+      throw new EntityNotFoundError(id);
+    }
+    return SeboPrivateResponseSchema.parseAsync(result);
   }
 
   async update(id: number, data: SeboUpdateDTO, authToken: unknown) {

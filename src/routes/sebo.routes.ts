@@ -16,6 +16,10 @@ seboRoutes.get('/:id', async (req, res) => {
   await seboController.getById(req, res);
 });
 
+seboRoutes.get('/perfil/:id', ensureIsSebo, async (req, res) => {
+  await seboController.getPerfilById(req, res);
+});
+
 seboRoutes.put('/:id', ensureIsSebo, async (req, res) => {
   await seboController.update(req, res);
 });

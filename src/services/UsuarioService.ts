@@ -1,6 +1,7 @@
 import {
   UsuarioCreateDTO,
   UsuarioCreateSchema,
+  UsuarioPrivateResponseSchema,
   UsuarioResponseSchema,
   UsuarioUpdateDTO,
   UsuarioUpdateSchema,
@@ -31,6 +32,15 @@ class UsuarioService {
       throw new EntityNotFoundError(id);
     }
     return UsuarioResponseSchema.parseAsync(result);
+  }
+
+  async getPerfilById(id: number, authToken: unknown) {
+    ensureSelfTargetedAction(id, authToken);
+    const result = await usuarioRepository.getById(id);
+    if (!result) {
+      throw new EntityNotFoundError(id);
+    }
+    return UsuarioPrivateResponseSchema.parseAsync(result);
   }
 
   async update(id: number, data: UsuarioUpdateDTO, authToken: unknown) {
