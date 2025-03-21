@@ -8,6 +8,7 @@ import {
   ContaUpdateDTO,
   ContaUpdateSchema,
 } from '@src/models/ContaSchema';
+import { JwtPayload } from 'jsonwebtoken';
 import { contaRepository } from '@src/repositories/ContaRepository';
 import { sendEmail } from '@src/lib/mailer';
 import { gerarAuthToken, gerarHashSenha, gerarResetToken } from '@src/utils/authUtils';
@@ -32,7 +33,7 @@ class ContaService {
     return gerarAuthToken(conta);
   }
 
-  async getPerfil(authToken: { contaId: number }) {
+  async getPerfil(authToken: JwtPayload) {
     if (!authToken) {
       return { autenticado: false };
     }
@@ -84,7 +85,7 @@ class ContaService {
     return ContaResponseSchema.parseAsync(result);
   }
 
-  async delete(id: number, authToken: unknown) {
+  async delete(id: number, authToken: JwtPayload) {
     ensureSelfTargetedAction(id, authToken);
 
     const conta = await contaRepository.getById(id);

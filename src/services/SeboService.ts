@@ -6,6 +6,7 @@ import {
   SeboUpdateDTO,
   SeboUpdateSchema,
 } from '@src/models/SeboSchema';
+import { JwtPayload } from 'jsonwebtoken';
 import { seboRepository } from '@src/repositories/SeboRepository';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import { ensureSelfTargetedAction } from '@src/utils/authUtils';
@@ -34,7 +35,7 @@ class SeboService {
     return SeboResponseSchema.parseAsync(result);
   }
 
-  async getPerfilById(id: number, authToken: unknown) {
+  async getPerfilById(id: number, authToken: JwtPayload) {
     ensureSelfTargetedAction(id, authToken);
     const result = await seboRepository.getById(id);
     if (!result) {
@@ -43,7 +44,7 @@ class SeboService {
     return SeboPrivateResponseSchema.parseAsync(result);
   }
 
-  async update(id: number, data: SeboUpdateDTO, authToken: unknown) {
+  async update(id: number, data: SeboUpdateDTO, authToken: JwtPayload) {
     ensureSelfTargetedAction(id, authToken);
 
     const parsedData = SeboUpdateSchema.parse(data);
