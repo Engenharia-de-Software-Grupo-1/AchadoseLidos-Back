@@ -16,6 +16,10 @@ usuarioRoutes.get('/:id', async (req, res) => {
   await usuarioController.getById(req, res);
 });
 
+usuarioRoutes.get('/perfil/:id', ensureIsUsuario, async (req, res) => {
+  await usuarioController.getPerfilById(req, res);
+});
+
 usuarioRoutes.put('/:id', ensureIsUsuario, async (req, res) => {
   await usuarioController.update(req, res);
 });

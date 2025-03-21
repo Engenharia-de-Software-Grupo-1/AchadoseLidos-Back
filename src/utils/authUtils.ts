@@ -34,6 +34,7 @@ export const gerarAuthToken = (conta: ContaWithRelations) => {
   const payload = {
     id: conta.sebo?.id || conta.usuario?.id,
     contaId: conta.id,
+    role: conta.tipo,
   };
 
   const token = jwt.sign(payload, process.env.JWT_SECRET, {

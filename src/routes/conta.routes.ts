@@ -3,6 +3,7 @@ import { contaController } from '@src/controllers/ContaController';
 import { getAuth, requireAuth } from '@src/middleware/authMiddleware';
 
 export const contaRoutes = Router();
+
 contaRoutes.post('/login', async (req, res) => {
   await contaController.login(req, res);
 });
