@@ -85,7 +85,7 @@ class ContaService {
     return ContaResponseSchema.parseAsync(result);
   }
 
-  async delete(id: number, authToken: JwtPayload) {
+  async delete(id: number, authToken: unknown) {
     ensureSelfTargetedAction(id, authToken);
 
     const conta = await contaRepository.getById(id);

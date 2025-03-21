@@ -5,14 +5,13 @@ import {
   ProdutoUpdateDTO,
   ProdutoUpdateSchema,
 } from '@src/models/ProdutoSchema';
-import { JwtPayload } from 'jsonwebtoken';
 import { produtoRepository } from '@src/repositories/ProdutoRepository';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import { StatusProduto } from '@prisma/client';
 import { ensureSelfTargetedAction, getAuthTokenId } from '@src/utils/authUtils';
 
 class ProdutoService {
-  async create(data: ProdutoCreateDTO, authToken: JwtPayload) {
+  async create(data: ProdutoCreateDTO, authToken: unknown) {
     const authTokenId = getAuthTokenId(authToken);
     const parsedData = ProdutoCreateSchema.parse(data);
 
@@ -33,7 +32,7 @@ class ProdutoService {
     return ProdutoResponseSchema.parseAsync(result);
   }
 
-  async update(id: number, data: ProdutoUpdateDTO, authToken: JwtPayload) {
+  async update(id: number, data: ProdutoUpdateDTO, authToken: unknown) {
     const parsedData = ProdutoUpdateSchema.parse(data);
     const produto = await this.getById(id);
     ensureSelfTargetedAction(produto.sebo.id, authToken);
@@ -42,7 +41,7 @@ class ProdutoService {
     return ProdutoResponseSchema.parseAsync(result);
   }
 
-  async delete(id: number, authToken: JwtPayload) {
+  async delete(id: number, authToken: unknown) {
     const produto = await this.getById(id);
     ensureSelfTargetedAction(produto.sebo.id, authToken);
 
