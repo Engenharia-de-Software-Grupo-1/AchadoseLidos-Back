@@ -47,7 +47,7 @@ const ensureRole = (role: TipoConta) => {
 const ensureIsSebo = ensureRole(TipoConta.SEBO);
 const ensureIsUsuario = ensureRole(TipoConta.USUARIO);
 
-const getDecryptedToken = (token: string): JwtPayload => {
+const getDecryptedToken = (token: string) => {
   if (!process.env.JWT_SECRET) {
     throw new InternalServerError();
   }

@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Conta, Sebo, Usuario } from '@prisma/client';
 import { InvalidTokenError } from '@src/errors/InvalidTokenError';
 import { NoPermissionError } from '@src/errors/NoPermissionError';
@@ -44,14 +44,14 @@ export const gerarAuthToken = (conta: ContaWithRelations) => {
   return `Bearer ${token}`;
 };
 
-export const getAuthTokenId = (authToken: unknown) => {
+export const getAuthTokenId = (authToken: JwtPayload) => {
   if (!authToken || typeof authToken !== 'object' || !('id' in authToken)) {
     throw new InvalidTokenError();
   }
   return Number(authToken.id);
 };
 
-export const ensureSelfTargetedAction = (id: number, authToken: unknown) => {
+export const ensureSelfTargetedAction = (id: number, authToken: JwtPayload) => {
   const authTokenId = getAuthTokenId(authToken);
   if (id !== authTokenId) {
     throw new NoPermissionError();
