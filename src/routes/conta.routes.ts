@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import { contaController } from '@src/controllers/ContaController';
-import { requireAuth } from '@src/middleware/authMiddleware';
+import { getAuth, requireAuth } from '@src/middleware/authMiddleware';
 
 export const contaRoutes = Router();
 contaRoutes.post('/login', async (req, res) => {
   await contaController.login(req, res);
 });
 
-contaRoutes.get('/perfil', async (req, res) => {
+contaRoutes.get('/perfil', getAuth, async (req, res) => {
   await contaController.getPerfil(req, res);
 });
 
