@@ -15,7 +15,7 @@ export const UsuarioCreateSchema = z.object({
   goodreads: optionalString,
   fotoPerfil: optionalString,
 
-  conta: ContaCreateSchema,
+  conta: z.lazy(() => ContaCreateSchema),
 });
 
 export const UsuarioUpdateSchema = UsuarioCreateSchema.extend({

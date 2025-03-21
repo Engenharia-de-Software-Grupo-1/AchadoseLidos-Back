@@ -34,7 +34,7 @@ export const SeboCreateSchema = z.object({
   enjoei: optionalString,
   amazon: optionalString,
 
-  conta: ContaCreateSchema,
+  conta: z.lazy(() => ContaCreateSchema),
   endereco: EnderecoSeboSchema,
   fotos: z.array(FotoSeboSchema).nullable().optional(),
 });
