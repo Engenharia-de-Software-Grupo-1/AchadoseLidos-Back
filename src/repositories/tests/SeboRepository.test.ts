@@ -33,7 +33,6 @@ describe('SeboRepository', () => {
         ehPublico: true,
         complemento: 'Complemento',
       },
-      fotos: [{ url: 'http://example.com/foto1' }],
     };
 
     const contaCriada = { id: 123 };

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { optionalString, requiredString } from '@src/utils/zodTypes';
 
-import { ContaCreateSchema, ContaResponseSchema } from './ContaSchema';
+import { ContaCreateSchema } from './ContaSchema';
 
 const EnderecoSeboSchema = z.object({
   cep: z.string().length(8),
@@ -18,13 +18,14 @@ const FotoSeboSchema = z.object({
   url: z.string().url(),
 });
 
-export const SeboCreateSchema = z.object({
+const SeboSchema = z.object({
   nome: requiredString,
-  cpfCnpj: z.string().min(11).max(16),
   concordaVender: z.boolean(),
   telefone: z.string().max(11).nullable().optional(),
 
   biografia: optionalString,
+  horarioInicio: z.date().nullable().optional(),
+  horarioFim: z.date().nullable().optional(),
   estanteVirtual: optionalString,
   instagram: optionalString,
   curadores: optionalString,
@@ -34,24 +35,35 @@ export const SeboCreateSchema = z.object({
   enjoei: optionalString,
   amazon: optionalString,
 
-  conta: z.lazy(() => ContaCreateSchema),
   endereco: EnderecoSeboSchema,
+});
+
+const SeboPrivateSchema = z.object({
+  cpfCnpj: z.string().min(11).max(16),
+});
+
+export const SeboCreateSchema = SeboSchema.merge(SeboPrivateSchema).extend({
+  conta: z.lazy(() => ContaCreateSchema),
+});
+
+export const SeboUpdateSchema = SeboSchema.merge(SeboPrivateSchema).extend({
   fotos: z.array(FotoSeboSchema).nullable().optional(),
 });
 
-export const SeboUpdateSchema = SeboCreateSchema.extend({
-  conta: z
-    .lazy(() => ContaResponseSchema)
-    .nullable()
-    .optional(),
+export const SeboResponseSchema = SeboSchema.extend({
+  id: z.number(),
+}).transform(data => {
+  const { telefone, endereco, ...rest } = data;
+  return {
+    ...rest,
+    id: data.id,
+    ...(data.concordaVender ? { telefone } : {}),
+    ...(endereco && endereco.ehPublico ? { endereco } : {}),
+  };
 });
 
-export const SeboResponseSchema = SeboCreateSchema.extend({
+export const SeboPrivateResponseSchema = SeboSchema.merge(SeboPrivateSchema).extend({
   id: z.number(),
-  conta: z
-    .lazy(() => ContaResponseSchema)
-    .nullable()
-    .optional(),
 });
 
 export type SeboCreateDTO = z.infer<typeof SeboCreateSchema>;
