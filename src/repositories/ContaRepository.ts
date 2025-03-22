@@ -1,4 +1,5 @@
 import { TipoConta, Prisma, StatusConta } from '@prisma/client';
+import { DELETED_CONTA } from '@src/constants/deletedData';
 import prismaClient from '@src/lib/prismaClient';
 import { ContaCreateDTO } from '@src/models/ContaSchema';
 import { gerarHashSenha } from '@src/utils/authUtils';
@@ -68,10 +69,10 @@ class ContaRepository {
     });
   }
 
-  async atualizarStatus(id: number, status: StatusConta) {
-    return prismaClient.conta.update({
+  async delete(tx: Prisma.TransactionClient, id: number) {
+    await tx.conta.update({
       where: { id },
-      data: { status },
+      data: DELETED_CONTA,
     });
   }
 }

@@ -9,7 +9,7 @@ app.use(express.json());
 app.use('/sebos', seboRoutes);
 
 jest.mock('@src/controllers/SeboController');
-jest.mock('@src/middleware/authMiddleware', () => ({
+jest.mock('@src/middlewares/authMiddleware', () => ({
   requireAuth: jest.fn((req, res, next) => next()),
   ensureIsSebo: jest.fn((req, res, next) => next()),
 }));
@@ -65,5 +65,15 @@ describe('Sebo Routes', () => {
     expect(response.status).toBe(200);
     expect(response.body.message).toBe('mensagem teste para atualização');
     expect(seboController.update).toHaveBeenCalledTimes(1);
+  });
+
+  it('deletes a sebo by id', async () => {
+    (seboController.delete as jest.Mock).mockImplementationOnce((req, res) => {
+      res.status(200).send({ message: 'mensagem teste para exclusão' });
+    });
+
+    const response = await request(app).delete('/sebos/1');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ message: 'mensagem teste para exclusão' });
   });
 });

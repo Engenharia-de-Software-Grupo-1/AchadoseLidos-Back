@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { contaController } from '@src/controllers/ContaController';
-import { getAuth, requireAuth } from '@src/middleware/authMiddleware';
+import { getAuth, requireAuth } from '@src/middlewares/authMiddleware';
 
 export const contaRoutes = Router();
 
@@ -22,10 +22,6 @@ contaRoutes.post('/recuperar_senha', async (req, res) => {
 
 contaRoutes.put('/atualizar_senha', async (req, res) => {
   await contaController.atualizarSenha(req, res);
-});
-
-contaRoutes.delete('/:id', requireAuth, async (req, res) => {
-  await contaController.delete(req, res);
 });
 
 contaRoutes.post('/logout', requireAuth, async (req, res) => {

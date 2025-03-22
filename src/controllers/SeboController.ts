@@ -33,6 +33,14 @@ class SeboController {
     const result = await seboService.update(Number(id), req.body, authToken);
     res.status(200).json(result);
   }
+
+  async delete(req: Request, res: Response) {
+    const { id } = req.params;
+    const authToken = res.locals.decryptedToken;
+
+    await seboService.delete(Number(id), authToken);
+    res.status(204).send();
+  }
 }
 
 export const seboController = new SeboController();

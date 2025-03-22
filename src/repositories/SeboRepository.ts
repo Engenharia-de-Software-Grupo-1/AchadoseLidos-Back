@@ -1,8 +1,10 @@
 import prismaClient from '@src/lib/prismaClient';
 import { StatusConta, TipoConta } from '@prisma/client';
 import { SeboCreateDTO, SeboUpdateDTO } from '@src/models/SeboSchema';
+import { DELETED_ENDERECO, DELETED_SEBO } from '@src/constants/deletedData';
 
 import { contaRepository } from './ContaRepository';
+import { produtoRepository } from './ProdutoRepository';
 
 class SeboRepository {
   async create(data: SeboCreateDTO) {
@@ -35,7 +37,7 @@ class SeboRepository {
   async getById(id: number) {
     return prismaClient.sebo.findUnique({
       where: { id },
-      include: { conta: true, endereco: true, fotos: true },
+      include: { conta: true, endereco: true, fotos: true, produtos: true },
     });
   }
 
@@ -59,6 +61,21 @@ class SeboRepository {
         where: { id },
         include: { conta: true, endereco: true, fotos: true },
       });
+    });
+  }
+
+  async delete(id: number) {
+    const sebo = await this.getById(id);
+    if (!sebo) return;
+
+    await prismaClient.$transaction(async tx => {
+      await Promise.all([
+        contaRepository.delete(tx, sebo.conta.id),
+        tx.sebo.update({ where: { id }, data: DELETED_SEBO }),
+        tx.enderecoSebo.update({ where: { seboId: id }, data: DELETED_ENDERECO }),
+        tx.fotoSebo.deleteMany({ where: { seboId: id } }),
+        sebo.produtos.forEach(produto => produtoRepository.delete(produto.id, tx)),
+      ]);
     });
   }
 }

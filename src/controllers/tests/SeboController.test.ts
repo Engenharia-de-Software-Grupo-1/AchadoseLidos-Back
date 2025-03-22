@@ -90,4 +90,26 @@ describe('SeboController', () => {
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith(mockResult);
   });
+
+  it('returns 204 if the account is successfully deleted', async () => {
+    const req = {
+      params: {
+        id: '1',
+      },
+    } as unknown as Request;
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+      locals: { decryptedToken: { id: 1 } },
+    } as unknown as Response;
+
+    (seboService.delete as jest.Mock).mockResolvedValueOnce('resolveu');
+
+    await seboController.delete(req, res);
+
+    expect(seboService.delete).toHaveBeenCalledWith(1, { id: 1 });
+    expect(res.status).toHaveBeenCalledWith(204);
+    expect(res.send).toHaveBeenCalled();
+  });
 });

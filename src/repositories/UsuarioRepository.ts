@@ -1,6 +1,7 @@
 import prismaClient from '@src/lib/prismaClient';
 import { StatusConta, TipoConta } from '@prisma/client';
 import { UsuarioCreateDTO, UsuarioUpdateDTO } from '@src/models/UsuarioSchema';
+import { DELETED_USUARIO } from '@src/constants/deletedData';
 
 import { contaRepository } from './ContaRepository';
 
@@ -36,11 +37,21 @@ class UsuarioRepository {
   }
 
   async update(id: number, data: UsuarioUpdateDTO) {
-    const { conta: _conta, ...usuario } = data;
-
     return prismaClient.usuario.update({
       where: { id },
-      data: usuario,
+      data,
+    });
+  }
+
+  async delete(id: number) {
+    const usuario = await this.getById(id);
+    if (!usuario) return;
+
+    await prismaClient.$transaction(async tx => {
+      await Promise.all([
+        contaRepository.delete(tx, usuario.conta.id),
+        tx.usuario.update({ where: { id }, data: DELETED_USUARIO }),
+      ]);
     });
   }
 }

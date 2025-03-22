@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { usuarioController } from '@src/controllers/UsuarioController';
-import { ensureIsUsuario } from '@src/middleware/authMiddleware';
+import { ensureIsUsuario } from '@src/middlewares/authMiddleware';
 
 export const usuarioRoutes = Router();
 
@@ -22,4 +22,8 @@ usuarioRoutes.get('/perfil/:id', ensureIsUsuario, async (req, res) => {
 
 usuarioRoutes.put('/:id', ensureIsUsuario, async (req, res) => {
   await usuarioController.update(req, res);
+});
+
+usuarioRoutes.delete('/:id', ensureIsUsuario, async (req, res) => {
+  await usuarioController.delete(req, res);
 });

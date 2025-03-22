@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { produtoController } from '@src/controllers/ProdutoController';
-import { ensureIsSebo } from '@src/middleware/authMiddleware';
+import { ensureIsSebo } from '@src/middlewares/authMiddleware';
 
 export const produtoRoutes = Router();
 

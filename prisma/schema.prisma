@@ -110,12 +110,14 @@ enum CategoriaProduto {
   DISCO
   CD
   DVD
+  OUTRO
 }
 
 enum EstadoConservacaoProduto {
   NOVO
   SEMINOVO
   USADO
+  DESCONHECIDO
 }
 
 model Produto {

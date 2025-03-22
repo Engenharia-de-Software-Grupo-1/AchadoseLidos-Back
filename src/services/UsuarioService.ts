@@ -52,6 +52,13 @@ class UsuarioService {
     const result = await usuarioRepository.update(id, parsedData);
     return UsuarioResponseSchema.parseAsync(result);
   }
+
+  async delete(id: number, authToken: unknown) {
+    ensureSelfTargetedAction(id, authToken);
+
+    await this.getById(id);
+    await usuarioRepository.delete(id);
+  }
 }
 
 export const usuarioService = new UsuarioService();
