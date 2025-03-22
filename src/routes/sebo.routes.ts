@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { seboController } from '@src/controllers/SeboController';
-import { ensureIsSebo } from '@src/middleware/authMiddleware';
+import { ensureIsSebo } from '@src/middlewares/authMiddleware';
 
 export const seboRoutes = Router();
 

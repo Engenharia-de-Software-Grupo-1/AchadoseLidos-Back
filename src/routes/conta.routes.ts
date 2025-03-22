@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { contaController } from '@src/controllers/ContaController';
-import { getAuth, requireAuth } from '@src/middleware/authMiddleware';
+import { getAuth, requireAuth } from '@src/middlewares/authMiddleware';
 
 export const contaRoutes = Router();
 
