@@ -1,7 +1,6 @@
 import express from 'express';
 import request from 'supertest';
 import { produtoController } from '@src/controllers/ProdutoController';
-import { reset } from 'module-alias';
 
 import { produtoRoutes } from '../produto.route';
 

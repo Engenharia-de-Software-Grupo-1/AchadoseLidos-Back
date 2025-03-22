@@ -90,7 +90,7 @@ describe('ProdutoController', () => {
     expect(res.json).toHaveBeenCalledWith(mockResult);
   });
 
-  it('returns 204 and the deleted entity when delete is successful', async () => {
+  it('returns 204 and if the product is successfully deleted', async () => {
     const req = {
       params: {
         id: '1',

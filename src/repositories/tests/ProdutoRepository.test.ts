@@ -79,7 +79,7 @@ describe('ProdutoRepository', () => {
     });
   });
 
-  it('return a product by id', async () => {
+  it('returns a product by id', async () => {
     const produto = {
       id: 1,
       seboId: 123,
