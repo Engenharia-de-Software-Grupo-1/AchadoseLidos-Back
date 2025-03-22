@@ -24,10 +24,6 @@ contaRoutes.put('/atualizar_senha', async (req, res) => {
   await contaController.atualizarSenha(req, res);
 });
 
-contaRoutes.delete('/:id', requireAuth, async (req, res) => {
-  await contaController.delete(req, res);
-});
-
 contaRoutes.post('/logout', requireAuth, async (req, res) => {
   await contaController.logout(req, res);
 });

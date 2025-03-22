@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt';
-import { StatusConta } from '@prisma/client';
 import { AppError } from '@src/errors/AppError';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import {
@@ -12,7 +11,6 @@ import { JwtPayload } from 'jsonwebtoken';
 import { contaRepository } from '@src/repositories/ContaRepository';
 import { sendEmail } from '@src/lib/mailer';
 import { gerarAuthToken, gerarHashSenha, gerarResetToken } from '@src/utils/authUtils';
-import { ensureSelfTargetedAction } from '@src/utils/authUtils';
 import { InvalidTokenError } from '@src/errors/InvalidTokenError';
 import { ExpiredTokenError } from '@src/errors/ExpiredTokenError';
 import { EmailNotRegisteredError } from '@src/errors/EmailNotRegisteredError';
@@ -83,17 +81,6 @@ class ContaService {
     const result = await contaRepository.atualizarSenha(conta.id, hashSenha);
 
     return ContaResponseSchema.parseAsync(result);
-  }
-
-  async delete(id: number, authToken: unknown) {
-    ensureSelfTargetedAction(id, authToken);
-
-    const conta = await contaRepository.getById(id);
-    if (!conta) {
-      throw new EntityNotFoundError(id);
-    }
-
-    await contaRepository.atualizarStatus(id, StatusConta.EXCLUIDA);
   }
 }
 

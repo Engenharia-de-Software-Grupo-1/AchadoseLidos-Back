@@ -40,14 +40,6 @@ class ContaController {
     res.status(200).json(result);
   }
 
-  async delete(req: Request, res: Response) {
-    const { id } = req.params;
-    const authToken = res.locals.decryptedToken;
-
-    await contaService.delete(Number(id), authToken);
-    res.status(204).send();
-  }
-
   async logout(_: Request, res: Response) {
     res.cookie('authToken', '', { maxAge: 1 });
     res.status(200).send();
