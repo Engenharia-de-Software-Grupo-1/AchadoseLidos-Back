@@ -1,6 +1,7 @@
 import prismaClient from '@src/lib/prismaClient';
 import { ProdutoCreateDTO, ProdutoUpdateDTO } from '@src/models/ProdutoSchema';
-import { StatusProduto } from '@prisma/client';
+import { Prisma, StatusProduto } from '@prisma/client';
+import { DELETED_PRODUTO } from '@src/constants/deletedData';
 
 const includeFotosAndSebo = {
   include: {
@@ -67,11 +68,14 @@ class ProdutoRepository {
     });
   }
 
-  async atualizarStatus(id: number, status: StatusProduto) {
-    return prismaClient.produto.update({
-      where: { id },
-      data: { status },
-    });
+  async delete(id: number, tx: Prisma.TransactionClient = prismaClient) {
+    await Promise.all([
+      tx.fotoProduto.deleteMany({ where: { produtoId: id } }),
+      tx.produto.update({
+        where: { id },
+        data: DELETED_PRODUTO,
+      }),
+    ]);
   }
 }
 

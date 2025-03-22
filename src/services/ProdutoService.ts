@@ -7,7 +7,6 @@ import {
 } from '@src/models/ProdutoSchema';
 import { produtoRepository } from '@src/repositories/ProdutoRepository';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
-import { StatusProduto } from '@prisma/client';
 import { ensureSelfTargetedAction, getAuthTokenId } from '@src/utils/authUtils';
 
 class ProdutoService {
@@ -45,7 +44,7 @@ class ProdutoService {
     const produto = await this.getById(id);
     ensureSelfTargetedAction(produto.sebo.id, authToken);
 
-    await produtoRepository.atualizarStatus(id, StatusProduto.EXCLUIDO);
+    await produtoRepository.delete(id);
   }
 }
 
