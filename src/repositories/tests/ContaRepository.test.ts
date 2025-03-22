@@ -2,6 +2,7 @@ import { StatusConta, TipoConta } from '@prisma/client';
 import { contaRepository } from '@src/repositories/ContaRepository';
 import prismaClient from '@src/lib/prismaClient';
 import { genSalt, hash } from 'bcrypt';
+import { DELETED_CONTA } from '@src/constants/deletedData';
 
 import { prismaMock } from '../../lib/singleton';
 
@@ -88,16 +89,13 @@ describe('ContaRepository', () => {
     expect(result).toEqual(mockAccount);
   });
 
-  it('updates account status', async () => {
-    const mockResponse = { id: 1, status: StatusConta.ATIVA };
-    (prismaClient.conta.update as jest.Mock).mockResolvedValue(mockResponse);
-
-    const result = await contaRepository.atualizarStatus(1, StatusConta.ATIVA);
+  it('deletes an account by id', async () => {
+    const tx = prismaMock;
+    await contaRepository.delete(tx, 1);
 
     expect(prismaClient.conta.update).toHaveBeenCalledWith({
       where: { id: 1 },
-      data: { status: StatusConta.ATIVA },
+      data: DELETED_CONTA,
     });
-    expect(result).toEqual(mockResponse);
   });
 });
