@@ -23,3 +23,7 @@ seboRoutes.get('/perfil/:id', ensureIsSebo, async (req, res) => {
 seboRoutes.put('/:id', ensureIsSebo, async (req, res) => {
   await seboController.update(req, res);
 });
+
+seboRoutes.delete('/:id', ensureIsSebo, async (req, res) => {
+  await seboController.delete(req, res);
+});

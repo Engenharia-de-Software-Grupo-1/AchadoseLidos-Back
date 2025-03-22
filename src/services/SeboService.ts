@@ -52,6 +52,13 @@ class SeboService {
     const result = await seboRepository.update(id, parsedData);
     return SeboResponseSchema.parseAsync(result);
   }
+
+  async delete(id: number, authToken: unknown) {
+    ensureSelfTargetedAction(id, authToken);
+
+    await this.getById(id);
+    await seboRepository.delete(id);
+  }
 }
 
 export const seboService = new SeboService();
