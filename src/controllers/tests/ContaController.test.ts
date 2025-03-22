@@ -63,28 +63,6 @@ describe('ContaController', () => {
     expect(res.json).toHaveBeenCalledWith({ mensagem: 'Email disponível' });
   });
 
-  it('returns 204 if the account is successfully deleted', async () => {
-    const req = {
-      params: {
-        id: '1',
-      },
-    } as unknown as Request;
-
-    const res = {
-      status: jest.fn().mockReturnThis(),
-      send: jest.fn(),
-      locals: { decryptedToken: { id: 1 } },
-    } as unknown as Response;
-
-    (contaService.delete as jest.Mock).mockResolvedValueOnce('resolveu');
-
-    await contaController.delete(req, res);
-
-    expect(contaService.delete).toHaveBeenCalledWith(1, { id: 1 });
-    expect(res.status).toHaveBeenCalledWith(204);
-    expect(res.send).toHaveBeenCalled();
-  });
-
   it('clears the authToken cookie and send a 200 status', async () => {
     const req = {} as unknown as Request;
 

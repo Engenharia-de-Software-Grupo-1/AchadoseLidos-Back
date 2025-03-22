@@ -54,7 +54,7 @@ export const DELETED_PRODUTO = {
   preco: 0,
   status: StatusProduto.EXCLUIDO,
   categoria: CategoriaProduto.OUTRO,
-  generos: ['-'],
+  generos: ['Outro'],
   qtdEstoque: 0,
   estadoConservacao: EstadoConservacaoProduto.DESCONHECIDO,
   anoEdicao: null,

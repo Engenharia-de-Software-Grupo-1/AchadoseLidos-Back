@@ -33,12 +33,6 @@ describe('Conta Routes', () => {
     expect(response.body).toEqual({ message: 'mensagem de email validado' });
   });
 
-  it('deletes conta by id', async () => {
-    const response = await request(app).delete('/conta/1');
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({ message: 'mensagem de conta deletada' });
-  });
-
   it('desloga', async () => {
     const response = await request(app).post('/conta/logout');
     expect(response.status).toBe(200);

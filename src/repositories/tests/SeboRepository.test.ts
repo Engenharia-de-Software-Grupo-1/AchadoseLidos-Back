@@ -110,7 +110,7 @@ describe('SeboRepository', () => {
     expect(result).toEqual(sebo);
     expect(prismaClient.sebo.findUnique).toHaveBeenCalledWith({
       where: { id: 1 },
-      include: { conta: true, endereco: true, fotos: true },
+      include: { conta: true, endereco: true, fotos: true, produtos: true },
     });
   });
 

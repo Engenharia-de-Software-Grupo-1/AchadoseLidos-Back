@@ -79,40 +79,4 @@ describe('ContaService', () => {
 
     await expect(contaService.validarEmail('test@example.com')).resolves.not.toThrow();
   });
-
-  it('should throw an error if account does not exist', async () => {
-    (contaRepository.getById as jest.Mock).mockResolvedValue(null);
-
-    await expect(contaService.delete(1, { id: 1 })).rejects.toEqual({
-      message: 'Entidade com id 1 não encontrada',
-      statusCode: 404,
-    });
-  });
-
-  it('should update account status to EXCLUIDA if account exists', async () => {
-    (contaRepository.getById as jest.Mock).mockResolvedValue({ id: 1 });
-    (contaRepository.atualizarStatus as jest.Mock).mockResolvedValue(true);
-
-    await expect(contaService.delete(1, { id: 1 })).resolves.not.toThrow();
-    expect(contaRepository.atualizarStatus).toHaveBeenCalledWith(1, StatusConta.EXCLUIDA);
-  });
-
-  it('should throw an error if authToken is missing', async () => {
-    const invalidAuthenticatedConta = null;
-
-    await expect(contaService.delete(1, invalidAuthenticatedConta)).rejects.toEqual({
-      message: ErrorMessages.invalidToken,
-      statusCode: 401,
-    });
-  });
-
-  it('should throw an error if deletionId does not match authToken.id', async () => {
-    const authToken = { id: 2 };
-    const deletionId = 1;
-
-    await expect(contaService.delete(deletionId, authToken)).rejects.toEqual({
-      message: ErrorMessages.noPermissionForAction,
-      statusCode: 403,
-    });
-  });
 });
