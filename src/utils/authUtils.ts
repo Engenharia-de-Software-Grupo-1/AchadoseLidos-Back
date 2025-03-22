@@ -11,7 +11,7 @@ type ContaWithRelations = Conta & {
   usuario?: Usuario | null;
 };
 
-export const COOKIE_EXPIRATION_HOURS = 1;
+export const COOKIE_EXPIRATION_HOURS = 4;
 export const COOKIE_EXPIRATION_SECONDS = COOKIE_EXPIRATION_HOURS * 60 * 60;
 export const COOKIE_EXPIRATION_MS = COOKIE_EXPIRATION_SECONDS * 1000;
 

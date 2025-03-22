@@ -37,11 +37,12 @@ class ContaController {
 
   async atualizarSenha(req: Request, res: Response) {
     const result = await contaService.atualizarSenha(req.body);
+    res.clearCookie('authToken');
     res.status(200).json(result);
   }
 
   async logout(_: Request, res: Response) {
-    res.cookie('authToken', '', { maxAge: 1 });
+    res.clearCookie('authToken');
     res.status(200).send();
   }
 }
