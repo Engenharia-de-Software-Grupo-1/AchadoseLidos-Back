@@ -23,3 +23,7 @@ usuarioRoutes.get('/perfil/:id', ensureIsUsuario, async (req, res) => {
 usuarioRoutes.put('/:id', ensureIsUsuario, async (req, res) => {
   await usuarioController.update(req, res);
 });
+
+usuarioRoutes.delete('/:id', ensureIsUsuario, async (req, res) => {
+  await usuarioController.delete(req, res);
+});
