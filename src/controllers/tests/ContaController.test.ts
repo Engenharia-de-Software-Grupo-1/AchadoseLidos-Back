@@ -69,12 +69,12 @@ describe('ContaController', () => {
     const res = {
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
-      cookie: jest.fn(),
+      clearCookie: jest.fn(),
     } as unknown as Response;
 
     await contaController.logout(req, res);
 
-    expect(res.cookie).toHaveBeenCalledWith('authToken', '', { maxAge: 1 });
+    expect(res.clearCookie).toHaveBeenCalledWith('authToken');
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.send).toHaveBeenCalled();
   });
