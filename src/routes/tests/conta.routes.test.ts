@@ -6,7 +6,7 @@ import { contaRoutes } from '../conta.routes';
 const app = express();
 app.use(express.json());
 app.use('/conta', contaRoutes);
-jest.mock('@src/middleware/authMiddleware', () => ({
+jest.mock('@src/middlewares/authMiddleware', () => ({
   getAuth: jest.fn((req, res, next) => next()),
   requireAuth: jest.fn((req, res, next) => next()),
 }));

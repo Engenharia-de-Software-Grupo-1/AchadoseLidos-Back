@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { usuarioController } from '@src/controllers/UsuarioController';
-import { ensureIsUsuario } from '@src/middleware/authMiddleware';
+import { ensureIsUsuario } from '@src/middlewares/authMiddleware';
 
 export const usuarioRoutes = Router();
 
