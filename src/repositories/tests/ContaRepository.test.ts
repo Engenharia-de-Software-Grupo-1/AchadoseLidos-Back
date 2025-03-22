@@ -61,6 +61,10 @@ describe('ContaRepository', () => {
 
     expect(prismaClient.conta.findUnique).toHaveBeenCalledWith({
       where: { id: 1 },
+      include: {
+        sebo: { include: { endereco: true } },
+        usuario: true,
+      },
     });
     expect(result).toEqual(mockAccount);
   });
@@ -75,6 +79,10 @@ describe('ContaRepository', () => {
       where: {
         email: 'test@example.com',
         status: StatusConta.ATIVA,
+      },
+      include: {
+        sebo: true,
+        usuario: true,
       },
     });
     expect(result).toEqual(mockAccount);

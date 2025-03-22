@@ -1,17 +1,38 @@
 import { Request, Response } from 'express';
 import { contaService } from '@src/services/ContaService';
+import { COOKIE_EXPIRATION_MS } from '@src/utils/authUtils';
 
 class ContaController {
+  async login(req: Request, res: Response) {
+    const { email, senha } = req.body;
+    const token = await contaService.login(email, senha);
+
+    res.cookie('authToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: COOKIE_EXPIRATION_MS,
+    });
+
+    res.status(200).send();
+  }
+
+  async getPerfil(req: Request, res: Response) {
+    const authToken = res.locals.decryptedToken;
+    const result = await contaService.getPerfil(authToken);
+    res.status(200).json(result);
+  }
+
   async validarEmail(req: Request, res: Response) {
     const email = req.query.email as string;
     await contaService.validarEmail(email);
-    res.status(200).json({ mensagem: 'E-mail disponível' });
+    res.status(200).json({ mensagem: 'Email disponível' });
   }
 
   async recuperarSenha(req: Request, res: Response) {
     const { email } = req.body;
     await contaService.recuperarSenha(email);
-    res.status(200).json({ mensagem: 'E-mail enviado! Verifique sua caixa de Spam' });
+    res.status(200).json({ mensagem: 'Email enviado. Verifique sua caixa de Spam' });
   }
 
   async atualizarSenha(req: Request, res: Response) {
@@ -21,8 +42,15 @@ class ContaController {
 
   async delete(req: Request, res: Response) {
     const { id } = req.params;
-    await contaService.delete(Number(id));
+    const authToken = res.locals.decryptedToken;
+
+    await contaService.delete(Number(id), authToken);
     res.status(204).send();
+  }
+
+  async logout(_: Request, res: Response) {
+    res.cookie('authToken', '', { maxAge: 1 });
+    res.status(200).send();
   }
 }
 

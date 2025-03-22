@@ -3,7 +3,9 @@ import { produtoService } from '@src/services/ProdutoService';
 
 class ProdutoController {
   async create(req: Request, res: Response) {
-    const result = await produtoService.create(req.body);
+    const authToken = res.locals.decryptedToken;
+
+    const result = await produtoService.create(req.body, authToken);
     return res.status(201).json(result);
   }
 
@@ -20,13 +22,17 @@ class ProdutoController {
 
   async update(req: Request, res: Response) {
     const { id } = req.params;
-    const result = await produtoService.update(Number(id), req.body);
+    const authToken = res.locals.decryptedToken;
+
+    const result = await produtoService.update(Number(id), req.body, authToken);
     res.status(200).json(result);
   }
 
   async delete(req: Request, res: Response) {
     const { id } = req.params;
-    await produtoService.delete(Number(id));
+    const authToken = res.locals.decryptedToken;
+
+    await produtoService.delete(Number(id), authToken);
     res.status(204).send();
   }
 }

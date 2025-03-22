@@ -4,14 +4,22 @@ import 'express-async-errors';
 import cors from 'cors';
 import express, { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
+import cookieParser from 'cookie-parser';
 
 import { routes } from './routes/routes';
 import { AppError } from './errors/AppError';
+import { ErrorMessages } from './errors/ErrorMessages';
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: process.env.FRONTEND_URL,
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
 app.use('/api', routes);
 
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
@@ -29,7 +37,7 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   }
 
   console.error(err);
-  res.status(500).json({ message: 'Internal server error' });
+  res.status(500).json({ message: ErrorMessages.serverError });
 };
 
 app.use(errorHandler);

@@ -1,27 +1,29 @@
-/*
-  Warnings:
-
-  - You are about to drop the `perfis` table. If the table is not empty, all the data it contains will be lost.
-
-*/
 -- CreateEnum
-CREATE TYPE "Papel" AS ENUM ('SEBO', 'USUARIO');
+CREATE TYPE "TipoConta" AS ENUM ('SEBO', 'USUARIO');
 
 -- CreateEnum
-CREATE TYPE "Status" AS ENUM ('ATIVO', 'EXCLUIDO');
+CREATE TYPE "StatusConta" AS ENUM ('ATIVA', 'EXCLUIDA');
 
--- DropTable
-DROP TABLE "perfis";
+-- CreateEnum
+CREATE TYPE "StatusProduto" AS ENUM ('ATIVO', 'EXCLUIDO');
+
+-- CreateEnum
+CREATE TYPE "CategoriaProduto" AS ENUM ('LIVRO', 'DISCO', 'CD', 'DVD', 'REVISTA', 'GIBI');
+
+-- CreateEnum
+CREATE TYPE "EstadoConservacaoProduto" AS ENUM ('NOVO', 'EXECELENTE', 'BOM', 'ACEITAVEL', 'RUIM');
 
 -- CreateTable
 CREATE TABLE "Conta" (
     "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
     "senha" TEXT NOT NULL,
-    "papel" "Papel" NOT NULL,
-    "status" "Status" NOT NULL DEFAULT 'ATIVO',
+    "tipo" "TipoConta" NOT NULL,
+    "status" "StatusConta" NOT NULL DEFAULT 'ATIVA',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "resetToken" TEXT,
+    "resetTokenExpiresAt" TIMESTAMP(3),
 
     CONSTRAINT "Conta_pkey" PRIMARY KEY ("id")
 );
@@ -39,6 +41,9 @@ CREATE TABLE "Sebo" (
     "curadores" TEXT,
     "historia" TEXT,
     "fotoPerfil" TEXT,
+    "mercadoLivre" TEXT,
+    "enjoei" TEXT,
+    "amazon" TEXT,
     "contaId" INTEGER NOT NULL,
 
     CONSTRAINT "Sebo_pkey" PRIMARY KEY ("id")
@@ -54,7 +59,7 @@ CREATE TABLE "EnderecoSebo" (
     "rua" TEXT NOT NULL,
     "numero" TEXT NOT NULL,
     "complemento" TEXT,
-    "isPublic" BOOLEAN NOT NULL,
+    "ehPublico" BOOLEAN NOT NULL,
     "seboId" INTEGER NOT NULL,
 
     CONSTRAINT "EnderecoSebo_pkey" PRIMARY KEY ("id")
@@ -72,7 +77,7 @@ CREATE TABLE "FotoSebo" (
 CREATE TABLE "Usuario" (
     "id" SERIAL NOT NULL,
     "nome" TEXT NOT NULL,
-    "cpf" VARCHAR(16) NOT NULL,
+    "cpf" CHAR(11) NOT NULL,
     "telefone" CHAR(11) NOT NULL,
     "biografia" TEXT,
     "twitter" TEXT,
@@ -85,8 +90,34 @@ CREATE TABLE "Usuario" (
     CONSTRAINT "Usuario_pkey" PRIMARY KEY ("id")
 );
 
--- CreateIndex
-CREATE UNIQUE INDEX "Conta_email_key" ON "Conta"("email");
+-- CreateTable
+CREATE TABLE "Produto" (
+    "id" SERIAL NOT NULL,
+    "nome" TEXT NOT NULL,
+    "preco" DOUBLE PRECISION NOT NULL,
+    "status" "StatusProduto" NOT NULL DEFAULT 'ATIVO',
+    "categoria" "CategoriaProduto" NOT NULL,
+    "qtdEstoque" INTEGER NOT NULL,
+    "estadoConservacao" "EstadoConservacaoProduto" NOT NULL,
+    "anoEdicao" INTEGER NOT NULL,
+    "anoLancamento" INTEGER NOT NULL,
+    "autores" TEXT,
+    "descricao" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "seboId" INTEGER NOT NULL,
+
+    CONSTRAINT "Produto_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "FotoProduto" (
+    "id" SERIAL NOT NULL,
+    "url" TEXT NOT NULL,
+    "produtoId" INTEGER NOT NULL,
+
+    CONSTRAINT "FotoProduto_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Sebo_contaId_key" ON "Sebo"("contaId");
@@ -108,3 +139,9 @@ ALTER TABLE "FotoSebo" ADD CONSTRAINT "FotoSebo_seboId_fkey" FOREIGN KEY ("seboI
 
 -- AddForeignKey
 ALTER TABLE "Usuario" ADD CONSTRAINT "Usuario_contaId_fkey" FOREIGN KEY ("contaId") REFERENCES "Conta"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Produto" ADD CONSTRAINT "Produto_seboId_fkey" FOREIGN KEY ("seboId") REFERENCES "Sebo"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "FotoProduto" ADD CONSTRAINT "FotoProduto_produtoId_fkey" FOREIGN KEY ("produtoId") REFERENCES "Produto"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -18,9 +18,19 @@ class SeboController {
     res.status(200).json(result);
   }
 
+  async getPerfilById(req: Request, res: Response) {
+    const { id } = req.params;
+    const authToken = res.locals.decryptedToken;
+
+    const result = await seboService.getPerfilById(Number(id), authToken);
+    res.status(200).json(result);
+  }
+
   async update(req: Request, res: Response) {
     const { id } = req.params;
-    const result = await seboService.update(Number(id), req.body);
+    const authToken = res.locals.decryptedToken;
+
+    const result = await seboService.update(Number(id), req.body, authToken);
     res.status(200).json(result);
   }
 }

@@ -9,6 +9,10 @@ app.use(express.json());
 app.use('/sebos', seboRoutes);
 
 jest.mock('@src/controllers/SeboController');
+jest.mock('@src/middleware/authMiddleware', () => ({
+  requireAuth: jest.fn((req, res, next) => next()),
+  ensureIsSebo: jest.fn((req, res, next) => next()),
+}));
 
 describe('Sebo Routes', () => {
   beforeEach(() => {

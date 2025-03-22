@@ -1,23 +1,63 @@
+import bcrypt from 'bcrypt';
 import { StatusConta } from '@prisma/client';
 import { AppError } from '@src/errors/AppError';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
-import { ContaResponseSchema, ContaUpdateDTO, ContaUpdateSchema } from '@src/models/ContaSchema';
+import {
+  ContaExtendedResponseSchema,
+  ContaResponseSchema,
+  ContaUpdateDTO,
+  ContaUpdateSchema,
+} from '@src/models/ContaSchema';
+import { JwtPayload } from 'jsonwebtoken';
 import { contaRepository } from '@src/repositories/ContaRepository';
 import { sendEmail } from '@src/lib/mailer';
-import { gerarHashSenha, gerarResetToken } from '@src/utils/auth';
+import { gerarAuthToken, gerarHashSenha, gerarResetToken } from '@src/utils/authUtils';
+import { ensureSelfTargetedAction } from '@src/utils/authUtils';
+import { InvalidTokenError } from '@src/errors/InvalidTokenError';
+import { ExpiredTokenError } from '@src/errors/ExpiredTokenError';
+import { EmailNotRegisteredError } from '@src/errors/EmailNotRegisteredError';
+import { IncorrectPasswordError } from '@src/errors/IncorrectPasswordError';
 
 class ContaService {
+  async login(email: string, senha: string) {
+    const conta = await contaRepository.getByEmail(email);
+    if (!conta) {
+      throw new EmailNotRegisteredError();
+    }
+
+    const senhaValida = await bcrypt.compare(senha, conta.senha);
+    if (!senhaValida) {
+      throw new IncorrectPasswordError();
+    }
+
+    return gerarAuthToken(conta);
+  }
+
+  async getPerfil(authToken: JwtPayload) {
+    if (!authToken) {
+      return { autenticado: false };
+    }
+
+    const conta = await contaRepository.getById(authToken.contaId);
+    if (!conta) {
+      throw new EntityNotFoundError(authToken.contaId);
+    }
+
+    const parsedData = await ContaExtendedResponseSchema.parseAsync(conta);
+    return { autenticado: true, conta: parsedData };
+  }
+
   async validarEmail(email: string) {
     const emailAtivo = await contaRepository.getByEmail(email);
     if (emailAtivo) {
-      throw new AppError('Já existe um cadastro para este e-mail!', 409);
+      throw new AppError('Email já cadastrado', 409);
     }
   }
 
   async recuperarSenha(email: string) {
     const emailAtivo = await contaRepository.getByEmail(email);
     if (!emailAtivo) {
-      throw new AppError('Não existe um cadastro para este e-mail', 404);
+      throw new EmailNotRegisteredError();
     }
 
     const { token, expiresAt } = gerarResetToken();
@@ -29,13 +69,14 @@ class ContaService {
 
   async atualizarSenha(data: ContaUpdateDTO) {
     const parsedData = ContaUpdateSchema.parse(data);
-
     const conta = await contaRepository.getByResetToken(parsedData.token);
+
     if (!conta) {
-      throw new AppError('Token inválido', 400);
+      throw new InvalidTokenError();
     }
+
     if (conta.resetTokenExpiresAt && conta.resetTokenExpiresAt < new Date()) {
-      throw new AppError('Token expirado', 401);
+      throw new ExpiredTokenError();
     }
 
     const hashSenha = await gerarHashSenha(parsedData.senha);
@@ -44,11 +85,14 @@ class ContaService {
     return ContaResponseSchema.parseAsync(result);
   }
 
-  async delete(id: number) {
+  async delete(id: number, authToken: unknown) {
+    ensureSelfTargetedAction(id, authToken);
+
     const conta = await contaRepository.getById(id);
     if (!conta) {
       throw new EntityNotFoundError(id);
     }
+
     await contaRepository.atualizarStatus(id, StatusConta.EXCLUIDA);
   }
 }

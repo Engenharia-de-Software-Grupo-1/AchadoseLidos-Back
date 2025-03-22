@@ -6,7 +6,7 @@ import { contaRepository } from './ContaRepository';
 
 class SeboRepository {
   async create(data: SeboCreateDTO) {
-    const { conta, endereco, fotos: _fotos, ...sebo } = data;
+    const { conta, endereco, ...sebo } = data;
 
     return prismaClient.$transaction(async tx => {
       const contaCriada = await contaRepository.create(tx, conta, TipoConta.SEBO);
@@ -40,7 +40,7 @@ class SeboRepository {
   }
 
   async update(id: number, data: SeboUpdateDTO) {
-    const { conta: _conta, endereco, fotos, ...sebo } = data;
+    const { endereco, fotos, ...sebo } = data;
 
     return prismaClient.$transaction(async tx => {
       await Promise.all([
@@ -49,7 +49,7 @@ class SeboRepository {
         tx.fotoSebo.deleteMany({ where: { seboId: id } }),
       ]);
 
-      if (fotos && fotos.length > 0) {
+      if (fotos?.length) {
         await tx.fotoSebo.createMany({
           data: fotos.map(foto => ({ url: foto.url, seboId: id })),
         });

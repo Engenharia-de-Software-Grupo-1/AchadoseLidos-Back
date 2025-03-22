@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { seboController } from '@src/controllers/SeboController';
+import { ensureIsSebo } from '@src/middleware/authMiddleware';
 
 export const seboRoutes = Router();
 
@@ -15,6 +16,10 @@ seboRoutes.get('/:id', async (req, res) => {
   await seboController.getById(req, res);
 });
 
-seboRoutes.put('/:id', async (req, res) => {
+seboRoutes.get('/perfil/:id', ensureIsSebo, async (req, res) => {
+  await seboController.getPerfilById(req, res);
+});
+
+seboRoutes.put('/:id', ensureIsSebo, async (req, res) => {
   await seboController.update(req, res);
 });
