@@ -24,8 +24,7 @@ const SeboSchema = z.object({
   telefone: z.string().max(11).nullable().optional(),
 
   biografia: optionalString,
-  horarioInicio: z.date().nullable().optional(),
-  horarioFim: z.date().nullable().optional(),
+  horarioFuncionamento: optionalString,
   estanteVirtual: optionalString,
   instagram: optionalString,
   curadores: optionalString,
