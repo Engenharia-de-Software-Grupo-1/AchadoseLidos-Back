@@ -33,22 +33,21 @@ model Conta {
 }
 
 model Sebo {
-  id             Int       @id @default(autoincrement())
-  nome           String
-  cpfCnpj        String    @db.VarChar(16)
-  concordaVender Boolean
-  telefone       String?   @db.Char(11)
-  horarioInicio  DateTime?
-  horarioFim     DateTime?
-  biografia      String?
-  estanteVirtual String?
-  instagram      String?
-  curadores      String?
-  historia       String?
-  fotoPerfil     String?
-  mercadoLivre   String?
-  enjoei         String?
-  amazon         String?
+  id                   Int     @id @default(autoincrement())
+  nome                 String
+  cpfCnpj              String  @db.VarChar(16)
+  concordaVender       Boolean
+  telefone             String? @db.Char(11)
+  biografia            String?
+  horarioFuncionamento String?
+  estanteVirtual       String?
+  instagram            String?
+  curadores            String?
+  historia             String?
+  fotoPerfil           String?
+  mercadoLivre         String?
+  enjoei               String?
+  amazon               String?
 
   contaId Int   @unique
   conta   Conta @relation(fields: [contaId], references: [id])
