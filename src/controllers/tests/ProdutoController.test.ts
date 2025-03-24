@@ -14,6 +14,7 @@ describe('ProdutoController', () => {
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
+      locals: { decryptedToken: 'testToken' },
     } as unknown as Response;
 
     const mockResult = { someResultKey: 'someResultValue' };
@@ -21,7 +22,7 @@ describe('ProdutoController', () => {
 
     await produtoController.create(req, res);
 
-    expect(produtoService.create).toHaveBeenCalledWith(req.body);
+    expect(produtoService.create).toHaveBeenCalledWith(req.body, 'testToken');
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith(mockResult);
   });
@@ -78,6 +79,7 @@ describe('ProdutoController', () => {
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
+      locals: { decryptedToken: 'testToken' },
     } as unknown as Response;
 
     const mockResult = { someResultKey: 'someResultValue' };
@@ -85,7 +87,7 @@ describe('ProdutoController', () => {
 
     await produtoController.update(req, res);
 
-    expect(produtoService.update).toHaveBeenCalledWith(1, req.body);
+    expect(produtoService.update).toHaveBeenCalledWith(1, req.body, 'testToken');
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith(mockResult);
   });
@@ -100,6 +102,7 @@ describe('ProdutoController', () => {
     const res = {
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
+      locals: { decryptedToken: 'testToken' },
     } as unknown as Response;
 
     (produtoService.delete as jest.Mock).mockResolvedValueOnce({ id: 1 });
@@ -107,6 +110,6 @@ describe('ProdutoController', () => {
     await produtoController.delete(req, res);
 
     expect(res.status).toHaveBeenCalledWith(204);
-    expect(produtoService.delete).toHaveBeenCalledWith(1);
+    expect(produtoService.delete).toHaveBeenCalledWith(1, 'testToken');
   });
 });

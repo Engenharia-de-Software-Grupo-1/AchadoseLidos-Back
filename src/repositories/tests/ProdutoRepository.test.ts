@@ -9,15 +9,14 @@ jest.mock('@src/lib/prismaClient');
 describe('ProdutoRepository', () => {
   it('creates a new product', async () => {
     const data: ProdutoCreateDTO = {
-      seboId: 123,
-      status: StatusProduto.ATIVO,
       nome: 'Produto 1',
       preco: 10,
       categoria: CategoriaProduto.LIVRO,
       qtdEstoque: 10,
-      estadoConservacao: EstadoConservacaoProduto.BOM,
+      estadoConservacao: EstadoConservacaoProduto.NOVO,
       anoEdicao: 2020,
       anoLancamento: 2021,
+      generos: [''],
     };
 
     const produtoCriado = {
@@ -25,18 +24,21 @@ describe('ProdutoRepository', () => {
       ...data,
     };
 
-    (prismaClient.$transaction as jest.Mock).mockImplementation(async fn =>
-      fn({
-        produto: {
-          create: jest.fn().mockResolvedValue(produtoCriado),
-          findUnique: jest.fn().mockResolvedValue(produtoCriado),
-        },
-      }),
-    );
+    const mockTx = {
+      produto: {
+        create: jest.fn().mockResolvedValue(produtoCriado),
+        findUnique: jest.fn().mockResolvedValue(produtoCriado),
+      },
+    };
 
-    const result = await produtoRepository.create(data);
+    (prismaClient.$transaction as jest.Mock).mockImplementation(async fn => fn(mockTx));
+
+    const result = await produtoRepository.create(data, 123);
 
     expect(prismaClient.$transaction).toHaveBeenCalled();
+    expect(mockTx.produto.create).toHaveBeenCalledWith({
+      data: { ...data, sebo: { connect: { id: 123 } } },
+    });
     expect(result).toEqual(produtoCriado);
   });
 
@@ -50,7 +52,7 @@ describe('ProdutoRepository', () => {
         preco: 10,
         categoria: CategoriaProduto.LIVRO,
         qtdEstoque: 10,
-        estadoConservacao: EstadoConservacaoProduto.BOM,
+        estadoConservacao: EstadoConservacaoProduto.NOVO,
         anoEdicao: 2020,
         anoLancamento: 2021,
       },
@@ -62,7 +64,7 @@ describe('ProdutoRepository', () => {
         preco: 10,
         categoria: CategoriaProduto.LIVRO,
         qtdEstoque: 10,
-        estadoConservacao: EstadoConservacaoProduto.BOM,
+        estadoConservacao: EstadoConservacaoProduto.NOVO,
         anoEdicao: 2020,
         anoLancamento: 2021,
       },
@@ -75,7 +77,10 @@ describe('ProdutoRepository', () => {
     expect(result).toEqual(produtos);
     expect(prismaClient.produto.findMany).toHaveBeenCalledWith({
       where: { status: StatusProduto.ATIVO },
-      include: { fotos: true },
+      include: {
+        fotos: true,
+        sebo: { include: { endereco: true } },
+      },
     });
   });
 
@@ -88,7 +93,7 @@ describe('ProdutoRepository', () => {
       preco: 10,
       categoria: CategoriaProduto.LIVRO,
       qtdEstoque: 10,
-      estadoConservacao: EstadoConservacaoProduto.BOM,
+      estadoConservacao: EstadoConservacaoProduto.NOVO,
       anoEdicao: 2020,
       anoLancamento: 2021,
     };
@@ -100,24 +105,23 @@ describe('ProdutoRepository', () => {
     expect(result).toEqual(produto);
     expect(prismaClient.produto.findUnique).toHaveBeenCalledWith({
       where: { id: 1 },
-      include: { fotos: true },
+      include: {
+        fotos: true,
+        sebo: { include: { endereco: true } },
+      },
     });
   });
 
   it('updates a product by id', async () => {
     const produto: ProdutoUpdateDTO = {
-      id: 1,
-      seboId: 123,
-      status: StatusProduto.ATIVO,
       nome: 'Produto 1',
       preco: 10,
       categoria: CategoriaProduto.LIVRO,
       qtdEstoque: 10,
-      estadoConservacao: EstadoConservacaoProduto.BOM,
+      estadoConservacao: EstadoConservacaoProduto.NOVO,
       anoEdicao: 2020,
       anoLancamento: 2021,
-      createdAt: '2024',
-      updatedAt: '2025',
+      generos: [''],
     };
 
     (prismaClient.$transaction as jest.Mock).mockImplementation(async fn =>
@@ -134,24 +138,5 @@ describe('ProdutoRepository', () => {
 
     expect(result).toEqual(produto);
     expect(prismaClient.$transaction).toHaveBeenCalled();
-  });
-
-  it('updates a product status by id', async () => {
-    const novoStatus = StatusProduto.EXCLUIDO;
-
-    const produtoAtualizado = {
-      id: 1,
-      status: novoStatus,
-    };
-
-    (prismaClient.produto.update as jest.Mock).mockResolvedValue(produtoAtualizado);
-
-    const result = await produtoRepository.atualizarStatus(1, novoStatus);
-
-    expect(result).toEqual(produtoAtualizado);
-    expect(prismaClient.produto.update).toHaveBeenCalledWith({
-      where: { id: 1 },
-      data: { status: novoStatus },
-    });
   });
 });

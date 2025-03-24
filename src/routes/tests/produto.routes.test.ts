@@ -2,13 +2,16 @@ import express from 'express';
 import request from 'supertest';
 import { produtoController } from '@src/controllers/ProdutoController';
 
-import { produtoRoutes } from '../produto.route';
+import { produtoRoutes } from '../produto.routes';
 
 const app = express();
 app.use(express.json());
 app.use('/produtos', produtoRoutes);
 
 jest.mock('@src/controllers/ProdutoController');
+jest.mock('@src/middlewares/authMiddleware', () => ({
+  ensureIsSebo: jest.fn((req, res, next) => next()),
+}));
 
 describe('Produto Routes', () => {
   beforeEach(() => {
