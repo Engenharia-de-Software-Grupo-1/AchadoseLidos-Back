@@ -9,6 +9,9 @@ import {
 import { cestaRepository } from '@src/repositories/CestaRepository';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import { getAuthTokenId } from '@src/utils/authUtils';
+import { AppError } from '@src/errors/AppError';
+
+import { produtoService } from './ProdutoService';
 
 class CestaService {
   async getCesta(authToken: unknown) {
@@ -20,32 +23,39 @@ class CestaService {
 
   async adicionarProduto(data: CestaCreateDTO, authToken: unknown) {
     const usuarioId = getAuthTokenId(authToken);
-    const parsedData = CestaCreateSchema.parse(data);
-    // validar produtoId
-    // validar se há quantidade em estoque disponível
+    const { produtoId } = CestaCreateSchema.parse(data);
 
-    const result = await cestaRepository.addProduto(usuarioId, parsedData.produtoId);
+    const produto = await cestaRepository.getProduto(usuarioId, produtoId);
+    if (produto) {
+      throw new AppError('Produto já adicionado à cesta', 409);
+    }
+
+    await produtoService.validarProduto(produtoId);
+    await produtoService.validarQtdEstoque(produtoId);
+
+    const result = await cestaRepository.addProduto(usuarioId, produtoId);
     return CestaResponseSchema.parseAsync(result);
   }
 
   async atualizarProduto(produtoId: number, data: CestaUpdateDTO, authToken: unknown) {
     const usuarioId = getAuthTokenId(authToken);
-    this.validarProduto(usuarioId, produtoId);
-    // validar se ainda há quantidade em estoque disponível
-
     const parsedData = CestaUpdateSchema.parse(data);
+
+    await this.validarProdutoCesta(usuarioId, produtoId);
+    await produtoService.validarQtdEstoque(produtoId, parsedData.quantidade);
+
     const result = await cestaRepository.updateProduto(usuarioId, produtoId, parsedData);
     return CestaResponseSchema.parseAsync(result);
   }
 
   async removerProduto(produtoId: number, authToken: unknown) {
     const usuarioId = getAuthTokenId(authToken);
-    await this.validarProduto(usuarioId, produtoId);
 
+    await this.validarProdutoCesta(usuarioId, produtoId);
     await cestaRepository.deleteProduto(usuarioId, produtoId);
   }
 
-  private async validarProduto(usuarioId: number, produtoId: number) {
+  private async validarProdutoCesta(usuarioId: number, produtoId: number) {
     const produto = await cestaRepository.getProduto(usuarioId, produtoId);
     if (!produto) {
       throw new EntityNotFoundError(produtoId);
