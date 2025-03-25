@@ -1,6 +1,7 @@
 import prismaClient from '@src/lib/prismaClient';
 import { ProdutoCreateDTO, ProdutoUpdateDTO } from '@src/models/ProdutoSchema';
 import { CategoriaProduto, EstadoConservacaoProduto, StatusProduto } from '@prisma/client';
+import { DELETED_PRODUTO } from '@src/constants/deletedData';
 
 import { produtoRepository } from '../ProdutoRepository';
 
@@ -138,5 +139,20 @@ describe('ProdutoRepository', () => {
 
     expect(result).toEqual(produto);
     expect(prismaClient.$transaction).toHaveBeenCalled();
+  });
+
+  it('deletes a product by id', async () => {
+    (prismaClient.fotoProduto.deleteMany as jest.Mock).mockResolvedValue({ count: 2 });
+    (prismaClient.produto.update as jest.Mock).mockResolvedValue(DELETED_PRODUTO);
+
+    await produtoRepository.delete(1);
+
+    expect(prismaClient.fotoProduto.deleteMany).toHaveBeenCalledWith({
+      where: { produtoId: 1 },
+    });
+    expect(prismaClient.produto.update).toHaveBeenCalledWith({
+      where: { id: 1 },
+      data: DELETED_PRODUTO,
+    });
   });
 });
