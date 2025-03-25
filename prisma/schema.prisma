@@ -93,6 +93,8 @@ model Usuario {
   goodreads  String?
   fotoPerfil String?
 
+  favoritos MarcacaoFavorito[]
+
   contaId Int   @unique
   conta   Conta @relation(fields: [contaId], references: [id])
 }
@@ -135,9 +137,11 @@ model Produto {
   createdAt         DateTime                 @default(now())
   updatedAt         DateTime                 @updatedAt
 
-  fotos  FotoProduto[]
+  fotos        FotoProduto[]
+  favoritagens MarcacaoFavorito[]
+
   seboId Int
-  sebo   Sebo          @relation(fields: [seboId], references: [id])
+  sebo   Sebo @relation(fields: [seboId], references: [id])
 }
 
 model FotoProduto {
@@ -146,4 +150,14 @@ model FotoProduto {
 
   produtoId Int
   produto   Produto @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+}
+
+model MarcacaoFavorito {
+  usuarioId Int
+  produtoId Int
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  produto Produto @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+
+  @@id([usuarioId, produtoId])
 }
