@@ -6,4 +6,6 @@ export enum ErrorMessages {
   emailNotRegistered = 'Email não cadastrado',
   wrongPassword = 'Senha incorreta',
   noPermissionForAction = 'Acesso negado. Você não tem permissão para essa ação',
+  alreadyFavorited = 'Produto já favoritado',
+  favoriteNotFound = 'Favorito não encontrado',
 }
