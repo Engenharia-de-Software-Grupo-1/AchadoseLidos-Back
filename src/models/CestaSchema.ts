@@ -18,6 +18,7 @@ export type CestaUpdateDTO = z.infer<typeof CestaUpdateSchema>;
 const SeboCestaSchema = z.object({
   id: z.number(),
   nome: z.string(),
+  concordaVender: z.boolean(),
 });
 
 const ProdutoCestaSchema = z.object({
