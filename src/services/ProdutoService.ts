@@ -8,6 +8,7 @@ import {
 import { produtoRepository } from '@src/repositories/ProdutoRepository';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import { ensureSelfTargetedAction, getAuthTokenId } from '@src/utils/authUtils';
+import { AppError } from '@src/errors/AppError';
 
 class ProdutoService {
   async create(data: ProdutoCreateDTO, authToken: unknown) {
@@ -45,6 +46,20 @@ class ProdutoService {
     ensureSelfTargetedAction(produto.sebo.id, authToken);
 
     await produtoRepository.delete(id);
+  }
+
+  async validarProduto(id: number) {
+    const produto = await produtoRepository.getById(id);
+    if (!produto) {
+      throw new EntityNotFoundError(id);
+    }
+  }
+
+  async validarQtdEstoque(id: number, quantidade = 1) {
+    const produto = await produtoRepository.getById(id);
+    if (produto && produto.qtdEstoque < quantidade) {
+      throw new AppError('Produto sem estoque suficiente', 409);
+    }
   }
 }
 

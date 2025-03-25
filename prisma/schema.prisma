@@ -95,6 +95,8 @@ model Usuario {
 
   contaId Int   @unique
   conta   Conta @relation(fields: [contaId], references: [id])
+
+  cestaProdutos CestaProduto[]
 }
 
 enum StatusProduto {
@@ -138,6 +140,8 @@ model Produto {
   fotos  FotoProduto[]
   seboId Int
   sebo   Sebo          @relation(fields: [seboId], references: [id])
+
+  cestas CestaProduto[]
 }
 
 model FotoProduto {
@@ -146,4 +150,15 @@ model FotoProduto {
 
   produtoId Int
   produto   Produto @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+}
+
+model CestaProduto {
+  quantidade Int @default(1)
+
+  usuarioId Int
+  usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  produtoId Int
+  produto   Produto @relation(fields: [produtoId], references: [id])
+
+  @@id([usuarioId, produtoId])
 }
