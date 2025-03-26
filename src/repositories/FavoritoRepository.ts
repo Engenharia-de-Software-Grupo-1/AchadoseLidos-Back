@@ -10,7 +10,12 @@ class FavoritoRepository {
   }
 
   async getAllFavoritos(usuarioId: number) {
-    return prismaClient.marcacaoFavorito.findMany({ where: { usuarioId }, include: { produto: true } });
+    return prismaClient.marcacaoFavorito.findMany({
+      where: { usuarioId },
+      select: {
+        produto: true,
+      },
+    });
   }
 
   async delete(usuarioId: number, produtoId: number) {
