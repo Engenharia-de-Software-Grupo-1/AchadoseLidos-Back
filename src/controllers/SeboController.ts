@@ -8,7 +8,7 @@ class SeboController {
   }
 
   async getAll(req: Request, res: Response) {
-    const result = await seboService.getAll();
+    const result = await seboService.getAll(req.body);
     return res.status(200).json(result);
   }
 

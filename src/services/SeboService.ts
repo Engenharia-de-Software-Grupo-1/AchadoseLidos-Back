@@ -9,6 +9,7 @@ import {
 import { seboRepository } from '@src/repositories/SeboRepository';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import { ensureSelfTargetedAction } from '@src/utils/authUtils';
+import { Filter, Sorter } from '@src/utils/filterTypes';
 
 import { contaService } from './ContaService';
 
@@ -21,8 +22,8 @@ class SeboService {
     return SeboResponseSchema.parseAsync(result);
   }
 
-  async getAll() {
-    const result = await seboRepository.getAll();
+  async getAll(data: { filters: Filter[]; sorters: Sorter[] }) {
+    const result = await seboRepository.getAll(data);
     return await SeboResponseSchema.array().parseAsync(result);
   }
 

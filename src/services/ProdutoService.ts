@@ -10,6 +10,7 @@ import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import { ensureSelfTargetedAction, getAuthTokenId } from '@src/utils/authUtils';
 import { AppError } from '@src/errors/AppError';
 import { StatusProduto } from '@prisma/client';
+import { Filter, Sorter } from '@src/utils/filterTypes';
 
 class ProdutoService {
   async create(data: ProdutoCreateDTO, authToken: unknown) {
@@ -20,8 +21,8 @@ class ProdutoService {
     return ProdutoResponseSchema.parseAsync(result);
   }
 
-  async getAll() {
-    const result = await produtoRepository.getAll();
+  async getAll(data: { filters: Filter[]; sorters: Sorter[] }) {
+    const result = await produtoRepository.getAll(data);
     return await ProdutoResponseSchema.array().parseAsync(result);
   }
 

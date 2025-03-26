@@ -2,6 +2,7 @@ import prismaClient from '@src/lib/prismaClient';
 import { ProdutoCreateDTO, ProdutoUpdateDTO } from '@src/models/ProdutoSchema';
 import { Prisma, StatusProduto } from '@prisma/client';
 import { DELETED_PRODUTO } from '@src/constants/deletedData';
+import { buildOrderClause, buildWhereClause, Filter, Sorter } from '@src/utils/filterTypes';
 
 const includeFotosAndSebo = {
   include: {
@@ -32,10 +33,14 @@ class ProdutoRepository {
     });
   }
 
-  async getAll() {
+  async getAll(data: { filters: Filter[]; sorters: Sorter[] }) {
     return prismaClient.produto.findMany({
-      where: { status: StatusProduto.ATIVO },
+      where: {
+        status: StatusProduto.ATIVO,
+        ...buildWhereClause(data.filters),
+      },
       ...includeFotosAndSebo,
+      orderBy: buildOrderClause(data.sorters),
     });
   }
 

@@ -2,6 +2,7 @@ import prismaClient from '@src/lib/prismaClient';
 import { StatusConta, TipoConta } from '@prisma/client';
 import { SeboCreateDTO, SeboUpdateDTO } from '@src/models/SeboSchema';
 import { DELETED_ENDERECO, DELETED_SEBO } from '@src/constants/deletedData';
+import { Filter, Sorter, buildWhereClause, buildOrderClause } from '@src/utils/filterTypes';
 
 import { contaRepository } from './ContaRepository';
 import { produtoRepository } from './ProdutoRepository';
@@ -23,14 +24,16 @@ class SeboRepository {
     });
   }
 
-  async getAll() {
+  async getAll(data: { filters: Filter[]; sorters: Sorter[] }) {
     return prismaClient.sebo.findMany({
       where: {
         conta: {
           status: StatusConta.ATIVA,
         },
+        ...buildWhereClause(data.filters),
       },
       include: { endereco: true },
+      orderBy: buildOrderClause(data.sorters),
     });
   }
 
