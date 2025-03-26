@@ -5,6 +5,7 @@ import { seboRoutes } from './sebo.routes';
 import { usuarioRoutes } from './usuario.routes';
 import { produtoRoutes } from './produto.routes';
 import { cestaRoutes } from './cesta.routes';
+import { pedidoRoutes } from './pedido.route';
 
 export const routes = Router();
 
@@ -13,3 +14,4 @@ routes.use('/sebos', seboRoutes);
 routes.use('/usuarios', usuarioRoutes);
 routes.use('/produtos', produtoRoutes);
 routes.use('/cesta', cestaRoutes);
+routes.use('/pedidos', pedidoRoutes);
