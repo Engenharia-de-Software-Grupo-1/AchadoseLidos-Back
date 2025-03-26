@@ -8,10 +8,10 @@ class FavoritoService {
     return await favoritoRepository.create(authTokenId, produtoId);
   }
 
-  async getAllForUser(authToken: unknown) {
+  async getFavoritos(authToken: unknown) {
     const authTokenId = getAuthTokenId(authToken);
 
-    return await favoritoRepository.getAllForUser(authTokenId);
+    return await favoritoRepository.getFavoritos(authTokenId);
   }
 
   async delete(authToken: unknown, produtoId: number) {

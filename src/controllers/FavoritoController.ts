@@ -10,10 +10,10 @@ class FavoritoController {
     return res.status(201).json(result);
   }
 
-  async getAllForUser(_: Request, res: Response) {
+  async getFavoritos(_: Request, res: Response) {
     const authToken = res.locals.decryptedToken;
 
-    const result = await favoritoService.getAllForUser(authToken);
+    const result = await favoritoService.getFavoritos(authToken);
     return res.status(200).json(result);
   }
 

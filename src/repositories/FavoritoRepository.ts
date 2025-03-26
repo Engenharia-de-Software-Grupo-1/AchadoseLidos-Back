@@ -13,7 +13,7 @@ class FavoritoRepository {
     return await prismaClient.marcacaoFavorito.create({ data: { produtoId, usuarioId } });
   }
 
-  async getAllForUser(usuarioId: number) {
+  async getFavoritos(usuarioId: number) {
     return await prismaClient.marcacaoFavorito.findMany({ where: { usuarioId } });
   }
 
