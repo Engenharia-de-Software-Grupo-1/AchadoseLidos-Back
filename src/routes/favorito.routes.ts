@@ -12,6 +12,6 @@ favoritoRoutes.get('/', ensureIsUsuario, async (req, res) => {
   await favoritoController.getFavoritos(req, res);
 });
 
-favoritoRoutes.delete('/delete/:produtoId', ensureIsUsuario, async (req, res) => {
+favoritoRoutes.delete('/:produtoId', ensureIsUsuario, async (req, res) => {
   await favoritoController.delete(req, res);
 });
