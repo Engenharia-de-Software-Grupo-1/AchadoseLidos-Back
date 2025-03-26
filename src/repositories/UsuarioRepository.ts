@@ -4,6 +4,7 @@ import { UsuarioCreateDTO, UsuarioUpdateDTO } from '@src/models/UsuarioSchema';
 import { DELETED_USUARIO } from '@src/constants/deletedData';
 
 import { contaRepository } from './ContaRepository';
+import { cestaRepository } from './CestaRepository';
 
 class UsuarioRepository {
   async create(data: UsuarioCreateDTO) {
@@ -51,6 +52,7 @@ class UsuarioRepository {
       await Promise.all([
         contaRepository.delete(tx, usuario.conta.id),
         tx.usuario.update({ where: { id }, data: DELETED_USUARIO }),
+        cestaRepository.deleteAllProdutos(tx, id),
       ]);
     });
   }

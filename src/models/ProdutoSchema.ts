@@ -3,10 +3,10 @@ import { optionalString, requiredString } from '@src/utils/zodTypes';
 
 import { SeboResponseSchema } from './SeboSchema';
 
-const CategoriaProduto = z.enum(['LIVRO', 'REVISTA', 'QUADRINHOS', 'DISCO', 'CD', 'DVD', 'OUTRO']);
+export const CategoriaProduto = z.enum(['LIVRO', 'REVISTA', 'QUADRINHOS', 'DISCO', 'CD', 'DVD', 'OUTRO']);
 const EstadoConservacaoProduto = z.enum(['NOVO', 'SEMINOVO', 'USADO', 'DESCONHECIDO']);
 
-const FotoProdutoSchema = z.object({
+export const FotoProdutoSchema = z.object({
   url: z.string().url(),
 });
 
