@@ -8,4 +8,5 @@ export enum ErrorMessages {
   noPermissionForAction = 'Acesso negado. Você não tem permissão para essa ação',
   alreadyFavorited = 'Produto já favoritado',
   favoriteNotFound = 'Favorito não encontrado',
+  produtoNotFound = 'Produto não encontrado',
 }
