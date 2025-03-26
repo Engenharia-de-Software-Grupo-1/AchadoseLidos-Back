@@ -85,6 +85,7 @@ describe('ProdutoRepository', () => {
         fotos: true,
         sebo: { include: { endereco: true } },
       },
+      orderBy: [],
     });
   });
 
@@ -139,6 +140,7 @@ describe('ProdutoRepository', () => {
         fotos: true,
         sebo: { include: { endereco: true } },
       },
+      orderBy: [],
     });
   });
 

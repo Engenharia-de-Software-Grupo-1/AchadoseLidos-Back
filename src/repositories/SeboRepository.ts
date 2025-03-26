@@ -2,7 +2,7 @@ import prismaClient from '@src/lib/prismaClient';
 import { StatusConta, TipoConta } from '@prisma/client';
 import { SeboCreateDTO, SeboUpdateDTO } from '@src/models/SeboSchema';
 import { DELETED_ENDERECO, DELETED_SEBO } from '@src/constants/deletedData';
-import { Filter, Sorter, buildWhereClause, buildOrderClause } from '@src/utils/filterTypes';
+import { Filter, Sorter, buildWhereClause, buildOrderClause } from '@src/utils/filterUtils';
 
 import { contaRepository } from './ContaRepository';
 import { produtoRepository } from './ProdutoRepository';

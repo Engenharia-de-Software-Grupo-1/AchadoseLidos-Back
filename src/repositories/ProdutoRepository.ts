@@ -2,7 +2,7 @@ import prismaClient from '@src/lib/prismaClient';
 import { ProdutoCreateDTO, ProdutoUpdateDTO } from '@src/models/ProdutoSchema';
 import { Prisma, StatusProduto } from '@prisma/client';
 import { DELETED_PRODUTO } from '@src/constants/deletedData';
-import { buildOrderClause, buildWhereClause, Filter, Sorter } from '@src/utils/filterTypes';
+import { buildOrderClause, buildWhereClause, Filter, Sorter } from '@src/utils/filterUtils';
 
 const includeFotosAndSebo = {
   include: {

@@ -9,12 +9,8 @@ export type Sorter = {
   ordem: 'ASC' | 'DESC';
 };
 
-export function buildWhereClause(filters: Filter[]) {
+export function buildWhereClause(filters: Filter[] = []) {
   const where: Record<string, unknown> = {};
-
-  if (!filters || filters.length === 0) {
-    return where;
-  }
 
   filters.forEach(filter => {
     const { campo, operador, valor } = filter;
@@ -40,11 +36,7 @@ export function buildWhereClause(filters: Filter[]) {
   return where;
 }
 
-export function buildOrderClause(sorters: Sorter[]) {
-  if (!sorters || sorters.length === 0) {
-    return undefined;
-  }
-
+export function buildOrderClause(sorters: Sorter[] = []) {
   return sorters.map(sorter => ({
     [sorter.campo]: sorter.ordem.toLowerCase(),
   }));

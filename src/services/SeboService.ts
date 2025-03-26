@@ -9,7 +9,7 @@ import {
 import { seboRepository } from '@src/repositories/SeboRepository';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import { ensureSelfTargetedAction } from '@src/utils/authUtils';
-import { Filter, Sorter } from '@src/utils/filterTypes';
+import { Filter, Sorter } from '@src/utils/filterUtils';
 
 import { contaService } from './ContaService';
 

@@ -89,6 +89,7 @@ describe('SeboRepository', () => {
         },
       },
       include: { endereco: true },
+      orderBy: [],
     });
   });
 
@@ -133,6 +134,7 @@ describe('SeboRepository', () => {
         },
       },
       include: { endereco: true },
+      orderBy: [],
     });
   });
 
