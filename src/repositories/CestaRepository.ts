@@ -65,9 +65,16 @@ class CestaRepository {
       const seboId = item.produto.sebo.id;
 
       if (!acc[seboId]) {
-        acc[seboId] = { sebo: item.produto.sebo, produtos: [] };
+        acc[seboId] = {
+          sebo: item.produto.sebo,
+          produtos: [],
+          totalPreco: 0,
+          totalQuantidade: 0,
+        };
       }
       acc[seboId].produtos.push(item);
+      acc[seboId].totalPreco += item.produto.preco * item.quantidade;
+      acc[seboId].totalQuantidade += item.quantidade;
 
       return acc;
     }, {} as CestaAgrupada);

@@ -36,6 +36,8 @@ const ProdutoCestaSchema = z.object({
 export const CestaAgrupadaSchema = z.object({
   sebo: SeboCestaSchema,
   produtos: z.array(ProdutoCestaSchema),
+  totalPreco: z.number().nonnegative(),
+  totalQuantidade: z.number().int().nonnegative(),
 });
 
 export type SeboCesta = z.infer<typeof SeboCestaSchema>;
@@ -44,4 +46,4 @@ export type ProdutoCesta = z.infer<typeof ProdutoCestaSchema> & {
     sebo: SeboCesta;
   };
 };
-export type CestaAgrupada = Record<number, { sebo: SeboCesta; produtos: ProdutoCesta[] }>;
+export type CestaAgrupada = Record<number, z.infer<typeof CestaAgrupadaSchema>>;

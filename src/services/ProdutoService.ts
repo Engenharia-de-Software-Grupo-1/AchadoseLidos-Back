@@ -9,6 +9,7 @@ import { produtoRepository } from '@src/repositories/ProdutoRepository';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import { ensureSelfTargetedAction, getAuthTokenId } from '@src/utils/authUtils';
 import { AppError } from '@src/errors/AppError';
+import { StatusProduto } from '@prisma/client';
 
 class ProdutoService {
   async create(data: ProdutoCreateDTO, authToken: unknown) {
@@ -50,7 +51,7 @@ class ProdutoService {
 
   async validarProduto(id: number) {
     const produto = await produtoRepository.getById(id);
-    if (!produto) {
+    if (!produto || produto.status === StatusProduto.EXCLUIDO) {
       throw new EntityNotFoundError(id);
     }
   }
