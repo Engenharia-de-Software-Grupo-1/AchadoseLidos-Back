@@ -18,13 +18,13 @@ class FavoritoService {
       throw new AlreadyFavoritedError();
     }
 
-    return await favoritoRepository.create(authTokenId, produtoId);
+    return favoritoRepository.create(authTokenId, produtoId);
   }
 
   async getFavoritos(authToken: unknown) {
     const authTokenId = getAuthTokenId(authToken);
 
-    return await favoritoRepository.getAllFavoritos(authTokenId);
+    return favoritoRepository.getAllFavoritos(authTokenId);
   }
 
   async delete(authToken: unknown, produtoId: number) {
@@ -39,7 +39,7 @@ class FavoritoService {
       throw new FavoriteNotFoundError();
     }
 
-    return await favoritoRepository.delete(authTokenId, produtoId);
+    return favoritoRepository.delete(authTokenId, produtoId);
   }
 }
 
