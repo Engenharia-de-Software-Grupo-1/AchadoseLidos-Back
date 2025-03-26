@@ -18,7 +18,7 @@ class FavoritoController {
   }
 
   async delete(req: Request, res: Response) {
-    const { produtoId } = req.body;
+    const { produtoId } = req.params;
     const authToken = res.locals.decryptedToken;
 
     await favoritoService.delete(authToken, Number(produtoId));
