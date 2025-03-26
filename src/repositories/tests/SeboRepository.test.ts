@@ -73,9 +73,13 @@ describe('SeboRepository', () => {
         },
       },
     ];
+
     (prismaClient.sebo.findMany as jest.Mock).mockResolvedValue(sebos);
 
-    const result = await seboRepository.getAll();
+    const result = await seboRepository.getAll({
+      filters: [],
+      sorters: [],
+    });
 
     expect(result).toEqual(sebos);
     expect(prismaClient.sebo.findMany).toHaveBeenCalledWith({
@@ -85,6 +89,102 @@ describe('SeboRepository', () => {
         },
       },
       include: { endereco: true },
+      orderBy: [],
+    });
+  });
+
+  it('returns all filtered sebos', async () => {
+    const sebos = [
+      {
+        id: 1,
+        endereco: {
+          cep: '12345-678',
+          estado: 'Estado',
+          cidade: 'Cidade',
+          bairro: 'Centro',
+          rua: 'Rua',
+          numero: '123',
+          ehPublico: true,
+          complemento: 'Complemento',
+        },
+      },
+    ];
+
+    (prismaClient.sebo.findMany as jest.Mock).mockResolvedValue(sebos);
+
+    const result = await seboRepository.getAll({
+      filters: [
+        {
+          campo: 'bairro',
+          operador: 'in',
+          valor: ['Centro', 'Catolé'],
+        },
+      ],
+      sorters: [],
+    });
+
+    expect(result).toEqual(sebos);
+    expect(prismaClient.sebo.findMany).toHaveBeenCalledWith({
+      where: {
+        conta: {
+          status: StatusConta.ATIVA,
+        },
+        bairro: {
+          in: ['Centro', 'Catolé'],
+        },
+      },
+      include: { endereco: true },
+      orderBy: [],
+    });
+  });
+
+  it('returns all sebos sorted', async () => {
+    const sebos = [
+      {
+        id: 1,
+        endereco: {
+          cep: '12345-678',
+          estado: 'Estado',
+          cidade: 'Cidade',
+          bairro: 'Centro',
+          rua: 'Rua',
+          numero: '123',
+          ehPublico: true,
+          complemento: 'Complemento',
+        },
+      },
+    ];
+
+    (prismaClient.sebo.findMany as jest.Mock).mockResolvedValue(sebos);
+
+    const result = await seboRepository.getAll({
+      filters: [
+        {
+          campo: 'bairro',
+          operador: 'in',
+          valor: ['Centro', 'Catolé'],
+        },
+      ],
+      sorters: [
+        {
+          campo: 'nome',
+          ordem: 'ASC',
+        },
+      ],
+    });
+
+    expect(result).toEqual(sebos);
+    expect(prismaClient.sebo.findMany).toHaveBeenCalledWith({
+      where: {
+        conta: {
+          status: StatusConta.ATIVA,
+        },
+        bairro: {
+          in: ['Centro', 'Catolé'],
+        },
+      },
+      include: { endereco: true },
+      orderBy: [{ nome: 'asc' }],
     });
   });
 
@@ -103,6 +203,7 @@ describe('SeboRepository', () => {
       },
       fotos: [{ url: 'http://example.com/foto1' }],
     };
+
     (prismaClient.sebo.findUnique as jest.Mock).mockResolvedValue(sebo);
 
     const result = await seboRepository.getById(1);

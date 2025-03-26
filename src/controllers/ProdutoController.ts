@@ -10,7 +10,7 @@ class ProdutoController {
   }
 
   async getAll(req: Request, res: Response) {
-    const result = await produtoService.getAll();
+    const result = await produtoService.getAll(req.body);
     return res.status(200).json(result);
   }
 

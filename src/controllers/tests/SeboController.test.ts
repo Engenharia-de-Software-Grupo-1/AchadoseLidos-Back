@@ -27,7 +27,12 @@ describe('SeboController', () => {
   });
 
   it('returns 200 and all entities when getAll is successful', async () => {
-    const req = {} as Request;
+    const req = {
+      body: {
+        filters: [],
+        sorters: [],
+      },
+    } as Request;
 
     const res = {
       status: jest.fn().mockReturnThis(),
@@ -40,7 +45,7 @@ describe('SeboController', () => {
 
     await seboController.getAll(req, res);
 
-    expect(seboService.getAll).toHaveBeenCalled();
+    expect(seboService.getAll).toHaveBeenCalledWith(req.body);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith(mockResult);
   });
