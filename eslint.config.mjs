@@ -20,7 +20,6 @@ export default [
     rules: {
       'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 1, maxBOF: 0 }],
       semi: ['error', 'always'],
-      indent: ['error', 2],
       'object-curly-spacing': ['error', 'always'],
       'comma-dangle': ['error', 'always-multiline'],
       'no-trailing-spaces': 'error',

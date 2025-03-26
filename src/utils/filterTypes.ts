@@ -10,7 +10,7 @@ export type Sorter = {
 };
 
 export function buildWhereClause(filters: Filter[]) {
-  const where: any = {};
+  const where: Record<string, unknown> = {};
 
   if (!filters || filters.length === 0) {
     return where;
