@@ -1,7 +1,7 @@
 export type Filter = {
   campo: string;
   operador: string;
-  valor: string | number;
+  valor: string | number | string[];
 };
 
 export type Sorter = {
