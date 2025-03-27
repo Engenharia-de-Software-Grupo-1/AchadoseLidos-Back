@@ -11,10 +11,7 @@ class FavoritoService {
     const authTokenId = getAuthTokenId(authToken);
     const { produtoId } = FavoritoCreateSchema.parse(data);
 
-    const produto = await produtoRepository.getById(produtoId);
-    if (!produto) {
-      throw new ProdutoNotFoundError();
-    }
+    await produtoService.validarProduto(produtoId);
 
     const favorito = await favoritoRepository.getFavorito(authTokenId, produtoId);
     if (favorito) {
