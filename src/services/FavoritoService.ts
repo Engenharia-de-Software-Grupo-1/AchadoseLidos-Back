@@ -1,6 +1,6 @@
 import { AlreadyFavoritedError } from '@src/errors/AlreadyFavoritedError';
 import { FavoriteNotFoundError } from '@src/errors/FavoriteNotFoundError';
-import { FavoritoCreateDTO, FavoritoCreateSchema } from '@src/models/FavoritoSchema';
+import { FavoritoCreateDTO, FavoritoCreateSchema, FavoritoResponseSchema } from '@src/models/FavoritoSchema';
 import { favoritoRepository } from '@src/repositories/FavoritoRepository';
 import { getAuthTokenId } from '@src/utils/authUtils';
 
@@ -43,7 +43,7 @@ class FavoritoService {
 
     const result = Object.values(groupedFavoritos);
 
-    return result;
+    return FavoritoResponseSchema.parseAsync(result);
   }
 
   async delete(authToken: unknown, produtoId: number) {

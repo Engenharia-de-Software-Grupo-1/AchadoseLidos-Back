@@ -38,9 +38,22 @@ describe('FavoritoService', () => {
     it('calls favoritoRepository.getAllForUser with correct parameters', async () => {
       const mockFavoritos = [
         {
-          id: 1,
           produto: {
-            id: mockProdutoId,
+            id: 1,
+            nome: 'Livro Teste Exclusão 2',
+            preco: 29.9,
+            status: 'ATIVO',
+            categoria: 'LIVRO',
+            generos: ['ACAO'],
+            qtdEstoque: 1,
+            estadoConservacao: 'SEMINOVO',
+            anoEdicao: null,
+            anoLancamento: null,
+            autores: 'Marvel',
+            descricao: '',
+            createdAt: new Date('2025-03-26T15:18:22.077Z'),
+            updatedAt: new Date('2025-03-26T15:18:22.077Z'),
+            seboId: 1,
             sebo: { id: 1, nome: 'Sebo Example' },
           },
         },
@@ -53,8 +66,31 @@ describe('FavoritoService', () => {
       expect(favoritoRepository.getAllFavoritos).toHaveBeenCalledWith(mockAuthTokenId);
       expect(result).toEqual([
         {
-          sebo: { id: 1, nome: 'Sebo Example' },
-          produtos: mockFavoritos,
+          produtos: [
+            {
+              produto: {
+                id: 1,
+                nome: 'Livro Teste Exclusão 2',
+                preco: 29.9,
+                status: 'ATIVO',
+                categoria: 'LIVRO',
+                generos: ['ACAO'],
+                qtdEstoque: 1,
+                estadoConservacao: 'SEMINOVO',
+                anoEdicao: null,
+                anoLancamento: null,
+                autores: 'Marvel',
+                descricao: '',
+                createdAt: new Date('2025-03-26T15:18:22.077Z'),
+                updatedAt: new Date('2025-03-26T15:18:22.077Z'),
+                seboId: 1,
+              },
+            },
+          ],
+          sebo: {
+            id: 1,
+            nome: 'Sebo Example',
+          },
         },
       ]);
     });
