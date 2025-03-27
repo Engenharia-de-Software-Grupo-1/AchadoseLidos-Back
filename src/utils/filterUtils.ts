@@ -1,7 +1,7 @@
 export type Filter = {
   campo: string;
   operador: string;
-  valor: string | number | string[];
+  valor: string | number | boolean | string[];
 };
 
 export type Sorter = {
@@ -26,7 +26,11 @@ export function buildWhereClause(filters: Filter[] = []) {
         where[campo] = { lte: valor };
         break;
       case 'in':
-        where[campo] = { in: valor };
+        if (campo === 'bairro') {
+          where['endereco'] = { bairro: { in: valor } };
+        } else {
+          where[campo] = { in: valor };
+        }
         break;
       case 'hasSome':
         where[campo] = { hasSome: valor };
