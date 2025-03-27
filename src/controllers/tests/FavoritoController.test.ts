@@ -26,7 +26,7 @@ describe('FavoritoController', () => {
 
       await favoritoController.create(mockRequest as Request, mockResponse as Response);
 
-      expect(favoritoService.create).toHaveBeenCalledWith(mockAuthToken, mockProdutoId);
+      expect(favoritoService.create).toHaveBeenCalledWith(mockAuthToken, { produtoId: 1 });
       expect(statusMock).toHaveBeenCalledWith(201);
       expect(jsonMock).toHaveBeenCalledWith(mockResponseData);
     });
@@ -35,11 +35,11 @@ describe('FavoritoController', () => {
   describe('getAllForUser', () => {
     it('returns all favoritos for a user with 200 status', async () => {
       const mockResponseData = [{ id: 1, produtoId: mockProdutoId }];
-      (favoritoService.getAllForUser as jest.Mock).mockResolvedValue(mockResponseData);
+      (favoritoService.getFavoritos as jest.Mock).mockResolvedValue(mockResponseData);
 
-      await favoritoController.getAllForUser(mockRequest as Request, mockResponse as Response);
+      await favoritoController.getFavoritos(mockRequest as Request, mockResponse as Response);
 
-      expect(favoritoService.getAllForUser).toHaveBeenCalledWith(mockAuthToken);
+      expect(favoritoService.getFavoritos).toHaveBeenCalledWith(mockAuthToken);
       expect(statusMock).toHaveBeenCalledWith(200);
       expect(jsonMock).toHaveBeenCalledWith(mockResponseData);
     });
@@ -47,6 +47,15 @@ describe('FavoritoController', () => {
 
   describe('delete', () => {
     it('deletes a favorito and return 204 status', async () => {
+      const mockRequest: Partial<Request> = {
+        params: { produtoId: mockProdutoId.toString() },
+      };
+
+      const mockResponse: Partial<Response> = {
+        status: statusMock,
+        locals: { decryptedToken: mockAuthToken },
+      };
+
       (favoritoService.delete as jest.Mock).mockResolvedValue(undefined);
 
       await favoritoController.delete(mockRequest as Request, mockResponse as Response);

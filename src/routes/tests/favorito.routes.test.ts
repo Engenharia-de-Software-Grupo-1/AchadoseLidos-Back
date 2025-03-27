@@ -14,20 +14,20 @@ jest.mock('@src/middlewares/authMiddleware', () => ({
 jest.mock('@src/controllers/FavoritoController', () => ({
   favoritoController: {
     create: jest.fn((req, res) => res.status(201).send({ message: 'Favorito criado com sucesso' })),
-    getAllForUser: jest.fn((req, res) => res.status(200).send({ favoritos: [] })),
+    getFavoritos: jest.fn((req, res) => res.status(200).send({ favoritos: [] })),
     delete: jest.fn((req, res) => res.status(200).send({ message: 'Favorito deletado com sucesso' })),
   },
 }));
 
 describe('Favorito Routes', () => {
   it('cria um favorito', async () => {
-    const response = await request(app).post('/favorito/create').send({ itemId: 1 });
+    const response = await request(app).post('/favorito').send({ itemId: 1 });
     expect(response.status).toBe(201);
     expect(response.body).toEqual({ message: 'Favorito criado com sucesso' });
   });
 
   it('obtém todos os favoritos do usuário', async () => {
-    const response = await request(app).get('/favorito/getAllForUser');
+    const response = await request(app).get('/favorito');
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ favoritos: [] });
   });
