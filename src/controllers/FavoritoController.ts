@@ -3,10 +3,9 @@ import { favoritoService } from '@src/services/FavoritoService';
 
 class FavoritoController {
   async create(req: Request, res: Response) {
-    const { produtoId } = req.body;
     const authToken = res.locals.decryptedToken;
 
-    const result = await favoritoService.create(authToken, Number(produtoId));
+    const result = await favoritoService.create(authToken, req.body);
     return res.status(201).json(result);
   }
 
