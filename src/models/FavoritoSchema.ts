@@ -30,6 +30,13 @@ export const FavoritoResponseSchema = z.array(
           createdAt: z.date(),
           updatedAt: z.date(),
           seboId: z.number(),
+          fotos: z.array(
+            z.object({
+              id: z.number(),
+              url: z.string(),
+              produtoId: z.number(),
+            }),
+          ),
         }),
       }),
     ),

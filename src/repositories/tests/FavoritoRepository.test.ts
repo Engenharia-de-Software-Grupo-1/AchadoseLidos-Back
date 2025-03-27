@@ -40,6 +40,7 @@ describe('FavoritoRepository', () => {
         select: {
           produto: {
             include: {
+              fotos: true,
               sebo: {
                 select: {
                   id: true,

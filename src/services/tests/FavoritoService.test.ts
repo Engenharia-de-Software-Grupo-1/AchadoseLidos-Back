@@ -55,6 +55,7 @@ describe('FavoritoService', () => {
             updatedAt: new Date('2025-03-26T15:18:22.077Z'),
             seboId: 1,
             sebo: { id: 1, nome: 'Sebo Example' },
+            fotos: [{ id: 1, url: 'https://google.com', produtoId: 5 }],
           },
         },
       ];
@@ -84,6 +85,7 @@ describe('FavoritoService', () => {
                 createdAt: new Date('2025-03-26T15:18:22.077Z'),
                 updatedAt: new Date('2025-03-26T15:18:22.077Z'),
                 seboId: 1,
+                fotos: [{ id: 1, url: 'https://google.com', produtoId: 5 }],
               },
             },
           ],
