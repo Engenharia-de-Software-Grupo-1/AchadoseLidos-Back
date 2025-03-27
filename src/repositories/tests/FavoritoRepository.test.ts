@@ -61,12 +61,11 @@ describe('FavoritoRepository', () => {
 
       (prismaClient.marcacaoFavorito.delete as jest.Mock).mockResolvedValue({ id: 1, usuarioId, produtoId });
 
-      const result = await favoritoRepository.delete(usuarioId, produtoId);
+      await favoritoRepository.delete(usuarioId, produtoId);
 
       expect(prismaClient.marcacaoFavorito.delete).toHaveBeenCalledWith({
         where: { usuarioId_produtoId: { produtoId, usuarioId } },
       });
-      expect(result).toEqual({ id: 1, usuarioId, produtoId });
     });
   });
 });

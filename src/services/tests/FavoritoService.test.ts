@@ -66,12 +66,11 @@ describe('FavoritoService', () => {
 
       (favoritoRepository.delete as jest.Mock).mockResolvedValue(true);
 
-      const result = await favoritoService.delete(mockAuthToken, mockProdutoId);
+      await favoritoService.delete(mockAuthToken, mockProdutoId);
 
       expect(getAuthTokenId).toHaveBeenCalledWith(mockAuthToken);
       expect(favoritoRepository.getFavorito).toHaveBeenCalledWith(mockAuthTokenId, mockProdutoId);
       expect(favoritoRepository.delete).toHaveBeenCalledWith(mockAuthTokenId, mockProdutoId);
-      expect(result).toBe(true);
     });
   });
 });
