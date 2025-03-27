@@ -129,8 +129,10 @@ describe('SeboRepository', () => {
         conta: {
           status: StatusConta.ATIVA,
         },
-        bairro: {
-          in: ['Centro', 'Catolé'],
+        endereco: {
+          bairro: {
+            in: ['Centro', 'Catolé'],
+          },
         },
       },
       include: { endereco: true },
@@ -179,8 +181,10 @@ describe('SeboRepository', () => {
         conta: {
           status: StatusConta.ATIVA,
         },
-        bairro: {
-          in: ['Centro', 'Catolé'],
+        endereco: {
+          bairro: {
+            in: ['Centro', 'Catolé'],
+          },
         },
       },
       include: { endereco: true },
