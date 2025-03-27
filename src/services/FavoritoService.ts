@@ -55,7 +55,7 @@ class FavoritoService {
       throw new FavoriteNotFoundError();
     }
 
-    return favoritoRepository.delete(authTokenId, produtoId);
+    await favoritoRepository.delete(authTokenId, produtoId);
   }
 }
 
