@@ -10,7 +10,10 @@ class ProdutoController {
   }
 
   async getAll(req: Request, res: Response) {
-    const result = await produtoService.getAll(req.body);
+    const filters = JSON.parse((req.query?.filters as string) || '[]');
+    const sorters = JSON.parse((req.query?.sorters as string) || '[]');
+
+    const result = await produtoService.getAll({ filters, sorters });
     return res.status(200).json(result);
   }
 

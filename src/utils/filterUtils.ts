@@ -28,6 +28,9 @@ export function buildWhereClause(filters: Filter[] = []) {
       case 'in':
         where[campo] = { in: valor };
         break;
+      case 'hasSome':
+        where[campo] = { hasSome: valor };
+        break;
       default:
         where[campo] = valor;
     }
