@@ -13,7 +13,7 @@ class FavoritoRepository {
     return prismaClient.marcacaoFavorito.findMany({
       where: { usuarioId },
       select: {
-        produto: true,
+        produto: { include: { sebo: { select: { id: true, nome: true } } } },
       },
     });
   }

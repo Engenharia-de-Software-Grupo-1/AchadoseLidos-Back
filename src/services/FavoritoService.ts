@@ -27,7 +27,26 @@ class FavoritoService {
   async getFavoritos(authToken: unknown) {
     const authTokenId = getAuthTokenId(authToken);
 
-    return favoritoRepository.getAllFavoritos(authTokenId);
+    const favoritos = await favoritoRepository.getAllFavoritos(authTokenId);
+
+    const groupedFavoritos = favoritos.reduce(
+      (acc, favorito) => {
+        const seboKey = `${favorito.produto.sebo.id}-${favorito.produto.sebo.nome}`;
+        if (!acc[seboKey]) {
+          acc[seboKey] = {
+            sebo: favorito.produto.sebo,
+            produtos: [],
+          };
+        }
+        acc[seboKey].produtos.push(favorito);
+        return acc;
+      },
+      {} as Record<string, { sebo: { id: number; nome: string }; produtos: typeof favoritos }>,
+    );
+
+    const result = Object.values(groupedFavoritos);
+
+    return result;
   }
 
   async delete(authToken: unknown, produtoId: number) {
