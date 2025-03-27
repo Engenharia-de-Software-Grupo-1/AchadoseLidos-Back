@@ -19,7 +19,7 @@ class FavoritoRepository {
   }
 
   async delete(usuarioId: number, produtoId: number) {
-    return prismaClient.marcacaoFavorito.delete({ where: { usuarioId_produtoId: { produtoId, usuarioId } } });
+    await prismaClient.marcacaoFavorito.delete({ where: { usuarioId_produtoId: { produtoId, usuarioId } } });
   }
 }
 
