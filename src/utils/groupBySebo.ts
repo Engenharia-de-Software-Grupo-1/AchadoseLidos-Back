@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { z } from 'zod';
 import { CategoriaProduto, FotoProdutoSchema } from '@src/models/ProdutoSchema';
 
@@ -16,7 +17,6 @@ export const ProdutoBaseSchema = z.object({
   preco: z.number().nonnegative(),
   qtdEstoque: z.number().int().nonnegative(),
 });
-type Produto = z.infer<typeof ProdutoBaseSchema> & { sebo: Sebo };
 
 export const ProdutoAgrupadoSchema = <T extends z.ZodTypeAny>(produtoSchema: T) =>
   z.object({
@@ -24,21 +24,13 @@ export const ProdutoAgrupadoSchema = <T extends z.ZodTypeAny>(produtoSchema: T) 
     produtos: z.array(produtoSchema),
   });
 
-export function groupBySebo<T extends { produto: Produto }>(items: T[]) {
-  const agrupados = items.reduce(
-    (acc, item) => {
-      const seboId = item.produto.sebo.id;
-      if (!acc[seboId]) {
-        acc[seboId] = {
-          sebo: item.produto.sebo,
-          produtos: [],
-        };
-      }
-      acc[seboId].produtos.push(item);
+export function groupBySebo<T>(items: T[], mapProduto: (item: T) => unknown) {
+  return Object.values(
+    items.reduce<Record<number, { sebo: Sebo; produtos: unknown[] }>>((acc, item) => {
+      const seboId = (item as any).produto.sebo.id;
+      acc[seboId] = acc[seboId] || { sebo: (item as any).produto.sebo, produtos: [] };
+      acc[seboId].produtos.push(mapProduto(item));
       return acc;
-    },
-    {} as Record<number, { sebo: Sebo; produtos: T[] }>,
+    }, {}),
   );
-
-  return Object.values(agrupados);
 }

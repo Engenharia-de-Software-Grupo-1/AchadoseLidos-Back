@@ -32,7 +32,7 @@ class FavoritoService {
     const authTokenId = getAuthTokenId(authToken);
 
     const favoritos = await favoritoRepository.getAllFavoritos(authTokenId);
-    const favoritosAgrupados = groupBySebo(favoritos);
+    const favoritosAgrupados = groupBySebo(favoritos, item => item.produto);
     return FavoritoAgrupadoSchema.array().parseAsync(favoritosAgrupados);
   }
 

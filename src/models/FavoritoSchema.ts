@@ -7,10 +7,6 @@ export const FavoritoCreateSchema = z.object({
 
 export const FavoritoResponseSchema = FavoritoCreateSchema;
 
-export const FavoritoAgrupadoSchema = ProdutoAgrupadoSchema(
-  z.object({
-    produto: ProdutoBaseSchema,
-  }),
-);
+export const FavoritoAgrupadoSchema = ProdutoAgrupadoSchema(ProdutoBaseSchema);
 
 export type FavoritoCreateDTO = z.infer<typeof FavoritoCreateSchema>;

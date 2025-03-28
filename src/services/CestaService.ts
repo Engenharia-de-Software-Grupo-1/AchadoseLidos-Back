@@ -19,7 +19,10 @@ class CestaService {
     const usuarioId = getAuthTokenId(authToken);
 
     const produtos = await cestaRepository.getCesta(usuarioId);
-    const produtosAgrupados = groupBySebo(produtos);
+    const produtosAgrupados = groupBySebo(produtos, item => ({
+      quantidade: item.quantidade,
+      produto: item.produto,
+    }));
     return CestaAgrupadaSchema.array().parseAsync(produtosAgrupados);
   }
 
