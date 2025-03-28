@@ -1,5 +1,5 @@
-import { AlreadyFavoritedError } from '@src/errors/AlreadyFavoritedError';
-import { FavoriteNotFoundError } from '@src/errors/FavoriteNotFoundError';
+import { AppError } from '@src/errors/AppError';
+import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import { FavoritoCreateDTO, FavoritoCreateSchema, FavoritoResponseSchema } from '@src/models/FavoritoSchema';
 import { favoritoRepository } from '@src/repositories/FavoritoRepository';
 import { getAuthTokenId } from '@src/utils/authUtils';
@@ -15,7 +15,7 @@ class FavoritoService {
 
     const favorito = await favoritoRepository.getFavorito(authTokenId, produtoId);
     if (favorito) {
-      throw new AlreadyFavoritedError();
+      throw new AppError('Produto já favoritado', 409);
     }
 
     return favoritoRepository.create(authTokenId, produtoId);
@@ -42,7 +42,6 @@ class FavoritoService {
     );
 
     const result = Object.values(groupedFavoritos);
-
     return FavoritoResponseSchema.parseAsync(result);
   }
 
@@ -52,7 +51,7 @@ class FavoritoService {
 
     const favorito = await favoritoRepository.getFavorito(authTokenId, produtoId);
     if (!favorito) {
-      throw new FavoriteNotFoundError();
+      throw new EntityNotFoundError(produtoId);
     }
 
     await favoritoRepository.delete(authTokenId, produtoId);
