@@ -1,17 +1,15 @@
 import prismaClient from '@src/lib/prismaClient';
 import { Prisma } from '@prisma/client';
-import { CestaAgrupada, CestaUpdateDTO, ProdutoCesta } from '@src/models/CestaSchema';
+import { CestaUpdateDTO } from '@src/models/CestaSchema';
 
 class CestaRepository {
   async getCesta(usuarioId: number) {
-    const cestaProdutos = await prismaClient.cestaProduto.findMany({
+    return prismaClient.cestaProduto.findMany({
       where: { usuarioId },
       include: {
         produto: { include: { sebo: true, fotos: true } },
       },
     });
-
-    return this.agruparProdutosPorSebo(cestaProdutos);
   }
 
   async addProduto(usuarioId: number, produtoId: number) {
@@ -54,32 +52,16 @@ class CestaRepository {
     });
   }
 
-  async deleteAllProdutos(tx: Prisma.TransactionClient, usuarioId: number) {
+  async deleteAllByUsuarioId(tx: Prisma.TransactionClient, usuarioId: number) {
     await tx.cestaProduto.deleteMany({
       where: { usuarioId },
     });
   }
 
-  private agruparProdutosPorSebo(cestaProdutos: ProdutoCesta[]) {
-    const produtosAgrupados = cestaProdutos.reduce((acc: CestaAgrupada, item: ProdutoCesta) => {
-      const seboId = item.produto.sebo.id;
-
-      if (!acc[seboId]) {
-        acc[seboId] = {
-          sebo: item.produto.sebo,
-          produtos: [],
-          totalPreco: 0,
-          totalQuantidade: 0,
-        };
-      }
-      acc[seboId].produtos.push(item);
-      acc[seboId].totalPreco += item.produto.preco * item.quantidade;
-      acc[seboId].totalQuantidade += item.quantidade;
-
-      return acc;
-    }, {} as CestaAgrupada);
-
-    return Object.values(produtosAgrupados);
+  async deleteAllByProdutoId(tx: Prisma.TransactionClient, produtoId: number) {
+    await tx.cestaProduto.deleteMany({
+      where: { produtoId },
+    });
   }
 }
 
