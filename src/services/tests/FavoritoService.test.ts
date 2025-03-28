@@ -69,14 +69,12 @@ describe('FavoritoService', () => {
         {
           produtos: [
             {
-              produto: {
-                id: 1,
-                nome: 'Livro Teste Exclusão 2',
-                preco: 29.9,
-                categoria: 'LIVRO',
-                qtdEstoque: 1,
-                fotos: [{ url: 'https://google.com' }],
-              },
+              id: 1,
+              nome: 'Livro Teste Exclusão 2',
+              preco: 29.9,
+              categoria: 'LIVRO',
+              qtdEstoque: 1,
+              fotos: [{ url: 'https://google.com' }],
             },
           ],
           sebo: {
