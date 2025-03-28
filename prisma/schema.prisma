@@ -93,11 +93,10 @@ model Usuario {
   goodreads  String?
   fotoPerfil String?
 
-  favoritos MarcacaoFavorito[]
-
   contaId Int   @unique
   conta   Conta @relation(fields: [contaId], references: [id])
 
+  favoritos     MarcacaoFavorito[]
   cestaProdutos CestaProduto[]
 }
 
@@ -139,13 +138,12 @@ model Produto {
   createdAt         DateTime                 @default(now())
   updatedAt         DateTime                 @updatedAt
 
-  fotos        FotoProduto[]
-  favoritagens MarcacaoFavorito[]
-
   seboId Int
   sebo   Sebo @relation(fields: [seboId], references: [id])
 
-  cestas CestaProduto[]
+  fotos        FotoProduto[]
+  favoritagens MarcacaoFavorito[]
+  cestas       CestaProduto[]
 }
 
 model FotoProduto {
