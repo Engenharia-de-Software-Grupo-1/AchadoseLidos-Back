@@ -41,12 +41,7 @@ describe('FavoritoRepository', () => {
           produto: {
             include: {
               fotos: true,
-              sebo: {
-                select: {
-                  id: true,
-                  nome: true,
-                },
-              },
+              sebo: true,
             },
           },
         },

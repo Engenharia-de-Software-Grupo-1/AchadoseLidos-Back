@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import prismaClient from '@src/lib/prismaClient';
 
 class FavoritoRepository {
@@ -13,13 +14,32 @@ class FavoritoRepository {
     return prismaClient.marcacaoFavorito.findMany({
       where: { usuarioId },
       select: {
-        produto: { include: { sebo: { select: { id: true, nome: true } }, fotos: true } },
+        produto: { include: { sebo: true, fotos: true } },
       },
     });
   }
 
   async delete(usuarioId: number, produtoId: number) {
-    await prismaClient.marcacaoFavorito.delete({ where: { usuarioId_produtoId: { produtoId, usuarioId } } });
+    await prismaClient.marcacaoFavorito.delete({
+      where: {
+        usuarioId_produtoId: {
+          produtoId,
+          usuarioId,
+        },
+      },
+    });
+  }
+
+  async deleteAllByUsuarioId(tx: Prisma.TransactionClient, usuarioId: number) {
+    await tx.marcacaoFavorito.deleteMany({
+      where: { usuarioId },
+    });
+  }
+
+  async deleteAllByProdutoId(tx: Prisma.TransactionClient, produtoId: number) {
+    await tx.marcacaoFavorito.deleteMany({
+      where: { produtoId },
+    });
   }
 }
 

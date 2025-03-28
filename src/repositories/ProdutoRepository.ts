@@ -3,6 +3,9 @@ import { ProdutoCreateDTO, ProdutoUpdateDTO } from '@src/models/ProdutoSchema';
 import { Prisma, StatusProduto } from '@prisma/client';
 import { DELETED_PRODUTO } from '@src/constants/deletedData';
 
+import { favoritoRepository } from './FavoritoRepository';
+import { cestaRepository } from './CestaRepository';
+
 const includeFotosAndSebo = {
   include: {
     fotos: true,
@@ -75,6 +78,8 @@ class ProdutoRepository {
         where: { id },
         data: DELETED_PRODUTO,
       }),
+      favoritoRepository.deleteAllByProdutoId(tx, id),
+      cestaRepository.deleteAllByProdutoId(tx, id),
     ]);
   }
 }

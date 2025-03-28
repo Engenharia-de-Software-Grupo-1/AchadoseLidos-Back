@@ -54,9 +54,15 @@ class CestaRepository {
     });
   }
 
-  async deleteAllProdutos(tx: Prisma.TransactionClient, usuarioId: number) {
+  async deleteAllByUsuarioId(tx: Prisma.TransactionClient, usuarioId: number) {
     await tx.cestaProduto.deleteMany({
       where: { usuarioId },
+    });
+  }
+
+  async deleteAllByProdutoId(tx: Prisma.TransactionClient, produtoId: number) {
+    await tx.cestaProduto.deleteMany({
+      where: { produtoId },
     });
   }
 
