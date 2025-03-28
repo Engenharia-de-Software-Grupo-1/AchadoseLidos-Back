@@ -55,6 +55,7 @@ model Sebo {
   endereco EnderecoSebo?
   fotos    FotoSebo[]
   produtos Produto[]
+  Pedido   Pedido[]
 }
 
 model EnderecoSebo {
@@ -97,6 +98,7 @@ model Usuario {
   conta   Conta @relation(fields: [contaId], references: [id])
 
   cestaProdutos CestaProduto[]
+  Pedido        Pedido[]
 }
 
 enum StatusProduto {
@@ -141,7 +143,8 @@ model Produto {
   seboId Int
   sebo   Sebo          @relation(fields: [seboId], references: [id])
 
-  cestas CestaProduto[]
+  cestas        CestaProduto[]
+  PedidoProduto PedidoProduto[]
 }
 
 model FotoProduto {
@@ -161,4 +164,43 @@ model CestaProduto {
   produto   Produto @relation(fields: [produtoId], references: [id])
 
   @@id([usuarioId, produtoId])
+}
+
+enum StatusPedido {
+  PENDENTE
+  CONCLUIDO
+  CANCELADO
+}
+
+enum StatusProdutoPedido {
+  PENDENTE
+  CONFIRMADO
+  CANCELADO
+}
+
+model Pedido {
+  id          Int          @id @default(autoincrement())
+  seboId      Int
+  usuarioId   Int
+  status      StatusPedido @default(PENDENTE)
+  qtdProdutos Int
+  total       Float
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  sebo     Sebo            @relation(fields: [seboId], references: [id])
+  usuario  Usuario         @relation(fields: [usuarioId], references: [id])
+  produtos PedidoProduto[]
+}
+
+model PedidoProduto {
+  pedidoId   Int
+  produtoId  Int
+  quantidade Int
+  status     StatusProdutoPedido
+
+  pedido  Pedido  @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  produto Produto @relation(fields: [produtoId], references: [id])
+
+  @@id([pedidoId, produtoId])
 }
