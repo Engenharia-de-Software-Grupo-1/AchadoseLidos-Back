@@ -24,13 +24,13 @@ describe('FavoritoService', () => {
 
   describe('create', () => {
     it('calls favoritoRepository.create with correct parameters', async () => {
-      (favoritoRepository.create as jest.Mock).mockResolvedValue({ id: 1, produtoId: mockProdutoIdObject });
+      (favoritoRepository.create as jest.Mock).mockResolvedValue({ id: 1, produtoId: mockProdutoId });
 
       const result = await favoritoService.create(mockAuthToken, mockProdutoIdObject);
 
       expect(getAuthTokenId).toHaveBeenCalledWith(mockAuthToken);
       expect(favoritoRepository.create).toHaveBeenCalledWith(mockAuthTokenId, 123);
-      expect(result).toEqual({ id: 1, produtoId: mockProdutoIdObject });
+      expect(result).toEqual({ produtoId: mockProdutoId });
     });
   });
 
@@ -54,7 +54,7 @@ describe('FavoritoService', () => {
             createdAt: new Date('2025-03-26T15:18:22.077Z'),
             updatedAt: new Date('2025-03-26T15:18:22.077Z'),
             seboId: 1,
-            sebo: { id: 1, nome: 'Sebo Example' },
+            sebo: { id: 1, nome: 'Sebo Example', concordaVender: true },
             fotos: [{ id: 1, url: 'https://google.com', produtoId: 5 }],
           },
         },
@@ -73,25 +73,16 @@ describe('FavoritoService', () => {
                 id: 1,
                 nome: 'Livro Teste Exclusão 2',
                 preco: 29.9,
-                status: 'ATIVO',
                 categoria: 'LIVRO',
-                generos: ['ACAO'],
                 qtdEstoque: 1,
-                estadoConservacao: 'SEMINOVO',
-                anoEdicao: null,
-                anoLancamento: null,
-                autores: 'Marvel',
-                descricao: '',
-                createdAt: new Date('2025-03-26T15:18:22.077Z'),
-                updatedAt: new Date('2025-03-26T15:18:22.077Z'),
-                seboId: 1,
-                fotos: [{ id: 1, url: 'https://google.com', produtoId: 5 }],
+                fotos: [{ url: 'https://google.com' }],
               },
             },
           ],
           sebo: {
             id: 1,
             nome: 'Sebo Example',
+            concordaVender: true,
           },
         },
       ]);

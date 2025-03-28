@@ -1,8 +1,14 @@
 import { AppError } from '@src/errors/AppError';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
-import { FavoritoCreateDTO, FavoritoCreateSchema, FavoritoResponseSchema } from '@src/models/FavoritoSchema';
+import {
+  FavoritoAgrupadoSchema,
+  FavoritoCreateDTO,
+  FavoritoCreateSchema,
+  FavoritoResponseSchema,
+} from '@src/models/FavoritoSchema';
 import { favoritoRepository } from '@src/repositories/FavoritoRepository';
 import { getAuthTokenId } from '@src/utils/authUtils';
+import { groupBySebo } from '@src/utils/groupBySebo';
 
 import { produtoService } from './ProdutoService';
 
@@ -18,31 +24,16 @@ class FavoritoService {
       throw new AppError('Produto já favoritado', 409);
     }
 
-    return favoritoRepository.create(authTokenId, produtoId);
+    const result = await favoritoRepository.create(authTokenId, produtoId);
+    return FavoritoResponseSchema.parseAsync(result);
   }
 
   async getFavoritos(authToken: unknown) {
     const authTokenId = getAuthTokenId(authToken);
 
     const favoritos = await favoritoRepository.getAllFavoritos(authTokenId);
-
-    const groupedFavoritos = favoritos.reduce(
-      (acc, favorito) => {
-        const seboKey = `${favorito.produto.sebo.id}-${favorito.produto.sebo.nome}`;
-        if (!acc[seboKey]) {
-          acc[seboKey] = {
-            sebo: favorito.produto.sebo,
-            produtos: [],
-          };
-        }
-        acc[seboKey].produtos.push(favorito);
-        return acc;
-      },
-      {} as Record<string, { sebo: { id: number; nome: string }; produtos: typeof favoritos }>,
-    );
-
-    const result = Object.values(groupedFavoritos);
-    return FavoritoResponseSchema.parseAsync(result);
+    const favoritosAgrupados = groupBySebo(favoritos);
+    return FavoritoAgrupadoSchema.array().parseAsync(favoritosAgrupados);
   }
 
   async delete(authToken: unknown, produtoId: number) {
