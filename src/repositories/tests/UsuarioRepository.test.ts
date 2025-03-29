@@ -1,9 +1,11 @@
 import prismaClient from '@src/lib/prismaClient';
 import { TipoConta } from '@prisma/client';
-import { UsuarioCreateDTO } from '@src/models/UsuarioSchema';
+import { UsuarioCreateDTO, UsuarioUpdateDTO } from '@src/models/UsuarioSchema';
 
 import { usuarioRepository } from '../UsuarioRepository';
 import { contaRepository } from '../ContaRepository';
+import { cestaRepository } from '../CestaRepository';
+import { favoritoRepository } from '../FavoritoRepository';
 
 jest.mock('@src/lib/prismaClient');
 
@@ -63,5 +65,55 @@ describe('UsuarioRepository', () => {
     const result = await usuarioRepository.getById(1);
 
     expect(result).toEqual(mockResult);
+  });
+
+  it('updates a usuario by id', async () => {
+    const data: UsuarioUpdateDTO = {
+      nome: 'usuario',
+      cpf: '12345678911',
+      telefone: '40028922',
+    };
+
+    (prismaClient.usuario.update as jest.Mock).mockResolvedValue(data);
+
+    const result = await usuarioRepository.update(1, data);
+
+    expect(prismaClient.usuario.update).toHaveBeenCalledWith({
+      where: { id: 1 },
+      data,
+    });
+    expect(result).toEqual(data);
+  });
+
+  it('deletes a usuario by id', async () => {
+    const usuario = {
+      id: 1,
+      nome: 'usuario',
+      cpf: '12345678911',
+      telefone: '40028922',
+      conta: {
+        id: 2,
+        email: 'teste@exemplo.com',
+        senha: 'senhaforte123',
+      },
+    };
+
+    (usuarioRepository.getById as jest.Mock) = jest.fn().mockResolvedValue(usuario);
+    (contaRepository.delete as jest.Mock) = jest.fn().mockResolvedValue(null);
+    (favoritoRepository.deleteAllByUsuarioId as jest.Mock) = jest.fn().mockResolvedValue(null);
+    (cestaRepository.deleteAllByUsuarioId as jest.Mock) = jest.fn().mockResolvedValue(null);
+    (prismaClient.usuario.update as jest.Mock) = jest.fn().mockResolvedValue(null);
+    (prismaClient.$transaction as jest.Mock) = jest.fn(async cb => cb(prismaClient));
+
+    await usuarioRepository.delete(1);
+
+    expect(prismaClient.$transaction).toHaveBeenCalled();
+    expect(contaRepository.delete).toHaveBeenCalledWith(prismaClient, usuario.conta.id);
+    expect(favoritoRepository.deleteAllByUsuarioId).toHaveBeenCalledWith(prismaClient, usuario.id);
+    expect(cestaRepository.deleteAllByUsuarioId).toHaveBeenCalledWith(prismaClient, usuario.id);
+    expect(prismaClient.usuario.update).toHaveBeenCalledWith({
+      where: { id: usuario.id },
+      data: expect.any(Object),
+    });
   });
 });
