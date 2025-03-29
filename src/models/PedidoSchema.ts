@@ -2,42 +2,46 @@ import { z } from 'zod';
 
 import { ProdutoBaseSchema, SeboBaseSchema, UsuarioBaseSchema } from './BaseSchema';
 
-export const StatusPedido = z.enum(['PENDENTE', 'CONCLUIDO', 'CANCELADO']);
-export const StatusProdutoPedido = z.enum(['PENDENTE', 'CONFIRMADO', 'CANCELADO']);
+const StatusPedido = z.enum(['PENDENTE', 'CONCLUIDO', 'CANCELADO']);
+const StatusProdutoPedido = z.enum(['PENDENTE', 'CONFIRMADO', 'CANCELADO']);
 
-const PedidoProdutoCreateSchema = z.object({
-  quantidade: z.number().int().min(1),
-  produto: ProdutoBaseSchema,
+const SeboPedidoSchema = SeboBaseSchema.extend({
+  telefone: z.string().length(13),
 });
 
-const PedidoProdutoUpdateSchema = z.object({
-  status: StatusProdutoPedido,
-  produto: ProdutoBaseSchema,
-});
+const ProdutoPedidoSchema = {
+  create: z.object({
+    quantidade: z.number().int().min(1),
+    produto: ProdutoBaseSchema,
+  }),
+  update: z.object({
+    status: StatusProdutoPedido,
+    produto: ProdutoBaseSchema,
+  }),
+};
 
 export const PedidoCreateSchema = z.object({
   qtdProdutos: z.number().int().min(1),
   total: z.number().positive(),
-  sebo: SeboBaseSchema,
-  produtos: z.array(PedidoProdutoCreateSchema).min(1),
+  sebo: SeboPedidoSchema,
+  produtos: z.array(ProdutoPedidoSchema.create).min(1),
 });
 
 export const PedidoUpdateSchema = z.object({
   status: StatusPedido,
-  produtos: z.array(PedidoProdutoUpdateSchema),
+  produtos: z.array(ProdutoPedidoSchema.update),
 });
 
 export const PedidoResponseSchema = PedidoCreateSchema.extend({
   id: z.number(),
-  qtdProdutos: z.number().int().min(1),
-  total: z.number().positive(),
   status: StatusPedido,
   createdAt: z.date().or(z.string().datetime()),
   updatedAt: z.date().or(z.string().datetime()),
-  produtos: z.array(PedidoProdutoCreateSchema.merge(PedidoProdutoUpdateSchema)),
-  sebo: SeboBaseSchema,
+  produtos: z.array(ProdutoPedidoSchema.create.merge(ProdutoPedidoSchema.update)),
+  sebo: SeboPedidoSchema,
   usuario: UsuarioBaseSchema,
 });
 
 export type PedidoCreateDTO = z.infer<typeof PedidoCreateSchema>;
 export type PedidoUpdateDTO = z.infer<typeof PedidoUpdateSchema>;
+export type PedidoResponseDTO = z.infer<typeof PedidoResponseSchema>;

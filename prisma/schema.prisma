@@ -37,7 +37,7 @@ model Sebo {
   nome                 String
   cpfCnpj              String  @db.VarChar(16)
   concordaVender       Boolean
-  telefone             String? @db.VarChar(11)
+  telefone             String? @db.VarChar(13)
   biografia            String?
   horarioFuncionamento String?
   estanteVirtual       String?
@@ -86,7 +86,7 @@ model Usuario {
   id         Int     @id @default(autoincrement())
   nome       String
   cpf        String  @db.Char(11)
-  telefone   String  @db.Char(11)
+  telefone   String  @db.VarChar(13)
   biografia  String?
   twitter    String?
   instagram  String?

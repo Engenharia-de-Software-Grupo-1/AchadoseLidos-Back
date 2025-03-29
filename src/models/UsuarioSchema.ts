@@ -15,7 +15,7 @@ const UsuarioSchema = z.object({
 
 const UsuarioPrivateSchema = z.object({
   cpf: z.string().length(11),
-  telefone: z.string().length(11),
+  telefone: z.string().max(13),
 });
 
 export const UsuarioCreateSchema = UsuarioSchema.merge(UsuarioPrivateSchema).extend({

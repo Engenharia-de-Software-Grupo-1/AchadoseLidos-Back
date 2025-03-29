@@ -21,7 +21,7 @@ const FotoSeboSchema = z.object({
 const SeboSchema = z.object({
   nome: requiredString,
   concordaVender: z.boolean(),
-  telefone: z.string().max(11).nullable().optional(),
+  telefone: z.string().max(13).nullable().optional(),
 
   biografia: optionalString,
   horarioFuncionamento: optionalString,
