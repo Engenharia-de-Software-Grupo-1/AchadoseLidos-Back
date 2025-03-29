@@ -1,5 +1,5 @@
 import prismaClient from '@src/lib/prismaClient';
-import { TipoConta } from '@prisma/client';
+import { StatusProdutoPedido, TipoConta } from '@prisma/client';
 import { PedidoCreateDTO, PedidoUpdateDTO } from '@src/models/PedidoSchema';
 import { buildWhereClause, Filter } from '@src/utils/filterUtils';
 
@@ -69,8 +69,8 @@ class PedidoRepository {
 
       if (produtos?.length) {
         await Promise.all(
-          produtos.map(item =>
-            tx.pedidoProduto.update({
+          produtos.map(async item => {
+            await tx.pedidoProduto.update({
               where: {
                 pedidoId_produtoId: {
                   pedidoId: id,
@@ -78,8 +78,15 @@ class PedidoRepository {
                 },
               },
               data: { status: item.status },
-            }),
-          ),
+            });
+
+            if (item.status === StatusProdutoPedido.CONFIRMADO) {
+              await tx.produto.update({
+                where: { id: item.produto.id },
+                data: { qtdEstoque: { decrement: item.quantidade } },
+              });
+            }
+          }),
         );
       }
 

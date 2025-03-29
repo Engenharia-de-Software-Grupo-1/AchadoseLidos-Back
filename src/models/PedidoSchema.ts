@@ -16,6 +16,7 @@ const ProdutoPedidoSchema = {
   }),
   update: z.object({
     status: StatusProdutoPedido,
+    quantidade: z.number().int().min(1),
     produto: ProdutoBaseSchema,
   }),
 };
