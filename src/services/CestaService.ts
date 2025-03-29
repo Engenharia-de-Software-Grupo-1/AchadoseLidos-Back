@@ -10,6 +10,7 @@ import { cestaRepository } from '@src/repositories/CestaRepository';
 import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 import { getAuthTokenId } from '@src/utils/authUtils';
 import { AppError } from '@src/errors/AppError';
+import { groupBySebo } from '@src/utils/groupBySebo';
 
 import { produtoService } from './ProdutoService';
 
@@ -17,8 +18,12 @@ class CestaService {
   async getCesta(authToken: unknown) {
     const usuarioId = getAuthTokenId(authToken);
 
-    const result = await cestaRepository.getCesta(usuarioId);
-    return await CestaAgrupadaSchema.array().parseAsync(result);
+    const produtos = await cestaRepository.getCesta(usuarioId);
+    const produtosAgrupados = groupBySebo(produtos, item => ({
+      quantidade: item.quantidade,
+      produto: item.produto,
+    }));
+    return CestaAgrupadaSchema.array().parseAsync(produtosAgrupados);
   }
 
   async adicionarProduto(data: CestaCreateDTO, authToken: unknown) {

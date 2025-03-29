@@ -75,7 +75,10 @@ describe('ProdutoService', () => {
       parseAsync: jest.fn().mockResolvedValue(produtos),
     });
 
-    const result = await produtoService.getAll();
+    const result = await produtoService.getAll({
+      filters: [],
+      sorters: [],
+    });
 
     expect(produtoRepository.getAll).toHaveBeenCalled();
     expect(ProdutoResponseSchema.array().parseAsync).toHaveBeenCalledWith(produtos);

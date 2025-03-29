@@ -8,7 +8,10 @@ class SeboController {
   }
 
   async getAll(req: Request, res: Response) {
-    const result = await seboService.getAll();
+    const filters = JSON.parse((req.query?.filters as string) || '[]');
+    const sorters = JSON.parse((req.query?.sorters as string) || '[]');
+
+    const result = await seboService.getAll({ filters, sorters });
     return res.status(200).json(result);
   }
 

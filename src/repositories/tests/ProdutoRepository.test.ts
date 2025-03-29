@@ -73,7 +73,10 @@ describe('ProdutoRepository', () => {
 
     (prismaClient.produto.findMany as jest.Mock).mockResolvedValue(produtos);
 
-    const result = await produtoRepository.getAll();
+    const result = await produtoRepository.getAll({
+      filters: [],
+      sorters: [],
+    });
 
     expect(result).toEqual(produtos);
     expect(prismaClient.produto.findMany).toHaveBeenCalledWith({
@@ -82,6 +85,122 @@ describe('ProdutoRepository', () => {
         fotos: true,
         sebo: { include: { endereco: true } },
       },
+      orderBy: [],
+    });
+  });
+
+  it('returns all filtered products', async () => {
+    const produtos = [
+      {
+        id: 1,
+        seboId: 123,
+        status: StatusProduto.ATIVO,
+        nome: 'Produto 1',
+        preco: 10,
+        categoria: CategoriaProduto.LIVRO,
+        qtdEstoque: 10,
+        estadoConservacao: EstadoConservacaoProduto.NOVO,
+        anoEdicao: 2020,
+        anoLancamento: 2021,
+      },
+      {
+        id: 2,
+        seboId: 456,
+        status: StatusProduto.ATIVO,
+        nome: 'Produto 2',
+        preco: 10,
+        categoria: CategoriaProduto.LIVRO,
+        qtdEstoque: 10,
+        estadoConservacao: EstadoConservacaoProduto.NOVO,
+        anoEdicao: 2020,
+        anoLancamento: 2021,
+      },
+    ];
+
+    (prismaClient.produto.findMany as jest.Mock).mockResolvedValue(produtos);
+
+    const result = await produtoRepository.getAll({
+      filters: [
+        {
+          campo: 'preco',
+          operador: '<=',
+          valor: '15',
+        },
+      ],
+      sorters: [],
+    });
+
+    expect(result).toEqual(produtos);
+    expect(prismaClient.produto.findMany).toHaveBeenCalledWith({
+      where: {
+        status: StatusProduto.ATIVO,
+        preco: { lte: '15' },
+      },
+      include: {
+        fotos: true,
+        sebo: { include: { endereco: true } },
+      },
+      orderBy: [],
+    });
+  });
+
+  it('returns all products sorted', async () => {
+    const produtos = [
+      {
+        id: 1,
+        seboId: 123,
+        status: StatusProduto.ATIVO,
+        nome: 'Produto 1',
+        preco: 10,
+        categoria: CategoriaProduto.LIVRO,
+        qtdEstoque: 10,
+        estadoConservacao: EstadoConservacaoProduto.NOVO,
+        anoEdicao: 2020,
+        anoLancamento: 2021,
+      },
+      {
+        id: 2,
+        seboId: 456,
+        status: StatusProduto.ATIVO,
+        nome: 'Produto 2',
+        preco: 10,
+        categoria: CategoriaProduto.LIVRO,
+        qtdEstoque: 10,
+        estadoConservacao: EstadoConservacaoProduto.NOVO,
+        anoEdicao: 2020,
+        anoLancamento: 2021,
+      },
+    ];
+
+    (prismaClient.produto.findMany as jest.Mock).mockResolvedValue(produtos);
+
+    const result = await produtoRepository.getAll({
+      filters: [
+        {
+          campo: 'preco',
+          operador: '<=',
+          valor: '15',
+        },
+      ],
+      sorters: [
+        {
+          campo: 'nome',
+          ordem: 'DESC',
+        },
+      ],
+    });
+
+    expect(result).toEqual(produtos);
+    expect(prismaClient.produto.findMany).toHaveBeenCalledWith({
+      where: {
+        status: StatusProduto.ATIVO,
+        preco: { lte: '15' },
+      },
+      include: {
+        fotos: true,
+        sebo: { include: { endereco: true } },
+      },
+      orderBy: [{ nome: 'desc' }],
     });
   });
 

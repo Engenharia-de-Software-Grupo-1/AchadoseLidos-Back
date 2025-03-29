@@ -97,8 +97,9 @@ model Usuario {
   contaId Int   @unique
   conta   Conta @relation(fields: [contaId], references: [id])
 
+  favoritos     MarcacaoFavorito[]
   cestaProdutos CestaProduto[]
-  Pedido        Pedido[]
+  pedidos       Pedido[]
 }
 
 enum StatusProduto {
@@ -139,12 +140,13 @@ model Produto {
   createdAt         DateTime                 @default(now())
   updatedAt         DateTime                 @updatedAt
 
-  fotos  FotoProduto[]
   seboId Int
-  sebo   Sebo          @relation(fields: [seboId], references: [id])
+  sebo   Sebo @relation(fields: [seboId], references: [id])
 
-  cestas        CestaProduto[]
-  PedidoProduto PedidoProduto[]
+  fotos        FotoProduto[]
+  favoritagens MarcacaoFavorito[]
+  cestas       CestaProduto[]
+  pedidos      PedidoProduto[]
 }
 
 model FotoProduto {
@@ -153,6 +155,16 @@ model FotoProduto {
 
   produtoId Int
   produto   Produto @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+}
+
+model MarcacaoFavorito {
+  usuarioId Int
+  produtoId Int
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  produto Produto @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+
+  @@id([usuarioId, produtoId])
 }
 
 model CestaProduto {

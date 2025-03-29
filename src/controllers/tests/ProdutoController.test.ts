@@ -28,7 +28,12 @@ describe('ProdutoController', () => {
   });
 
   it('returns 200 and all entities when getAll is successful', async () => {
-    const req = {} as Request;
+    const req = {
+      body: {
+        filters: [],
+        sorters: [],
+      },
+    } as Request;
 
     const res = {
       status: jest.fn().mockReturnThis(),
