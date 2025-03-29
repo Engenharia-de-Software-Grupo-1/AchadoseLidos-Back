@@ -3,6 +3,8 @@ import { ProdutoCreateDTO, ProdutoUpdateDTO, ProdutoUpdateSchema } from '@src/mo
 import { ProdutoCreateSchema, ProdutoResponseSchema } from '@src/models/ProdutoSchema';
 import { StatusProduto, CategoriaProduto, EstadoConservacaoProduto } from '@prisma/client';
 import { ensureSelfTargetedAction, getAuthTokenId } from '@src/utils/authUtils';
+import { InvalidTokenError } from '@src/errors/InvalidTokenError';
+import { NoPermissionError } from '@src/errors/NoPermissionError';
 
 import { produtoService } from '../ProdutoService';
 
@@ -40,6 +42,28 @@ describe('ProdutoService', () => {
     expect(produtoRepository.create).toHaveBeenCalledWith(data, 123);
     expect(ProdutoResponseSchema.parseAsync).toHaveBeenCalledWith(produtoCriado);
     expect(result).toEqual(produtoCriado);
+  });
+
+  it('should throw an error when create is called without authorized token id', async () => {
+    const data: ProdutoCreateDTO = {
+      nome: 'Produto 1',
+      preco: 10,
+      categoria: CategoriaProduto.LIVRO,
+      qtdEstoque: 10,
+      estadoConservacao: EstadoConservacaoProduto.NOVO,
+      anoEdicao: 2020,
+      anoLancamento: 2021,
+      generos: [''],
+    };
+
+    (getAuthTokenId as jest.Mock).mockImplementation(() => {
+      throw new InvalidTokenError();
+    });
+
+    await expect(produtoService.create(data, 123)).rejects.toEqual({
+      message: 'Token inválido',
+      statusCode: 401,
+    });
   });
 
   it('returns all products', async () => {
@@ -182,6 +206,38 @@ describe('ProdutoService', () => {
     });
   });
 
+  it('should throw an error when update is called without permission', async () => {
+    const produto: ProdutoUpdateDTO = {
+      nome: 'Produto 1',
+      preco: 10,
+      categoria: CategoriaProduto.LIVRO,
+      qtdEstoque: 10,
+      estadoConservacao: EstadoConservacaoProduto.NOVO,
+      anoEdicao: 2020,
+      anoLancamento: 2021,
+      generos: [''],
+    };
+
+    const produtoResponse = {
+      id: 1,
+      ...produto,
+      createdAt: '2024',
+      updatedAt: '2025',
+      sebo: { id: 123 },
+    };
+
+    (ProdutoUpdateSchema.parse as jest.Mock).mockReturnValue(produto);
+    (produtoRepository.getById as jest.Mock).mockResolvedValue(produtoResponse);
+    (ensureSelfTargetedAction as jest.Mock).mockImplementation(() => {
+      throw new NoPermissionError();
+    });
+
+    await expect(produtoService.update(1, produto, 'unauthorizedToken')).rejects.toEqual({
+      message: 'Acesso negado. Você não tem permissão para essa ação',
+      statusCode: 403,
+    });
+  });
+
   it('deletes a product by id', async () => {
     const produtoResponse = {
       id: 1,
@@ -216,6 +272,38 @@ describe('ProdutoService', () => {
     await expect(produtoService.delete(1, 'testToken')).rejects.toEqual({
       message: 'Entidade com id 1 não encontrada',
       statusCode: 404,
+    });
+  });
+
+  it('should throw an error when delete is called without permission', async () => {
+    const produto: ProdutoUpdateDTO = {
+      nome: 'Produto 1',
+      preco: 10,
+      categoria: CategoriaProduto.LIVRO,
+      qtdEstoque: 10,
+      estadoConservacao: EstadoConservacaoProduto.NOVO,
+      anoEdicao: 2020,
+      anoLancamento: 2021,
+      generos: [''],
+    };
+
+    const produtoResponse = {
+      id: 1,
+      ...produto,
+      createdAt: '2024',
+      updatedAt: '2025',
+      sebo: { id: 123 },
+    };
+
+    (produtoRepository.getById as jest.Mock).mockResolvedValueOnce(produtoResponse);
+
+    (ensureSelfTargetedAction as jest.Mock).mockImplementation(() => {
+      throw new NoPermissionError();
+    });
+
+    await expect(produtoService.delete(1, 'unauthorizedToken')).rejects.toEqual({
+      message: 'Acesso negado. Você não tem permissão para essa ação',
+      statusCode: 403,
     });
   });
 });
