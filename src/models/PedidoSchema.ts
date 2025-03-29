@@ -6,7 +6,7 @@ const StatusPedido = z.enum(['PENDENTE', 'CONCLUIDO', 'CANCELADO']);
 const StatusProdutoPedido = z.enum(['PENDENTE', 'CONFIRMADO', 'CANCELADO']);
 
 const SeboPedidoSchema = SeboBaseSchema.extend({
-  telefone: z.string().length(13),
+  telefone: z.string().max(13),
 });
 
 const ProdutoPedidoSchema = {

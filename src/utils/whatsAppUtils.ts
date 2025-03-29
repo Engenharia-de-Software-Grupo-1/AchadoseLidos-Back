@@ -6,17 +6,17 @@ export function gerarLinkWhatsApp(pedido: PedidoResponseDTO) {
   const produtosPedido = pedido.produtos
     .map(
       p =>
-        `- Nome: ${p.produto.nome}, Categoria: ${p.produto.categoria}, Quantidade: ${p.quantidade}, Preço: ${p.produto.preco}`,
+        `- Nome: ${p.produto.nome}, Categoria: ${p.produto.categoria}, 
+            Quantidade: ${p.quantidade}, Preço: R$ ${p.produto.preco.toFixed(2)}`,
     )
     .join('\n');
 
   const mensagem = [
-    'Achados e Lidos - Confirmação de Pedido',
-    `Olá, ${nome}! Acabei de realizar um novo pedido pelo site.`,
-    '',
+    'Achados e Lidos - Confirmação de Pedido\n',
+    `Olá, ${nome}! Acabei de realizar um novo pedido pelo site.\n`,
     'Produto(s) do Pedido:',
     produtosPedido,
-    `\nTotal: ${pedido.total}\n`,
+    `\n*Total: R$ ${pedido.total.toFixed(2)}*\n`,
     'Gostaria de saber mais detalhes sobre as formas de pagamento e entrega do pedido.',
   ].join('\n');
 
