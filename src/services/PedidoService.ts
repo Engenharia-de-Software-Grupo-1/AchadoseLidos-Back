@@ -1,10 +1,10 @@
 import { PrismaClient } from '@prisma/client';
-import { PedidoCreateSchema, StatusPedido } from '@src/models/PedidoSchema';
+import { PedidoCreateDTO, PedidoCreateSchema, StatusPedido } from '@src/models/PedidoSchema';
 
 const prisma = new PrismaClient();
 
 class PedidoService {
-  async create(data: any) {
+  async create(data: PedidoCreateDTO) {
     const validatedData = PedidoCreateSchema.parse(data);
 
     const pedido = await prisma.pedido.create({
