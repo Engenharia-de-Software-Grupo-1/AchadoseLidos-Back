@@ -192,27 +192,28 @@ enum StatusProdutoPedido {
 
 model Pedido {
   id          Int          @id @default(autoincrement())
-  seboId      Int
-  usuarioId   Int
   status      StatusPedido @default(PENDENTE)
   qtdProdutos Int
   total       Float
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
-  sebo     Sebo            @relation(fields: [seboId], references: [id])
-  usuario  Usuario         @relation(fields: [usuarioId], references: [id])
+  seboId    Int
+  sebo      Sebo    @relation(fields: [seboId], references: [id])
+  usuarioId Int
+  usuario   Usuario @relation(fields: [usuarioId], references: [id])
+
   produtos PedidoProduto[]
 }
 
 model PedidoProduto {
-  pedidoId   Int
-  produtoId  Int
   quantidade Int
-  status     StatusProdutoPedido
+  status     StatusProdutoPedido @default(PENDENTE)
 
-  pedido  Pedido  @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
-  produto Produto @relation(fields: [produtoId], references: [id])
+  pedidoId  Int
+  pedido    Pedido  @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  produtoId Int
+  produto   Produto @relation(fields: [produtoId], references: [id])
 
   @@id([pedidoId, produtoId])
 }

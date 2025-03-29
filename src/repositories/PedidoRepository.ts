@@ -1,58 +1,94 @@
 import prismaClient from '@src/lib/prismaClient';
-import { PedidoCreateDTO } from '@src/models/PedidoSchema';
+import { TipoConta } from '@prisma/client';
+import { PedidoCreateDTO, PedidoUpdateDTO } from '@src/models/PedidoSchema';
+import { buildWhereClause, Filter } from '@src/utils/filterUtils';
+
+const includeAllRelations = {
+  include: {
+    produtos: { include: { produto: true } },
+    sebo: true,
+    usuario: true,
+  },
+};
 
 class PedidoRepository {
-  async create(data: PedidoCreateDTO) {
+  async create(data: PedidoCreateDTO, usuarioId: number) {
+    const { produtos, sebo, ...pedido } = data;
+
     return prismaClient.$transaction(async tx => {
-      const pedido = await tx.pedido.create({
+      const pedidoCriado = await tx.pedido.create({
         data: {
-          seboId: data.seboId,
-          usuarioId: data.usuarioId,
-          status: data.status,
-          qtdProdutos: data.qtdProdutos,
-          total: data.total,
+          ...pedido,
+          sebo: { connect: { id: sebo.id } },
+          usuario: { connect: { id: usuarioId } },
         },
       });
 
-      const produtosValidos = await tx.produto.findMany({
-        where: { id: { in: data.produtos.map(p => p.produtoId) } },
-        select: { id: true },
-      });
-
-      const idsValidos = new Set(produtosValidos.map(p => p.id));
-
-      const produtosPedido = data.produtos
-        .filter(p => idsValidos.has(p.produtoId))
-        .map(p => ({
-          pedidoId: pedido.id,
-          produtoId: p.produtoId,
-          quantidade: p.quantidade,
-          status: p.status,
-        }));
-
-      if (!produtosPedido.length) throw new Error('Nenhum produto válido foi encontrado.');
-
-      await tx.pedidoProduto.createMany({ data: produtosPedido });
+      if (produtos?.length) {
+        await tx.pedidoProduto.createMany({
+          data: produtos.map(item => ({
+            pedidoId: pedidoCriado.id,
+            produtoId: item.produto.id,
+            quantidade: item.quantidade,
+          })),
+        });
+      }
 
       return tx.pedido.findUnique({
-        where: { id: pedido.id },
-        include: {
-          produtos: { include: { produto: true } },
-          sebo: true,
-          usuario: true,
-        },
+        where: { id: pedidoCriado.id },
+        ...includeAllRelations,
       });
+    });
+  }
+
+  async getAll(id: number, role: TipoConta, filters: Filter[]) {
+    const whereClause = {
+      ...(role === TipoConta.SEBO ? { seboId: id } : { usuarioId: id }),
+      ...buildWhereClause(filters),
+    };
+
+    return prismaClient.pedido.findMany({
+      where: whereClause,
+      ...includeAllRelations,
     });
   }
 
   async getById(id: number) {
     return prismaClient.pedido.findUnique({
       where: { id },
-      include: {
-        produtos: { include: { produto: true } },
-        sebo: true,
-        usuario: true,
-      },
+      ...includeAllRelations,
+    });
+  }
+
+  async update(id: number, data: PedidoUpdateDTO) {
+    const { produtos, status } = data;
+
+    return prismaClient.$transaction(async tx => {
+      await tx.pedido.update({
+        where: { id },
+        data: { status },
+      });
+
+      // pode usar updateMany pro pedidoProduto?
+      if (produtos?.length) {
+        produtos.forEach(
+          async item =>
+            await tx.pedidoProduto.update({
+              where: {
+                pedidoId_produtoId: {
+                  pedidoId: id,
+                  produtoId: item.produto.id,
+                },
+              },
+              data: { status: item.status },
+            }),
+        );
+      }
+
+      return tx.pedido.findUnique({
+        where: { id },
+        ...includeAllRelations,
+      });
     });
   }
 }

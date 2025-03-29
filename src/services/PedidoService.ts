@@ -1,81 +1,63 @@
-import { PrismaClient } from '@prisma/client';
-import { PedidoCreateDTO, PedidoCreateSchema, StatusPedido } from '@src/models/PedidoSchema';
+import { TipoConta } from '@prisma/client';
+import {
+  PedidoCreateDTO,
+  PedidoCreateSchema,
+  PedidoResponseSchema,
+  PedidoUpdateDTO,
+  PedidoUpdateSchema,
+} from '@src/models/PedidoSchema';
+import { pedidoRepository } from '@src/repositories/PedidoRepository';
+import { ensureSelfTargetedAction, getAuthTokenId, getAuthTokenIdAndRole } from '@src/utils/authUtils';
+import { Filter } from '@src/utils/filterUtils';
+import { EntityNotFoundError } from '@src/errors/EntityNotFoundError';
 
-const prisma = new PrismaClient();
+import { produtoService } from './ProdutoService';
 
 class PedidoService {
-  async create(data: PedidoCreateDTO) {
-    const validatedData = PedidoCreateSchema.parse(data);
+  async create(data: PedidoCreateDTO, authToken: unknown) {
+    const authTokenId = getAuthTokenId(authToken);
+    const parsedData = PedidoCreateSchema.parse(data);
 
-    const pedido = await prisma.pedido.create({
-      data: {
-        seboId: validatedData.seboId,
-        usuarioId: validatedData.usuarioId,
-        status: validatedData.status,
-        qtdProdutos: validatedData.qtdProdutos,
-        total: validatedData.total,
-        produtos: {
-          create: validatedData.produtos.map(produto => ({
-            produtoId: produto.produtoId,
-            quantidade: produto.quantidade,
-            status: produto.status,
-          })),
-        },
-      },
-      include: {
-        produtos: {
-          include: {
-            produto: true,
-          },
-        },
-        sebo: true,
-        usuario: true,
-      },
-    });
+    parsedData.produtos.forEach(async item => await produtoService.validarProduto(item.produto.id));
+    parsedData.produtos.forEach(async item => await produtoService.validarQtdEstoque(item.produto.id, item.quantidade));
 
-    return pedido;
+    const result = await pedidoRepository.create(parsedData, authTokenId);
+
+    // quando criar o pedido, remover da cesta
+    return PedidoResponseSchema.parseAsync(result);
   }
 
-  async getById(id: number) {
-    return prisma.pedido.findUnique({
-      where: { id },
-      include: {
-        produtos: { include: { produto: true } },
-        sebo: true,
-        usuario: true,
-      },
-    });
+  async getAll(filters: Filter[], authToken: unknown) {
+    const { authTokenId, role } = getAuthTokenIdAndRole(authToken);
+
+    const result = await pedidoRepository.getAll(authTokenId, role, filters);
+    return await PedidoResponseSchema.array().parseAsync(result);
   }
 
-  async getAll() {
-    return prisma.pedido.findMany({
-      include: {
-        produtos: { include: { produto: true } },
-        sebo: true,
-        usuario: true,
-      },
-    });
+  async getById(id: number, authToken: unknown) {
+    const { authTokenId: _, role } = getAuthTokenIdAndRole(authToken);
+
+    const result = await pedidoRepository.getById(id);
+    if (!result) {
+      throw new EntityNotFoundError(id);
+    }
+
+    const pedidoId = role === TipoConta.SEBO ? result.sebo.id : result.usuario.id;
+    ensureSelfTargetedAction(pedidoId, authToken);
+
+    return PedidoResponseSchema.parseAsync(result);
   }
 
-  async cancel(id: number) {
-    const pedido = await prisma.pedido.findUnique({ where: { id } });
+  async update(id: number, data: PedidoUpdateDTO, authToken: unknown) {
+    const parsedData = PedidoUpdateSchema.parse(data);
+    const pedido = await this.getById(id, authToken);
 
-    if (!pedido) throw new Error('Pedido não encontrado');
-    if (pedido.status === 'CANCELADO') throw new Error('Pedido já está cancelado');
+    ensureSelfTargetedAction(pedido.sebo.id, authToken);
+    parsedData.produtos.forEach(async item => await produtoService.validarProduto(item.produto.id));
+    // validar se o pedido/produto já foram atualizados, e se estão sendo atualizados para status válidos
 
-    await prisma.pedido.update({
-      where: { id },
-      data: { status: StatusPedido.Enum.CANCELADO },
-    });
-
-    return prisma.pedido.findUnique({
-      where: { id },
-      include: {
-        produtos: { include: { produto: true } },
-        sebo: true,
-        usuario: true,
-      },
-    });
+    const result = await pedidoRepository.update(id, parsedData);
+    return PedidoResponseSchema.parseAsync(result);
   }
 }
 

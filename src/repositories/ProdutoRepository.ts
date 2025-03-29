@@ -15,12 +15,12 @@ const includeFotosAndSebo = {
 };
 
 class ProdutoRepository {
-  async create(data: ProdutoCreateDTO, authTokenId: number) {
+  async create(data: ProdutoCreateDTO, seboId: number) {
     const { fotos, ...produto } = data;
 
     return prismaClient.$transaction(async tx => {
       const produtoCriado = await tx.produto.create({
-        data: { ...produto, sebo: { connect: { id: authTokenId } } },
+        data: { ...produto, sebo: { connect: { id: seboId } } },
       });
 
       if (fotos?.length) {
