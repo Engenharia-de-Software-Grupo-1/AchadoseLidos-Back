@@ -42,13 +42,11 @@ class PedidoRepository {
   }
 
   async getAll(id: number, role: TipoConta, filters: Filter[]) {
-    const whereClause = {
-      ...(role === TipoConta.SEBO ? { seboId: id } : { usuarioId: id }),
-      ...buildWhereClause(filters),
-    };
-
     return prismaClient.pedido.findMany({
-      where: whereClause,
+      where: {
+        ...(role === TipoConta.SEBO ? { seboId: id } : { usuarioId: id }),
+        ...buildWhereClause(filters),
+      },
       ...includeAllRelations,
     });
   }
@@ -69,11 +67,10 @@ class PedidoRepository {
         data: { status },
       });
 
-      // pode usar updateMany pro pedidoProduto?
       if (produtos?.length) {
-        produtos.forEach(
-          async item =>
-            await tx.pedidoProduto.update({
+        await Promise.all(
+          produtos.map(item =>
+            tx.pedidoProduto.update({
               where: {
                 pedidoId_produtoId: {
                   pedidoId: id,
@@ -82,6 +79,7 @@ class PedidoRepository {
               },
               data: { status: item.status },
             }),
+          ),
         );
       }
 
