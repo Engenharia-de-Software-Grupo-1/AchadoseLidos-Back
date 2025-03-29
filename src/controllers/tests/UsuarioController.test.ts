@@ -25,6 +25,7 @@ describe('UsuarioController', () => {
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith(mockResult);
   });
+
   it('returns 200 and all entities when getAll is successful', async () => {
     const req = {} as Request;
 
@@ -62,6 +63,29 @@ describe('UsuarioController', () => {
     await usuarioController.getById(req, res);
 
     expect(usuarioService.getById).toHaveBeenCalledWith(1);
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(mockResult);
+  });
+
+  it('returns 200 and the entity when getPerfilById is successful', async () => {
+    const req = {
+      params: {
+        id: '1',
+      },
+    } as unknown as Request;
+
+    const res = {
+      locals: { decryptedToken: 'testToken' },
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    } as unknown as Response;
+
+    const mockResult = { someResultKey: 'someResultValue' };
+    (usuarioService.getPerfilById as jest.Mock).mockResolvedValueOnce(mockResult);
+
+    await usuarioController.getPerfilById(req, res);
+
+    expect(usuarioService.getPerfilById).toHaveBeenCalledWith(1, 'testToken');
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith(mockResult);
   });
