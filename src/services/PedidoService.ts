@@ -20,13 +20,7 @@ class PedidoService {
   async create(data: PedidoCreateDTO, authToken: unknown) {
     const authTokenId = getAuthTokenId(authToken);
     const parsedData = PedidoCreateSchema.parse(data);
-
-    await Promise.all(
-      parsedData.produtos.map(async item => {
-        await produtoService.validarProduto(item.produto.id);
-        await produtoService.validarQtdEstoque(item.produto.id, item.quantidade);
-      }),
-    );
+    this.validarProdutosPedido(parsedData);
 
     const result = await pedidoRepository.create(parsedData, authTokenId);
     const whatsAppLink = gerarLinkWhatsApp(PedidoResponseSchema.parse(result));
@@ -64,11 +58,19 @@ class PedidoService {
     if (pedido.status !== StatusPedido.PENDENTE) {
       throw new AppError('Pedido já concluído');
     }
-
-    await Promise.all(parsedData.produtos.map(item => produtoService.validarProduto(item.produto.id)));
+    this.validarProdutosPedido(pedido);
 
     const result = await pedidoRepository.update(id, parsedData);
     return PedidoResponseSchema.parseAsync(result);
+  }
+
+  private async validarProdutosPedido(pedido: PedidoCreateDTO | PedidoUpdateDTO) {
+    await Promise.all(
+      pedido.produtos.map(async item => {
+        await produtoService.validarProduto(item.produto.id);
+        await produtoService.validarQtdEstoque(item.produto.id, item.quantidade);
+      }),
+    );
   }
 }
 
