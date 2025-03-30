@@ -4,6 +4,7 @@ import { SeboCreateDTO, SeboUpdateDTO } from '@src/models/SeboSchema';
 
 import { seboRepository } from '../SeboRepository';
 import { contaRepository } from '../ContaRepository';
+import { produtoRepository } from '../ProdutoRepository';
 
 jest.mock('@src/lib/prismaClient');
 
@@ -253,5 +254,55 @@ describe('SeboRepository', () => {
 
     expect(result).toEqual(sebo);
     expect(prismaClient.$transaction).toHaveBeenCalled();
+  });
+
+  it('deletes a sebo by id', async () => {
+    const sebo = {
+      id: 1,
+      endereco: {
+        cep: '12345-678',
+        estado: 'Estado',
+        cidade: 'Cidade',
+        bairro: 'Bairro',
+        rua: 'Rua',
+        numero: '123',
+        ehPublico: true,
+        complemento: 'Complemento',
+      },
+      conta: {
+        id: 2,
+        email: 'teste@exemplo.com',
+        senha: 'senhaforte123',
+      },
+      fotos: [{ url: 'http://example.com/foto1' }],
+      produtos: [{ id: 100 }, { id: 101 }],
+    };
+
+    (seboRepository.getById as jest.Mock) = jest.fn().mockResolvedValue(sebo);
+    (contaRepository.delete as jest.Mock) = jest.fn().mockResolvedValue(null);
+    (prismaClient.enderecoSebo.update as jest.Mock) = jest.fn().mockResolvedValue(null);
+    (prismaClient.sebo.update as jest.Mock) = jest.fn().mockResolvedValue(null);
+    (prismaClient.fotoSebo.deleteMany as jest.Mock) = jest.fn().mockResolvedValue(null);
+    (produtoRepository.delete as jest.Mock) = jest.fn().mockResolvedValue(null);
+    (prismaClient.$transaction as jest.Mock) = jest.fn(async cb => cb(prismaClient));
+
+    await seboRepository.delete(1);
+
+    expect(prismaClient.$transaction).toHaveBeenCalled();
+    expect(contaRepository.delete).toHaveBeenCalledWith(prismaClient, sebo.conta.id);
+    expect(prismaClient.sebo.update).toHaveBeenCalledWith({
+      where: { id: sebo.id },
+      data: expect.any(Object),
+    });
+    expect(prismaClient.enderecoSebo.update).toHaveBeenCalledWith({
+      where: { seboId: sebo.id },
+      data: expect.any(Object),
+    });
+    expect(prismaClient.fotoSebo.deleteMany).toHaveBeenCalledWith({
+      where: { seboId: sebo.id },
+    });
+    expect(produtoRepository.delete).toHaveBeenCalledTimes(sebo.produtos.length);
+    expect(produtoRepository.delete).toHaveBeenCalledWith(sebo.produtos[0].id, prismaClient);
+    expect(produtoRepository.delete).toHaveBeenCalledWith(sebo.produtos[1].id, prismaClient);
   });
 });
