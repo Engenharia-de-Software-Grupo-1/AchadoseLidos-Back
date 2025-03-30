@@ -1,5 +1,7 @@
 import { z } from 'zod';
-import { ProdutoAgrupadoSchema, ProdutoBaseSchema } from '@src/utils/groupBySebo';
+import { ProdutoAgrupadoSchema } from '@src/utils/groupBySebo';
+
+import { ProdutoBaseSchema } from './BaseSchema';
 
 export const CestaCreateSchema = z.object({
   produtoId: z.number(),

@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Sebo" ALTER COLUMN "telefone" SET DATA TYPE VARCHAR(13);
+
+-- AlterTable
+ALTER TABLE "Usuario" ALTER COLUMN "telefone" SET DATA TYPE VARCHAR(13);

@@ -37,7 +37,7 @@ model Sebo {
   nome                 String
   cpfCnpj              String  @db.VarChar(16)
   concordaVender       Boolean
-  telefone             String? @db.VarChar(11)
+  telefone             String? @db.VarChar(13)
   biografia            String?
   horarioFuncionamento String?
   estanteVirtual       String?
@@ -55,6 +55,7 @@ model Sebo {
   endereco EnderecoSebo?
   fotos    FotoSebo[]
   produtos Produto[]
+  pedidos  Pedido[]
 }
 
 model EnderecoSebo {
@@ -85,7 +86,7 @@ model Usuario {
   id         Int     @id @default(autoincrement())
   nome       String
   cpf        String  @db.Char(11)
-  telefone   String  @db.Char(11)
+  telefone   String  @db.VarChar(13)
   biografia  String?
   twitter    String?
   instagram  String?
@@ -98,6 +99,7 @@ model Usuario {
 
   favoritos     MarcacaoFavorito[]
   cestaProdutos CestaProduto[]
+  pedidos       Pedido[]
 }
 
 enum StatusProduto {
@@ -144,6 +146,7 @@ model Produto {
   fotos        FotoProduto[]
   favoritagens MarcacaoFavorito[]
   cestas       CestaProduto[]
+  pedidos      PedidoProduto[]
 }
 
 model FotoProduto {
@@ -173,4 +176,44 @@ model CestaProduto {
   produto   Produto @relation(fields: [produtoId], references: [id])
 
   @@id([usuarioId, produtoId])
+}
+
+enum StatusPedido {
+  PENDENTE
+  CONCLUIDO
+  CANCELADO
+}
+
+enum StatusProdutoPedido {
+  PENDENTE
+  CONFIRMADO
+  CANCELADO
+}
+
+model Pedido {
+  id          Int          @id @default(autoincrement())
+  status      StatusPedido @default(PENDENTE)
+  qtdProdutos Int
+  total       Float
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  seboId    Int
+  sebo      Sebo    @relation(fields: [seboId], references: [id])
+  usuarioId Int
+  usuario   Usuario @relation(fields: [usuarioId], references: [id])
+
+  produtos PedidoProduto[]
+}
+
+model PedidoProduto {
+  quantidade Int
+  status     StatusProdutoPedido @default(PENDENTE)
+
+  pedidoId  Int
+  pedido    Pedido  @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  produtoId Int
+  produto   Produto @relation(fields: [produtoId], references: [id])
+
+  @@id([pedidoId, produtoId])
 }
