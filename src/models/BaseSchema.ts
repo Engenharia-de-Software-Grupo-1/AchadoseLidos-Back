@@ -6,6 +6,7 @@ export const SeboBaseSchema = z.object({
   id: z.number(),
   nome: z.string(),
   concordaVender: z.boolean(),
+  telefone: z.string().max(13),
 });
 
 export const UsuarioBaseSchema = z.object({

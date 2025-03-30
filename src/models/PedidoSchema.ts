@@ -5,10 +5,6 @@ import { ProdutoBaseSchema, SeboBaseSchema, UsuarioBaseSchema } from './BaseSche
 const StatusPedido = z.enum(['PENDENTE', 'CONCLUIDO', 'CANCELADO']);
 const StatusProdutoPedido = z.enum(['PENDENTE', 'CONFIRMADO', 'CANCELADO']);
 
-const SeboPedidoSchema = SeboBaseSchema.extend({
-  telefone: z.string().max(13),
-});
-
 const ProdutoPedidoSchema = {
   create: z.object({
     quantidade: z.number().int().min(1),
@@ -24,13 +20,13 @@ const ProdutoPedidoSchema = {
 export const PedidoCreateSchema = z.object({
   qtdProdutos: z.number().int().min(1),
   total: z.number().positive(),
-  sebo: SeboPedidoSchema,
+  sebo: SeboBaseSchema,
   produtos: z.array(ProdutoPedidoSchema.create).min(1),
 });
 
 export const PedidoUpdateSchema = z.object({
   status: StatusPedido,
-  produtos: z.array(ProdutoPedidoSchema.update),
+  produtos: z.array(ProdutoPedidoSchema.update).min(1),
 });
 
 export const PedidoResponseSchema = PedidoCreateSchema.extend({
@@ -38,9 +34,8 @@ export const PedidoResponseSchema = PedidoCreateSchema.extend({
   status: StatusPedido,
   createdAt: z.date().or(z.string().datetime()),
   updatedAt: z.date().or(z.string().datetime()),
-  produtos: z.array(ProdutoPedidoSchema.create.merge(ProdutoPedidoSchema.update)),
-  sebo: SeboPedidoSchema,
   usuario: UsuarioBaseSchema,
+  produtos: z.array(ProdutoPedidoSchema.update),
 });
 
 export type PedidoCreateDTO = z.infer<typeof PedidoCreateSchema>;
