@@ -4,8 +4,6 @@ import { SeboCreateDTO, SeboUpdateDTO } from '@src/models/SeboSchema';
 
 import { seboRepository } from '../SeboRepository';
 import { contaRepository } from '../ContaRepository';
-import { favoritoRepository } from '../FavoritoRepository';
-import { cestaRepository } from '../CestaRepository';
 import { produtoRepository } from '../ProdutoRepository';
 
 jest.mock('@src/lib/prismaClient');
