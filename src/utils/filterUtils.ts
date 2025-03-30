@@ -10,30 +10,33 @@ export type Sorter = {
 };
 
 export function buildWhereClause(filters: Filter[] = []) {
-  const where: Record<string, unknown> = {};
+  const where: Record<string, any> = {};
 
-  filters.forEach(filter => {
-    const { campo, operador, valor } = filter;
+  filters.forEach(({ campo, operador, valor }) => {
+    if (!where[campo] && campo !== 'bairro') {
+      where[campo] = {};
+    }
 
     switch (operador) {
       case 'like':
-        where[campo] = { contains: valor, mode: 'insensitive' };
+        where[campo].contains = valor;
+        where[campo].mode = 'insensitive';
         break;
       case '>=':
-        where[campo] = { gte: valor };
+        where[campo].gte = valor;
         break;
       case '<=':
-        where[campo] = { lte: valor };
+        where[campo].lte = valor;
         break;
       case 'in':
         if (campo === 'bairro') {
           where['endereco'] = { bairro: { in: valor } };
         } else {
-          where[campo] = { in: valor };
+          where[campo].in = valor;
         }
         break;
       case 'hasSome':
-        where[campo] = { hasSome: valor };
+        where[campo].hasSome = valor;
         break;
       default:
         where[campo] = valor;
