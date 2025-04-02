@@ -51,6 +51,7 @@ export const SeboUpdateSchema = SeboSchema.merge(SeboPrivateSchema).extend({
 
 export const SeboResponseSchema = SeboSchema.extend({
   id: z.number(),
+  fotos: z.array(FotoSeboSchema).nullable().optional(),
 }).transform(data => {
   const { telefone, endereco, ...rest } = data;
   return {
