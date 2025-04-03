@@ -64,6 +64,7 @@ export const SeboResponseSchema = SeboSchema.extend({
 
 export const SeboPrivateResponseSchema = SeboSchema.merge(SeboPrivateSchema).extend({
   id: z.number(),
+  fotos: z.array(FotoSeboSchema).nullable().optional(),
 });
 
 export type SeboCreateDTO = z.infer<typeof SeboCreateSchema>;
