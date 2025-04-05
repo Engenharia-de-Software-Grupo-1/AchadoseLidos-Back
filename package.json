@@ -16,6 +16,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
+    "start": "node dist/server.js",
     "dev": "ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/server.ts",
     "lint": "eslint ./src ./test",
     "lint:fix": "eslint ./src ./test --fix",

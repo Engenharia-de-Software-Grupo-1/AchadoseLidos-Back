@@ -11,6 +11,7 @@ import { AppError } from './errors/AppError';
 import { ErrorMessages } from './errors/ErrorMessages';
 
 const app = express();
+const port = process.env.PORT || 3333;
 
 app.disable('x-powered-by');
 
@@ -43,4 +44,4 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
 };
 
 app.use(errorHandler);
-app.listen(3333, () => console.log('Server is running in port 3333'));
+app.listen(port, () => console.log(`Server is running in port ${port}`));
