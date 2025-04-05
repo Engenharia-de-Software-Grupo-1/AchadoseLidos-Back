@@ -1,6 +1,11 @@
 import { produtoRepository } from '@src/repositories/ProdutoRepository';
-import { ProdutoCreateDTO, ProdutoUpdateDTO, ProdutoUpdateSchema } from '@src/models/ProdutoSchema';
-import { ProdutoCreateSchema, ProdutoResponseSchema } from '@src/models/ProdutoSchema';
+import {
+  ProdutoCreateDTO,
+  ProdutoUpdateDTO,
+  ProdutoUpdateSchema,
+  ProdutoCreateSchema,
+  ProdutoResponseSchema,
+} from '@src/models/ProdutoSchema';
 import { StatusProduto, CategoriaProduto, EstadoConservacaoProduto } from '@prisma/client';
 import { ensureSelfTargetedAction, getAuthTokenId } from '@src/utils/authUtils';
 import { InvalidTokenError } from '@src/errors/InvalidTokenError';
