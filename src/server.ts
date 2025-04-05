@@ -13,6 +13,8 @@ import { ErrorMessages } from './errors/ErrorMessages';
 const app = express();
 const port = process.env.PORT || 3333;
 
+app.disable('x-powered-by');
+
 const corsOptions = {
   origin: process.env.FRONTEND_URL,
   credentials: true,

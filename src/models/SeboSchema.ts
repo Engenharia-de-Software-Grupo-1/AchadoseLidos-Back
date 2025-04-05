@@ -58,7 +58,7 @@ export const SeboResponseSchema = SeboSchema.extend({
     ...rest,
     id: data.id,
     ...(data.concordaVender ? { telefone } : {}),
-    ...(endereco && endereco.ehPublico ? { endereco } : {}),
+    ...(endereco?.ehPublico ? { endereco } : {}),
   };
 });
 
