@@ -1,6 +1,5 @@
 import { CategoriaProduto, EstadoConservacaoProduto, StatusProduto } from '@prisma/client';
 import {
-  CestaAgrupadaSchema,
   CestaCreateDTO,
   CestaCreateSchema,
   CestaResponseSchema,
@@ -9,7 +8,6 @@ import {
 } from '@src/models/CestaSchema';
 import { cestaRepository } from '@src/repositories/CestaRepository';
 import { getAuthTokenId } from '@src/utils/authUtils';
-import { groupBySebo } from '@src/utils/groupBySebo';
 
 import { cestaService } from '../CestaService';
 import { produtoService } from '../ProdutoService';
