@@ -11,7 +11,7 @@ import { AppError } from './errors/AppError';
 import { ErrorMessages } from './errors/ErrorMessages';
 
 const app = express();
-const port = process.env.PORT || 3333;
+const port = process.env.PORT ?? 3333;
 
 app.disable('x-powered-by');
 
