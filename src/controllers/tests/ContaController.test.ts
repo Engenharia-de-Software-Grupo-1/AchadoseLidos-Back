@@ -33,9 +33,9 @@ describe('ContaController', () => {
       expect(contaService.login).toHaveBeenCalledWith('test@example.com', 'password123');
       expect(res.cookie).toHaveBeenCalledWith('authToken', mockToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: true,
         maxAge: expect.any(Number),
-        sameSite: 'strict',
+        sameSite: 'none',
       });
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalled();
