@@ -13,7 +13,8 @@ const transporter = nodemailer.createTransport({
 });
 
 const loadTemplate = (template: string, replacements?: Record<string, string>) => {
-  let html = fs.readFileSync(path.resolve(__dirname, '../templates', template), 'utf8');
+  const templatePath = path.resolve(process.cwd(), 'templates', template);
+  let html = fs.readFileSync(templatePath, 'utf8');
   if (replacements) {
     Object.keys(replacements).forEach(key => {
       html = html.replace(new RegExp(`{{${key}}}`, 'g'), replacements[key]);
